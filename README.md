@@ -1,19 +1,16 @@
-# Foundation for Sites Template
-
-**Please open all issues with this template on the main [Foundation for Sites](https://github.com/zurb/foundation-sites/issues) repo.**
-
-This is the basic starter project for [Foundation for Sites 6](http://foundation.zurb.com/sites). It includes a Sass compiler and a starter HTML file for you.
+# Color Palettes
 
 ## Installation
 
-To use this template, your computer needs:
+To use this platform, you need:
 
 - [NodeJS](https://nodejs.org/en/) (0.10 or greater)
 - [Git](https://git-scm.com/)
+- [Composer](https://getcomposer.org)
 
-This template can be installed with the Foundation CLI, or downloaded and set up manually.
+### Install needed components
 
-### Using the CLI
+#### Foundation CLI
 
 Install the Foundation CLI with this command:
 
@@ -21,28 +18,36 @@ Install the Foundation CLI with this command:
 npm install foundation-cli --global
 ```
 
-Use this command to set up a blank Foundation for Sites project with this template:
+#### NPM Modules
 
 ```bash
-foundation new --framework sites --template basic
+(sudo for mac) npm install
 ```
 
-The CLI will prompt you to give your project a name. The template will be downloaded into a folder with this name.
-
-### Manual Setup
-
-To manually set up the template, first download it with Git:
-
+#### Bower
 ```bash
-git clone https://github.com/zurb/foundation-sites-template projectname
+(sudo for mac) npm install -g bower
 ```
 
-Then open the folder in your command line, and install the needed dependencies:
+#### Foundation SASS files
 
 ```bash
-cd projectname
-npm install
 bower install
 ```
 
-Finally, run `npm start` to run the Sass compiler. It will re-run every time you save a Sass file.
+#### Silex packages
+
+```bash
+composer install
+```
+
+### Configure Apache vHost (simple)
+
+```
+<VirtualHost *:80>  
+	DocumentRoot "/where/ever/your/installation/lies"  
+	ServerName "choose one"  
+</VirtualHost>
+```
+
+After that open your browser and go to the chosen URL of the Apache config

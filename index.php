@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 $app = require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
+/**
+ * Index page
+ */
 $app->get('/', function () use ($app) {
 
     $pals = [];
@@ -32,6 +35,9 @@ $app->get('/', function () use ($app) {
     ]);
 });
 
+/**
+ * Test page
+ */
 $app->get('/export/{paletteFile}', function ($paletteFile) use ($app) {
     $paletteFile = filter_var($paletteFile, FILTER_SANITIZE_STRING);
     $palettePath = 'temp_pals' . DIRECTORY_SEPARATOR . $paletteFile . '.gpl';
