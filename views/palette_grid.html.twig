@@ -1,0 +1,9 @@
+{% set columnNumber = 1 %}
+{% for color in pal.getColors() %}
+    <div class="colorBox float-left" style="background-color: #{{ color.colhex }}"></div>
+    {% set columnNumber = columnNumber+1 %}
+    {% if columnNumber > pal.getColumns() %}
+        <div class="clearfix"></div>
+        {% set columnNumber = 1 %}
+    {% endif %}
+{% endfor %}

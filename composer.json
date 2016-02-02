@@ -1,0 +1,18 @@
+{
+	"require": {
+	  	"silex/silex": "~1.3",
+	  	"monolog/monolog": "^1.14",
+	  	"twig/twig": "^1.18",
+	  	"knplabs/console-service-provider": "^1.0",
+	  	"symfony/config": "^2.7",
+	  	"symfony/yaml": "^2.7",
+	  	"deralex/yaml-config-service-provider": "^1.0",
+		"symfony/security": "^3.0"
+	},
+	"autoload": {
+	  "psr-4": {
+		"commands\\": "commands/",
+		"Colorpalettes\\": "lib/"
+	  }
+	}
+}
