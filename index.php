@@ -6,11 +6,10 @@
  * Time: 17:06
  */
 
-use Colorpalettes\GimpPalette,
-    Colorpalettes\BasePalette,
+use Colorpalettes\BasePalette,
     Colorpalettes\Importers\AdobeSwatchExchangeImporter,
-    Colorpalettes\Importers\GimpPaletteImporter;
-use Symfony\Component\HttpFoundation\Response;
+    Colorpalettes\Importers\GimpPaletteImporter,
+    Symfony\Component\HttpFoundation\Response;
 
 $app = require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
@@ -26,7 +25,9 @@ $app->get('/', function () use ($app) {
         '*.gpl');
 
     foreach ($palFiles as $currentFile) {
-        $palObj = new GimpPalette($currentFile);
+        $palObj = new BasePalette();
+        $palObj->import(new GimpPaletteImporter($currentFile));
+
         if ($palObj->getColumns() == 1) {
             $palObj->setColumns(16);
         }

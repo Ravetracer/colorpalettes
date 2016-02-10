@@ -7,8 +7,8 @@
             data-disable-hover="false"
             data-options="fadeInDuration:100;hoverDelay:100"
             tabindex="2"
-            title="{{ color.name }}: #{{ color.colhex }}"
-            style="background-color: #{{ color.colhex }}"></div>
+            title="{{ color.getName() }}: #{{ color.getHexValue() }}"
+            style="background-color: #{{ color.getHexValue() }}"></div>
     {% set columnNumber = columnNumber+1 %}
     {% if columnNumber > pal.getColumns() %}
         <div class="clearfix"></div>

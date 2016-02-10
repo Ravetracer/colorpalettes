@@ -17,6 +17,7 @@ class BasePalette
     protected $name = "";
     protected $columns = 1;
     protected $colors = [];
+    protected $filename = "";
 
     /**
      * Get number of columns for raster view
@@ -110,9 +111,29 @@ class BasePalette
         if ($importer->isValid()) {
             $this->setColors($importer->getParsedColors())
                  ->setName($importer->getPaletteName())
-                 ->setComment($importer->getComment());
+                 ->setComment($importer->getComment())
+                 ->setFilename($importer->getFilename())
+                 ->setColumns($importer->getColumns());
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @param string $filename
+     * @return BasePalette
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+        return $this;
     }
 }

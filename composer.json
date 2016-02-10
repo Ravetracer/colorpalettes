@@ -11,7 +11,8 @@
 		"doctrine/annotations": "^1.2",
 		"symfony/dependency-injection": "^3.0",
 		"symfony/expression-language": "^3.0",
-		"mischiefcollective/colorjizz": "dev-master"
+		"mischiefcollective/colorjizz": "dev-master",
+		"doctrine/dbal": "~2.2"
 	},
 	"autoload": {
 	  "psr-4": {

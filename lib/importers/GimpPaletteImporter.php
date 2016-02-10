@@ -39,9 +39,9 @@ class GimpPaletteImporter extends BaseImporter implements ImporterInterface
     private $comment = '';
 
     /**
-     * @var string
+     * @var int
      */
-    private $columns = '';
+    private $columns = 1;
 
     /**
      * GimpPalette constructor.

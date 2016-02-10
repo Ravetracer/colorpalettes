@@ -8,7 +8,8 @@
 
 namespace Colorpalettes;
 
-
+use MischiefCollective\ColorJizz\Formats\RGB;
+use MischiefCollective\ColorJizz\Formats\Hex;
 class BaseColor
 {
     /**
@@ -93,6 +94,15 @@ class BaseColor
     {
         $this->colorName = filter_var($name, FILTER_SANITIZE_STRING);
         return $this;
+    }
+
+    /**
+     * @return \MischiefCollective\ColorJizz\Formats\MischiefCollective\ColorJizz\Formats\Hex
+     */
+    public function getHexValue()
+    {
+        $rgb = new RGB($this->getRed(), $this->getGreen(), $this->getBlue());
+        return $rgb->toHex();
     }
 
     /**

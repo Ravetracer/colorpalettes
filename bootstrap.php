@@ -54,6 +54,13 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), [
     ]
 ]);
 
+$app->register(new Silex\Provider\DoctrineServiceProvider(), [
+    'db.options'    => [
+        'driver'    => 'pdo.sqlite',
+        'path'      => __DIR__ . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'colpals.db',
+    ]
+]);
+
 $app->register(new DerAlex\Silex\YamlConfigServiceProvider(__DIR__ . '/config/parameters.yml'));
 
 return $app;
