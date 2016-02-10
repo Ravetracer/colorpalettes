@@ -6,7 +6,10 @@
  * Time: 17:06
  */
 
-use Colorpalettes\GimpPalette;
+use Colorpalettes\GimpPalette,
+    Colorpalettes\BasePalette,
+    Colorpalettes\Importers\AdobeSwatchExchangeImporter,
+    Colorpalettes\Importers\GimpPaletteImporter;
 use Symfony\Component\HttpFoundation\Response;
 
 $app = require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
@@ -36,9 +39,9 @@ $app->get('/', function () use ($app) {
 });
 
 /**
- * Test page
+ * Test pages
  */
-$app->get('/export/{paletteFile}', function ($paletteFile) use ($app) {
+$app->get('/import/gpl/{paletteFile}', function ($paletteFile) use ($app) {
     $paletteFile = filter_var($paletteFile, FILTER_SANITIZE_STRING);
     $palettePath = 'temp_pals' . DIRECTORY_SEPARATOR . $paletteFile . '.gpl';
 
@@ -46,10 +49,24 @@ $app->get('/export/{paletteFile}', function ($paletteFile) use ($app) {
         return new Response('Palette file: ' . $paletteFile . ' not found!');
     }
 
-    $pal = new GimpPalette($palettePath);
-    $pal->setColumns(16);
+    $pal = new BasePalette();
+    var_dump($pal->import(new GimpPaletteImporter($palettePath)));
 
-    return new Response("<pre>" . $pal->getExportContents() . "</pre>");
+    var_dump($pal->getColors());
+});
+
+$app->get('/import/ase/{paletteFile}', function ($paletteFile) use ($app) {
+    $paletteFile = filter_var($paletteFile, FILTER_SANITIZE_STRING);
+    $palettePath = 'temp_pals' . DIRECTORY_SEPARATOR . $paletteFile . '.ase';
+
+    if (!file_exists($palettePath)) {
+        return new Response('Palette file: ' . $paletteFile . ' not found!');
+    }
+
+    $pal = new BasePalette();
+    $pal->import(new AdobeSwatchExchangeImporter($palettePath));
+
+    var_dump($pal->getColors());
 });
 
 $app->run();
