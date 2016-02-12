@@ -2,16 +2,15 @@
 
 namespace Colorpalettes\Importers;
 
-use Colorpalettes\ASEDecoder;
-use Colorpalettes\Interfaces\ImporterInterface;
-use Colorpalettes\BaseColor;
+use Colorpalettes\BaseColor,
+    Colorpalettes\Interfaces\ImporterInterface;
 /**
  * Created by PhpStorm.
  * User: cnielebock
  * Date: 19.01.16
  * Time: 11:41
  */
-class GimpPaletteImporter extends BaseImporter implements ImporterInterface
+class GimpPaletteImporter implements ImporterInterface
 {
     /**
      * @var string
@@ -75,7 +74,7 @@ class GimpPaletteImporter extends BaseImporter implements ImporterInterface
      */
     public function getFilename()
     {
-        return basename($this->fileName, '.ase');
+        return basename($this->fileName, '.gpl');
     }
 
     /**

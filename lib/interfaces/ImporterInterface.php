@@ -5,49 +5,37 @@ namespace Colorpalettes\Interfaces;
 interface ImporterInterface
 {
     /**
-     * ImporterInterface constructor.
-     * @param $filename
-     */
-    public function __construct($filename);
-
-    /**
-     * Returns the parsed color array
-     *
+     * Get the parsed color palette as an array
      * @return array
      */
     public function getParsedColors();
 
     /**
-     * Returns the name of the palette
-     *
+     * Get the name of the palette
      * @return string
      */
     public function getPaletteName();
 
     /**
-     * Returns the comment
-     *
-     * @return string
-     */
-    public function getComment();
-
-    /**
-     * Returns the base filename without extension
-     *
+     * Get the base filename of the palette without extension
      * @return string
      */
     public function getFilename();
 
     /**
-     * Return the number of columns
-     * 
-     * @return mixed
+     * Get the palette comment
+     * @return string
+     */
+    public function getComment();
+
+    /**
+     * Get the number of columns in the palette file
+     * @return int
      */
     public function getColumns();
 
     /**
-     * Returns, if the given file is valid
-     *
+     * Returns if the given input file is valid
      * @return boolean
      */
     public function isValid();

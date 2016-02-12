@@ -2,16 +2,17 @@
 
 namespace Colorpalettes\Importers;
 
-use Colorpalettes\ASEDecoder;
-use Colorpalettes\Interfaces\ImporterInterface;
-use Colorpalettes\BaseColor;
+use Colorpalettes\ASEDecoder,
+    Colorpalettes\BaseColor,
+    Colorpalettes\Interfaces\ImporterInterface;
+
 /**
  * Created by PhpStorm.
  * User: cnielebock
  * Date: 19.01.16
  * Time: 11:41
  */
-class AdobeSwatchExchangeImporter extends BaseImporter implements ImporterInterface
+class AdobeSwatchExchangeImporter implements ImporterInterface
 {
     /**
      * @var string

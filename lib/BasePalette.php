@@ -9,7 +9,9 @@
 namespace Colorpalettes;
 
 
-use Colorpalettes\Importers\BaseImporter;
+use Symfony\Component\HttpFoundation\Response,
+    Colorpalettes\Interfaces\ImporterInterface,
+    Colorpalettes\Interfaces\ExporterInterface;
 
 class BasePalette
 {
@@ -103,10 +105,10 @@ class BasePalette
     /**
      * Import a palette file
      *
-     * @param BaseImporter $importer
+     * @param ImporterInterface $importer
      * @return bool
      */
-    public function import(BaseImporter $importer)
+    public function import(ImporterInterface $importer)
     {
         if ($importer->isValid()) {
             $this->setColors($importer->getParsedColors())
@@ -117,6 +119,23 @@ class BasePalette
             return true;
         }
         return false;
+    }
+
+    /**
+     * Export palette
+     *
+     * @param ExporterInterface $exporter
+     * @return Response
+     */
+    public function export(ExporterInterface $exporter)
+    {
+        $contents = $exporter->getExportContents();
+        $response = new Response($contents, 200, [
+            'Content-type'          => 'application/octet-stream',
+            'Content-length'        => sizeof($contents),
+            'Content-Disposition'   => 'attachment;filename="' . $this->getFilename() . '.' . $exporter->getExportFileExtension() . '"'
+        ]);
+        return $response;
     }
 
     /**

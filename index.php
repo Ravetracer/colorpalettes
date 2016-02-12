@@ -9,6 +9,8 @@
 use Colorpalettes\BasePalette,
     Colorpalettes\Importers\AdobeSwatchExchangeImporter,
     Colorpalettes\Importers\GimpPaletteImporter,
+    Colorpalettes\Exporters\AdobeSwatchExchangeExporter,
+    Colorpalettes\Exporters\GimpPaletteExporter,
     Symfony\Component\HttpFoundation\Response;
 
 $app = require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
@@ -56,7 +58,7 @@ $app->get('/import/gpl/{paletteFile}', function ($paletteFile) use ($app) {
     var_dump($pal->getColors());
 });
 
-$app->get('/import/ase/{paletteFile}', function ($paletteFile) use ($app) {
+$app->get('/export/ase/to/gpl/{paletteFile}', function ($paletteFile) use ($app) {
     $paletteFile = filter_var($paletteFile, FILTER_SANITIZE_STRING);
     $palettePath = 'temp_pals' . DIRECTORY_SEPARATOR . $paletteFile . '.ase';
 
@@ -67,7 +69,29 @@ $app->get('/import/ase/{paletteFile}', function ($paletteFile) use ($app) {
     $pal = new BasePalette();
     $pal->import(new AdobeSwatchExchangeImporter($palettePath));
 
-    var_dump($pal->getColors());
+    $exporter = new GimpPaletteExporter($pal);
+    $expContents = $exporter->getExportContents();
+
+    return new Response($expContents, 200, [
+        'Content-type'          => 'application/octet-stream',
+        'Content-length'        => sizeof($expContents),
+        'Content-Disposition'   => 'attachment;filename="' . $pal->getFilename() . '.' . $exporter->getExportFileExtension() . '"'
+    ]);
+});
+
+$app->get('/export/gpl/to/ase/{paletteFile}', function ($paletteFile) use ($app) {
+    $paletteFile = filter_var($paletteFile, FILTER_SANITIZE_STRING);
+    $palettePath = 'temp_pals' . DIRECTORY_SEPARATOR . $paletteFile . '.gpl';
+
+    if (!file_exists($palettePath)) {
+        return new Response('Palette file: ' . $paletteFile . ' not found!');
+    }
+
+    $pal = new BasePalette();
+    $pal->import(new GimpPaletteImporter($palettePath));
+
+    $exporter = new GimpPaletteExporter($pal);
+    return $pal->export($exporter);
 });
 
 $app->run();
