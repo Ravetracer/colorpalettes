@@ -16,14 +16,9 @@ use Colorpalettes\BasePalette,
 $app = require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 /**
- * @var \Spot\Locator
- */
-$spot = require_once __DIR__ . DIRECTORY_SEPARATOR . 'db_conf.php';
-
-/**
  * Index page
  */
-$app->get('/', function () use ($app, $spot) {
+$app->get('/', function () use ($app) {
     $pals = [];
     $palFiles = glob(
         'temp_pals' .

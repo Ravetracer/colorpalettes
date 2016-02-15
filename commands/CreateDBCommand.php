@@ -8,11 +8,6 @@ use Knp\Command\Command,
 
 class CreateDBCommand extends Command
 {
-    public function __construct($name = null)
-    {
-        parent::__construct($name);
-    }
-
     /**
      * @inheritdoc
      */
@@ -27,6 +22,9 @@ class CreateDBCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $app = $this->getSilexApplication();
+        $query = "CREATE TABLE colors (id INTEGER PRIMARY KEY ASC, value_red INTEGER DEFAULT 0, value_green INTEGER DEFAULT 0, value_blue INTEGER DEFAULT 0, title TEXT)";
+        $app['db']->exec($query);
         $output->writeln('Works...');
     }
 }

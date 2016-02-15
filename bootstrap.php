@@ -56,7 +56,7 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), [
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), [
     'db.options'    => [
-        'driver'    => 'pdo.sqlite',
+        'driver'    => 'pdo_sqlite',
         'path'      => __DIR__ . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'colpals.db',
     ]
 ]);
