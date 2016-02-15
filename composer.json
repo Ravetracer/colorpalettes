@@ -8,15 +8,13 @@
 	  	"symfony/yaml": "^2.7",
 	  	"deralex/yaml-config-service-provider": "^1.0",
 		"symfony/security": "^3.0",
-		"doctrine/annotations": "^1.2",
 		"symfony/dependency-injection": "^3.0",
 		"symfony/expression-language": "^3.0",
-		"mischiefcollective/colorjizz": "dev-master",
-		"doctrine/dbal": "~2.2"
+		"mischiefcollective/colorjizz": "dev-master"
 	},
 	"autoload": {
 	  "psr-4": {
-		"commands\\": "commands/",
+		"Commands\\": "commands/",
 		"Colorpalettes\\": "lib/"
 	  }
 	}
