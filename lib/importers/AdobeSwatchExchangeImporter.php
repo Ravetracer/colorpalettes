@@ -59,7 +59,7 @@ class AdobeSwatchExchangeImporter implements ImporterInterface
      */
     public function getFilename()
     {
-        return basename($this->fileName, '.ase');
+        return strtolower(trim(str_replace(' ', '_', basename($this->fileName, '.ase'))));
     }
 
     /**

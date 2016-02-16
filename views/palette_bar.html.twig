@@ -2,7 +2,7 @@
     <div class="large-12 columns">
         <div class="row">
             <div class="large-12 columns">
-                <p>Name: {{ pal.getName() }}<br/>
+                <p>Name: {{ pal.getName()|raw }}<br/>
                 File: {{ pal.getFilename() }}<br/>
                 Comt: {{ pal.getComment() ? pal.getComment() : 'n.a.' }}</p>
             </div>
@@ -13,10 +13,10 @@
             </div>
             <div class="large-3 columns">
                 <div class="small button-group">
-                    <a href="#" class="button">
+                    <a href="{{ path('gpl_export', {id: pal.getId() }) }}" class="button">
                         <i class="fa fa-download"></i> .gpl
                     </a>
-                    <a href="#" class="button">
+                    <a href="{{ path('ase_export', {id: pal.getId() }) }}" class="button">
                         <i class="fa fa-download"></i> .ase
                     </a>
                 </div>

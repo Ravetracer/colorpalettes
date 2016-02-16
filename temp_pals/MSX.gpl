@@ -1,0 +1,19 @@
+GIMP Palette
+Name: MSX
+Columns: 1
+#
+  0   0   0	Black
+ 62 184  73	Medium Green
+116 208 125	Light Green
+ 89  85 224	Dark Blue
+128 118 241	Light Blue
+185  94  81	Dark Red
+101 219 239	Cyan
+219 101  89	Medium Red
+255 137 125	Light Red
+204 195  94	Dark Yellow
+222 208 135	Light Yellow
+ 58 162  65	Dark Green
+183 102 181	Magenta
+204 204 204	Grey
+255 255 255	White

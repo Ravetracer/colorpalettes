@@ -1,0 +1,20 @@
+GIMP Palette
+Name: C64-pepto-sorted
+Columns: 1
+#
+  0   0   0	Black
+ 53  40 121	Blue
+ 67  57   0	Brown 
+104  55  43	Red
+ 68  68  68	Dark Grey
+111  61 134	Purple
+111  79  37	Orange
+108  94 181	Light Blue
+108 108 108	Grey
+ 88 141  67	Green
+154 103  89	Light Red
+112 164 178	Cyan
+149 149 149	Light Grey
+184 199 111	Yellow
+154 210 132	Light Green
+255 255 255	White

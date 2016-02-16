@@ -1,0 +1,20 @@
+GIMP Palette
+Name: C64-c128
+Columns: 1
+#
+  0   0   0 Black
+  0   0 170 Blue
+170   0 170 Brown
+170   0   0 Red
+ 85  85  85 Dark Grey
+255  85 255 Purple
+170 170   0 Orange
+ 85  85 255 Light Blue 
+  0 170 170 Grey
+  0 170   0 Green
+255  85  85 Light Red    
+ 85 255 255 Cyan
+170 170 170 Light Grey 
+255 255  85 Yellow
+ 85 255  85 Light Green      
+255 255 255 White

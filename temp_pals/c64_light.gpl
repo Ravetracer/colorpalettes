@@ -1,0 +1,20 @@
+GIMP Palette
+Name: C64 light
+Columns: 1
+#
+0 0 0 black
+252 252 252 white
+139 31 0 red
+101 205 168 cyan
+167 59 159 purple
+79 179 23 green
+27 13 147 blue
+243 235 91 yellow
+163 71 0 orange
+63 28 0 brown
+203 123 111 lightred
+69 68 68 darkgrey
+131 131 131 grey
+151 255 151 lightgreen
+79 147 211 lightblue
+187 187 187 lightgrey

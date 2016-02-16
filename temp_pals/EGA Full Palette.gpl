@@ -1,0 +1,68 @@
+GIMP Palette
+Name: EGA Full Palette
+Columns: 1
+#
+  0   0   0	Swatch 1
+  0   0 170	Swatch 2
+  0 170   0	Swatch 3
+  0 170 170	Swatch 4
+170   0   0	Swatch 5
+170   0 170	Swatch 6
+170 170   0	Swatch 7
+170 170 170	Swatch 8
+  0   0  85	Swatch 9
+  0   0 255	Swatch 10
+  0 170  85	Swatch 11
+  0 170 255	Swatch 12
+170   0  85	Swatch 13
+170   0 255	Swatch 14
+170 170  85	Swatch 15
+170 170 255	Swatch 16
+  0  85   0	Swatch 17
+  0  85 170	Swatch 18
+  0 255   0	Swatch 19
+  0 255 170	Swatch 20
+170  85   0	Swatch 21
+170  85 170	Swatch 22
+170 255   0	Swatch 23
+170 255 170	Swatch 24
+  0  85  85	Swatch 25
+  0  85 255	Swatch 26
+  0 255  85	Swatch 27
+  0 255 255	Swatch 28
+170  85  85	Swatch 29
+170  85 255	Swatch 30
+170 255  85	Swatch 31
+170 255 255	Swatch 32
+ 85   0   0	Swatch 33
+ 85   0 170	Swatch 34
+ 85 170   0	Swatch 35
+ 85 170 170	Swatch 36
+255   0   0	Swatch 37
+255   0 170	Swatch 38
+255 170   1	Swatch 39
+255 170 170	Swatch 40
+ 85   0  85	Swatch 41
+ 85   0 255	Swatch 42
+ 85 170  85	Swatch 43
+ 85 170 255	Swatch 44
+255   0  85	Swatch 45
+255   0 255	Swatch 46
+255 170  85	Swatch 47
+255 170 255	Swatch 48
+ 85  85   0	Swatch 49
+ 85  85 170	Swatch 50
+ 85 255   0	Swatch 51
+ 85 255 170	Swatch 52
+255  85   0	Swatch 53
+255  85 170	Swatch 54
+255 255   0	Swatch 55
+255 255 170	Swatch 56
+ 85  85  85	Swatch 57
+ 85  85 255	Swatch 58
+ 85 255  85	Swatch 59
+ 85 255 255	Swatch 60
+255  85  85	Swatch 61
+255  85 255	Swatch 62
+255 255  85	Swatch 63
+255 255 255	Swatch 64

@@ -2,8 +2,6 @@
 bower_components
 node_modules
 npm-debug.log
-css
 vendor
-temp_pals
 logs
 dev_temp

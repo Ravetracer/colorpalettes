@@ -1,0 +1,20 @@
+GIMP Palette
+Name: C64-vice
+Columns: 1
+#
+  0   0   0 Black
+253 254 252 White
+190  26  36 Red
+ 48 230 198 Cyan
+180  26 226 Purple
+ 31 162  30 Green
+ 33  27 174 Blue
+223 246  10 Yellow
+184  65   4 Orange
+106  51   4 Brown
+254  74  87 Light Red
+ 66  69  64 Dark Grey
+112 116 111 Grey
+ 89 254  89 Light Green
+ 95  83 254 Light Blue
+164 167 162 Light Grey

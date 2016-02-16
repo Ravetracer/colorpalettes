@@ -1,0 +1,20 @@
+GIMP Palette
+Name: CGA Full Palette
+Columns: 1
+#
+  0   0   0	Black
+  0   0 170	Low Blue
+  0 170   0	Low Green
+  0 170 170	Low Cyan
+170   0   0	Low Red
+170   0 170	Low Magenta
+170  85   0	Brown
+170 170 170	Light Gray
+ 85  85  85	Dark Gray
+ 85  85 255	High Blue
+ 85 255  85	High Green
+ 85 255 255	High Cyan
+255  85  85	High Red
+255  85 255	High Magenta
+255 255  85	Yellow
+255 255 255	White

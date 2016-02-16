@@ -7,13 +7,15 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Silex\Application;
-use Knp\Provider\ConsoleServiceProvider;
+use Silex\Application,
+    Knp\Provider\ConsoleServiceProvider,
+    Colorpalettes\ResultToArrayService;
 
 class SilexApp extends Application
 {
     use Silex\Application\MonologTrait;
     use Silex\Application\TwigTrait;
+    use Silex\Application\UrlGeneratorTrait;
 }
 
 /**
@@ -57,10 +59,27 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), [
 $app->register(new Silex\Provider\DoctrineServiceProvider(), [
     'db.options'    => [
         'driver'    => 'pdo_sqlite',
-        'path'      => __DIR__ . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'colpals.db',
+        'path'      => __DIR__ . '/etc/colpals.db',
+    ]
+]);
+
+$app->register(new Dijky\Silex\Provider\SpotServiceProvider(), [
+    'spot.connections' => [
+        'colpals' => [
+            'driver'    => 'pdo_sqlite',
+            'path'      => __DIR__ . '/etc/colpals.db',
+        ],
     ]
 ]);
 
 $app->register(new DerAlex\Silex\YamlConfigServiceProvider(__DIR__ . '/config/parameters.yml'));
+$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
+
+/**
+ * return DB result as palette array
+ */
+$app["result_to_array"] = function () {
+    return new ResultToArrayService();
+};
 
 return $app;

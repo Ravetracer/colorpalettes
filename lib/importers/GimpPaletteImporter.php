@@ -74,7 +74,7 @@ class GimpPaletteImporter implements ImporterInterface
      */
     public function getFilename()
     {
-        return basename($this->fileName, '.gpl');
+        return strtolower(trim(str_replace(' ', '_', basename($this->fileName, '.gpl'))));
     }
 
     /**
@@ -120,7 +120,7 @@ class GimpPaletteImporter implements ImporterInterface
             // fetch name
             preg_match("/(Name|name): (.*)/", $currentEntry, $nameMatch);
             if (count($nameMatch)) {
-                $this->paletteName = trim($nameMatch[2]);
+                $this->paletteName = trim(filter_var($nameMatch[2], FILTER_SANITIZE_STRING));
             }
 
             // fetch columns
@@ -142,7 +142,7 @@ class GimpPaletteImporter implements ImporterInterface
                 $newCol->setRed((int)$colorMatch[1])
                     ->setGreen((int)$colorMatch[2])
                     ->setBlue((int)$colorMatch[3])
-                    ->setName($colorMatch[4]);
+                    ->setName(trim(filter_var($colorMatch[4], FILTER_SANITIZE_STRING)));
 
                 $colors[] = $newCol;
             }

@@ -20,6 +20,25 @@ class BasePalette
     protected $columns = 1;
     protected $colors = [];
     protected $filename = "";
+    protected $id = 0;
+
+    /**
+     * @param int $id
+     * @return BasePalette
+     */
+    public function setId($id = 0)
+    {
+        $this->id = (int)$id;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return (int)$this->id;
+    }
 
     /**
      * Get number of columns for raster view
@@ -33,10 +52,12 @@ class BasePalette
 
     /**
      * @param int $cols
+     * @return BasePalette
      */
     public function setColumns($cols = 1)
     {
         $this->columns = (int)$cols;
+        return $this;
     }
 
     /**
@@ -67,7 +88,7 @@ class BasePalette
      */
     public function getName()
     {
-        return $this->name;
+        return strlen($this->name) ? $this->name : str_replace(' ', '_', $this->getFilename());
     }
 
     /**

@@ -23,8 +23,12 @@ class CreateDBCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $app = $this->getSilexApplication();
-        $query = "CREATE TABLE colors (id INTEGER PRIMARY KEY ASC, value_red INTEGER DEFAULT 0, value_green INTEGER DEFAULT 0, value_blue INTEGER DEFAULT 0, title TEXT)";
-        $app['db']->exec($query);
-        $output->writeln('Works...');
+        $app['db']->exec('DROP TABLE palettes');
+        $app['db']->exec('DROP TABLE colors');
+        $mapper = $app['spot']->mapper('Entity\Palette');
+        $mapper->migrate();
+        $mapper2 = $app['spot']->mapper('Entity\Color');
+        $mapper2->migrate();
+        $output->writeln('Done...');
     }
 }

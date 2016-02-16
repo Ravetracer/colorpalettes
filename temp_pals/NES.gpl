@@ -1,0 +1,59 @@
+GIMP Palette
+Name: NES
+Columns: 1
+#
+120 128 132	Swatch 1
+188 192 196	Swatch 15
+252 248 252	Swatch 29
+  0   0 252	Swatch 2
+  0 120 252	Swatch 16
+ 56 192 252	Swatch 30
+164 232 252	Swatch 43
+  0   0 196	Swatch 3
+  0 136 252	Swatch 17
+104 136 252	Swatch 31
+188 184 252	Swatch 44
+ 64  40 196	Swatch 4
+104  72 252	Swatch 18
+156 120 252	Swatch 32
+220 184 252	Swatch 45
+148   0 140	Swatch 5
+220   0 212	Swatch 19
+252 120 252	Swatch 33
+252 184 252	Swatch 46
+172   0  40	Swatch 6
+228   0  96	Swatch 20
+252  88 156	Swatch 34
+244 192 224	Swatch 47
+172  16   0	Swatch 7
+252  56   0	Swatch 21
+252 120  88	Swatch 35
+244 208 180	Swatch 48
+140  24   0	Swatch 8
+228  96  24	Swatch 22
+252 160  72	Swatch 36
+252 224 180	Swatch 49
+ 80  48   0	Swatch 9
+172 128   0	Swatch 23
+252 184   0	Swatch 37
+252 216 132	Swatch 50
+  0 120   0	Swatch 10
+  0 184   0	Swatch 24
+188 248  24	Swatch 38
+220 248 120	Swatch 51
+  0 104   0	Swatch 11
+  0 168   0	Swatch 25
+  0 168  72	Swatch 26
+184 248 120	Swatch 52
+  0  88   0	Swatch 12
+ 88 216  88	Swatch 39
+ 88 248 156	Swatch 40
+176 240 216	Swatch 53
+  0  64  88	Swatch 13
+  0 136 148	Swatch 27
+  0 232 228	Swatch 41
+  0 248 252	Swatch 54
+  0   0   0	Swatch 14
+ 44  44  44	Swatch 28
+ 96  96  96	Swatch 42
+200 192 192	Swatch 55
