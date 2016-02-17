@@ -9,7 +9,18 @@
         <link rel="stylesheet" href="css/font-awesome.min.css" />
     </head>
     <body>
-        <h1>Color palettes</h1>
+        <div class="row">
+            <div class="large-12 columns">
+                <h1>Color palettes</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <blockquote>You want to create game graphics for some kind of retro style game but don't know which colors to use?<br />
+                Here's a small selection of color palettes I found in the web which you can export to GIMP palette or AdobeSwatchExchange file.<br/>
+                Sometimes the ASE exporter results in an almost empty file. I'm on it!</blockquote>
+            </div>
+        </div>
 
         {% for pal in palettes %}
             {% include 'palette_bar.html.twig' %}

@@ -5,7 +5,8 @@
 @import 'motion-ui';
 
 @include foundation-global-styles;
-@include foundation-grid;
+//@include foundation-grid;
+@include foundation-flex-grid;
 @include foundation-typography;
 @include foundation-button;
 @include foundation-forms;
@@ -54,5 +55,7 @@ table * {
 }
 
 .palgrid {
-  line-height: 0;
+  //line-height: 0;
+  background-color: $black;
+  padding: 1em;
 }

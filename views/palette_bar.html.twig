@@ -2,16 +2,16 @@
     <div class="large-12 columns">
         <div class="row">
             <div class="large-12 columns">
-                <p>Name: {{ pal.getName()|raw }}<br/>
-                File: {{ pal.getFilename() }}<br/>
-                Comt: {{ pal.getComment() ? pal.getComment() : 'n.a.' }}</p>
+                <h4>{{ pal.getName()|raw }}</h4>
+                <p>Number of colors: {{ pal.getColors()|length }}<br/>
+                Comment: {{ pal.getComment() ? pal.getComment() : 'n.a.' }}</p>
             </div>
         </div>
         <div class="row">
-            <div class="large-9 columns palgrid">
+            <div class="column palgrid align-bottom">
                 {% include 'palette_grid.html.twig' %}
             </div>
-            <div class="large-3 columns">
+            <div class="column align-bottom">
                 <div class="small button-group">
                     <a href="{{ path('gpl_export', {id: pal.getId() }) }}" class="button">
                         <i class="fa fa-download"></i> .gpl
@@ -20,14 +20,6 @@
                         <i class="fa fa-download"></i> .ase
                     </a>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="large-2 columns">
-
-            </div>
-            <div class="large-2 columns">
-
             </div>
         </div>
     </div>
