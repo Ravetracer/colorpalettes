@@ -8,7 +8,9 @@
 
 use Colorpalettes\BasePalette,
     Colorpalettes\Exporters\AdobeSwatchExchangeExporter,
-    Colorpalettes\Exporters\GimpPaletteExporter;
+    Colorpalettes\Exporters\GimpPaletteExporter,
+    Symfony\Component\HttpFoundation\Response,
+    Colorpalettes\Importers\GimpPaletteImporter;
 
 $app = require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
@@ -17,7 +19,7 @@ $app = require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
  */
 $app->get('/', function () use ($app) {
     $mapper = $app['spot']->mapper('Entity\Palette');
-    $result = $mapper->all();
+    $result = $mapper->all()->order(['filename' => 'ASC']);
 
     $resultConv = $app["result_to_array"];
     $pals = $resultConv->getPaletteArray($result);
@@ -59,5 +61,43 @@ $app->get('/export/gpl/{id}', function ($id) use ($app) {
     return $pal->export($exporter);
 })
 ->bind('gpl_export');
+
+/**
+ * Preview route for showing new files in the import folder
+ */
+$app->get('/previewImports', function () use ($app) {
+    $previewFiles = glob(__DIR__ . '/import/*.gpl');
+
+    if (count($previewFiles) <= 0) {
+        return new Response('Currently no import files available');
+    }
+
+    array_walk($previewFiles, function(&$item) {
+        $item = basename($item, '.gpl');
+    });
+
+    return $app->render('previewFiles.html.twig', [
+        'files' => $previewFiles
+    ]);
+});
+
+/**
+ * Preview a single palette file from the preview folder
+ */
+$app->get('/import/preview/{palName}', function ($palName) use ($app) {
+
+    $fname = __DIR__ . '/import/' . filter_var($palName, FILTER_SANITIZE_STRING) . '.gpl';
+    if (!file_exists($fname)) {
+        return new Response("File does not exists!");
+    }
+    $pal = new BasePalette();
+    $importer = new GimpPaletteImporter($fname);
+    $pal->import($importer);
+    $pal->calculateColorCount();
+
+    return $app->render('preview.html.twig', [
+        'pal' => $pal
+    ]);
+});
 
 $app->run();

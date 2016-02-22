@@ -1,35 +1,21 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Color Palettes</title>
-        <link rel="stylesheet" href="css/app.css" />
-        <link rel="stylesheet" href="css/font-awesome.min.css" />
-    </head>
-    <body>
-        <div class="row">
-            <div class="large-12 columns">
-                <h1>Color palettes</h1>
-            </div>
+{% extends 'layout.html.twig' %}
+
+{% block mainContent %}
+    <div class="row">
+        <div class="large-12 columns">
+            <h1>Color palettes</h1>
         </div>
-        <div class="row">
-            <div class="large-12 columns">
-                <blockquote>You want to create game graphics for some kind of retro style game but don't know which colors to use?<br />
+    </div>
+    <div class="row">
+        <div class="large-12 columns">
+            <blockquote>You want to create game graphics for some kind of retro style game but don't know which colors to use?<br />
                 Here's a small selection of color palettes I found in the web which you can export to GIMP palette or AdobeSwatchExchange file.<br/>
-                Sometimes the ASE exporter results in an almost empty file. I'm on it!</blockquote>
-            </div>
+                Sometimes the ASE exporter results in an almost empty file. I'm on it!<br/><br/>
+                Current number of palettes: {{ palettes|length }}</blockquote>
         </div>
+    </div>
 
-        {% for pal in palettes %}
-            {% include 'palette_bar.html.twig' %}
-        {% endfor %}
-
-        <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="/bower_components/motion-ui/dist/motion-ui.min.js"></script>
-        <script type="text/javascript" src="/bower_components/what-input/what-input.min.js"></script>
-        <script type="text/javascript" src="/bower_components/foundation-sites/dist/foundation.min.js"></script>
-        <script type="text/javascript" src="/js/app.js"></script>
-    </body>
-</html>
+    {% for pal in palettes %}
+        {% include 'palette_bar.html.twig' %}
+    {% endfor %}
+{% endblock %}

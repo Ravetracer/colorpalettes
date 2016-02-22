@@ -33,11 +33,7 @@ class ImportPalsCommand extends Command
     {
         $app = $this->getSilexApplication();
 
-        $palFiles = glob('./temp_pals/*.gpl');
-
-        array_walk($palFiles, function(&$item) {
-            $item = strtolower(basename($item));
-        });
+        $palFiles = glob('./import/*.gpl');
 
         asort($palFiles);
 
@@ -45,7 +41,7 @@ class ImportPalsCommand extends Command
         $mapper_col = $app['spot']->mapper('Entity\Color');
         foreach ($palFiles as $currentFile) {
             $palObj = new BasePalette();
-            $palObj->import(new GimpPaletteImporter('./temp_pals/' . $currentFile));
+            $palObj->import(new GimpPaletteImporter($currentFile));
 
             if ($palObj->getColumns() == 1) {
                 $palObj->setColumns(16);

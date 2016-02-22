@@ -19,6 +19,7 @@ class BasePalette
     protected $name = "";
     protected $columns = 1;
     protected $colors = [];
+    protected $colorCount = 0;
     protected $filename = "";
     protected $id = 0;
 
@@ -175,5 +176,45 @@ class BasePalette
     {
         $this->filename = $filename;
         return $this;
+    }
+
+    /**
+     * Calculates the exact color count of different colors
+     *
+     * @return BasePalette
+     */
+    public function calculateColorCount()
+    {
+        $colCount = 0;
+        $existingCombinations = [];
+        /**
+         * @var $currentColor BaseColor
+         */
+        foreach ($this->getColors() as $currentColor) {
+            $currentCombination = [
+                $currentColor->getRed(),
+                $currentColor->getGreen(),
+                $currentColor->getBlue()
+            ];
+            if (!in_array($currentCombination, $existingCombinations)) {
+                $colCount++;
+                $existingCombinations[] = $currentCombination;
+            }
+        }
+        $this->colorCount = $colCount;
+        return $this;
+    }
+
+    /**
+     * Get the color count
+     *
+     * @return int
+     */
+    public function getColorCount()
+    {
+        if ($this->colorCount <= 0) {
+            $this->calculateColorCount();
+        }
+        return (int)$this->colorCount;
     }
 }

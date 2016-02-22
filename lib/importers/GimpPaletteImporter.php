@@ -130,9 +130,9 @@ class GimpPaletteImporter implements ImporterInterface
             }
 
             // fetch comment
-            preg_match("/#(.*)/", $currentEntry, $commentMatch);
+            preg_match("/^#(.*)/", $currentEntry, $commentMatch);
             if (count($commentMatch)) {
-                $this->comment = trim(filter_var($commentMatch[1], FILTER_SANITIZE_STRING));
+                $this->comment .= trim(filter_var($commentMatch[1], FILTER_SANITIZE_STRING)) . "\n";
             }
 
             // fetch color

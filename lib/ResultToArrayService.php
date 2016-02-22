@@ -32,7 +32,8 @@ class ResultToArrayService
                 ->setColumns($currentResult->columns)
                 ->setComment($currentResult->comment)
                 ->setFilename($currentResult->filename)
-                ->setId($currentResult->id);
+                ->setId($currentResult->id)
+                ->calculateColorCount();
 
             $pals[] = $newPal;
         }

@@ -3,8 +3,8 @@
         <div class="row">
             <div class="large-12 columns">
                 <h4>{{ pal.getName()|raw }}</h4>
-                <p>Number of colors: {{ pal.getColors()|length }}<br/>
-                Comment: {{ pal.getComment() ? pal.getComment() : 'n.a.' }}</p>
+                <p>Number of colors: {{ pal.getColorCount() }}<br/>
+                Comment: {{ pal.getComment() ? pal.getComment()|nl2br : 'n.a.' }}</p>
             </div>
         </div>
         <div class="row">
