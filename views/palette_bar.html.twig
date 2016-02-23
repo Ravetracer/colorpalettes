@@ -7,11 +7,11 @@
                 Comment: {{ pal.getComment() ? pal.getComment()|nl2br : 'n.a.' }}</p>
             </div>
         </div>
-        <div class="row medium-unstack">
-            <div class="column palgrid align-bottom">
+        <div class="row">
+            <div class="large-10 medium-9 columns palgrid align-bottom">
                 {% include 'palette_grid.html.twig' %}
             </div>
-            <div class="column align-bottom">
+            <div class="large-2 medium-3 columns align-bottom">
                 <div class="small button-group">
                     <a href="{{ path('gpl_export', {id: pal.getId() }) }}" class="button">
                         <i class="fa fa-download"></i> .gpl
