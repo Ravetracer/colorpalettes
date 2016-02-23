@@ -49,8 +49,22 @@ table * {
 }
 
 .colorBox {
-  width: 1.1em;
-  height: 1.1em;
+
+  @include breakpoint('small') {
+    width: 0.8em;
+    height: 0.8em;
+  }
+
+  @include breakpoint('large') {
+    width: 1em;
+    height: 1em;
+  }
+
+  @include breakpoint('xlarge') {
+      width: 1.1em;
+      height: 1.1em;
+  }
+
   margin: 1px;
 }
 
