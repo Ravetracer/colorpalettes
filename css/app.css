@@ -3893,12 +3893,12 @@ table * {
   margin: 1px; }
   @media screen and (min-width: 64em) {
     .colorBox {
-      width: 1em;
-      height: 1em; } }
+      width: 0.9em;
+      height: 0.9em; } }
   @media screen and (min-width: 75em) {
     .colorBox {
-      width: 1.1em;
-      height: 1.1em; } }
+      width: 0.9em;
+      height: 0.9em; } }
 
 .palgrid {
   background-color: #000;

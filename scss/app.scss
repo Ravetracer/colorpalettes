@@ -56,13 +56,13 @@ table * {
   }
 
   @include breakpoint('large') {
-    width: 1em;
-    height: 1em;
+    width: 0.9em;
+    height: 0.9em;
   }
 
   @include breakpoint('xlarge') {
-      width: 1.1em;
-      height: 1.1em;
+      width: 0.9em;
+      height: 0.9em;
   }
 
   margin: 1px;

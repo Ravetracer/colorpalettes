@@ -1,21 +1,17 @@
 {% extends 'layout.html.twig' %}
 
 {% block mainContent %}
-    <div class="row">
-        <div class="large-12 columns">
-            <h1>Color palettes</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="large-12 columns">
-            <blockquote>You want to create game graphics for some kind of retro style game but don't know which colors to use?<br />
-                Here's a small selection of color palettes I found in the web which you can export to GIMP palette or AdobeSwatchExchange file.<br/>
-                Sometimes the ASE exporter results in an almost empty file. I'm on it!<br/><br/>
-                Current number of palettes: {{ palettes|length }}</blockquote>
-        </div>
+    <div class="row column">
+        <h1>Color palettes</h1>
+        <blockquote>You want to create game graphics for some kind of retro style game but don't know which colors to use?<br />
+            Here's a small selection of color palettes I found in the web which you can export to GIMP palette or AdobeSwatchExchange file.<br/>
+            Sometimes the ASE exporter results in an almost empty file. I'm on it!<br/><br/>
+            Current number of palettes: {{ palettes|length }}</blockquote>
     </div>
 
-    {% for pal in palettes %}
-        {% include 'palette_bar.html.twig' %}
-    {% endfor %}
+    <div class="row columns small-up-1 medium-up-2 large-up-3" data-equalizer data-equalize-by-row="true">
+        {% for pal in palettes %}
+            {% include 'palette_bar.html.twig' %}
+        {% endfor %}
+    </div>
 {% endblock %}
