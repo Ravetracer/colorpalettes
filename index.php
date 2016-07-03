@@ -10,7 +10,8 @@ use Colorpalettes\BasePalette,
     Colorpalettes\Exporters\AdobeSwatchExchangeExporter,
     Colorpalettes\Exporters\GimpPaletteExporter,
     Symfony\Component\HttpFoundation\Response,
-    Colorpalettes\Importers\GimpPaletteImporter;
+    Colorpalettes\Importers\GimpPaletteImporter,
+    Symfony\Component\HttpFoundation\Request;
 
 $app = require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
@@ -99,5 +100,13 @@ $app->get('/import/preview/{palName}', function ($palName) use ($app) {
         'pal' => $pal
     ]);
 });
+
+/**
+ * Convert palette
+ */
+$app->post('/convert', function(Request $request) use ($app) {
+    echo "<pre>", print_r($request, true), "</pre>";
+})
+->bind('convert_pal');
 
 $app->run();
