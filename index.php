@@ -109,4 +109,12 @@ $app->post('/convert', function(Request $request) use ($app) {
 })
 ->bind('convert_pal');
 
+/**
+ * Palette editor
+ */
+
+$app->get('/editor', function () use ($app) {
+    return $app->render('editor/index.html.twig');
+});
+
 $app->run();

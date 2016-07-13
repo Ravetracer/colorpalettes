@@ -3888,17 +3888,30 @@ table * {
   line-height: 0; }
 
 .colorBox {
+  border: none;
+  padding: 0;
   width: 0.7em;
   height: 0.7em;
   margin: 1px; }
+  .colorBox.large {
+    width: 0.9em;
+    height: 0.9em; }
   @media screen and (min-width: 64em) {
     .colorBox {
       width: 0.9em;
-      height: 0.9em; } }
+      height: 0.9em; }
+      .colorBox.large {
+        width: 1.1em;
+        height: 1.1em; } }
   @media screen and (min-width: 75em) {
     .colorBox {
       width: 0.9em;
-      height: 0.9em; } }
+      height: 0.9em; }
+      .colorBox.large {
+        width: 1.5em;
+        height: 1.5em; } }
+  .colorBox.grid {
+    border: 1px solid #333; }
 
 .palgrid {
   background-color: #000;

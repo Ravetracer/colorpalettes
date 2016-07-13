@@ -1,0 +1,93 @@
+<script type="text/javascript">
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function dragcol(ev) {
+        ev.dataTransfer.setData('text', ev.srcElement.value);
+    }
+
+    function dropcol(ev) {
+        ev.preventDefault();
+        var color = ev.dataTransfer.getData('text');
+        ev.target.setAttribute('style', 'background-color:' + color);
+    }
+
+    var colorEditor = {
+        cols: 0,
+        rows: 0,
+        backgroundColor: '#000000',
+        parentContainer: null,
+        storedColors: {},
+
+        setColumns: function(numColumns) {
+            this.cols = parseInt(numColumns, 10);
+        },
+
+        setRows: function (numRows) {
+            this.rows = parseInt(numRows, 10);
+        },
+
+        setColsAndRows: function (numColumns, numRows) {
+            this.setColumns(numColumns);
+            this.setRows(numRows);
+        },
+
+        setBackgroundColor: function (backgroundColor) {
+            this.backgroundColor = backgroundColor;
+        },
+
+        setParentContainer: function (container) {
+            this.parentContainer = container
+        },
+
+        storeColors: function() {
+            for (var x = 1; x <= this.cols; x++) {
+                for (var y = 1; y <= this.rows; y++) {
+                    var xyColor = $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color');
+                    this.storedColors[x.toString()+'-'+y.toString()] = xyColor;
+                }
+            }
+        },
+
+        renderGrid: function() {
+            var numColors = this.rows * this.cols,
+                colBreak = 1,
+                colX = 1,
+                colY = 1;
+
+            $(this.parentContainer).html('');
+            for (var cnt = 1; cnt <= numColors; cnt++) {
+                var newColorBox = '<div class="colorBox large float-left gridcolor" ondrop="dropcol(event)" ondragover="allowDrop(event)" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '"></div>';
+                $(this.parentContainer).append(newColorBox);
+                colBreak++;
+                colX++;
+                if (colBreak > this.cols) {
+                    $(this.parentContainer).append('<div class="clearfix"></div>');
+                    colBreak = 1;
+                    colX = 1;
+                    colY++;
+                }
+            }
+        }
+    };
+
+    $(document).ready(function () {
+        colorEditor.setColsAndRows($('#edit_cols').val(), $('#edit_rows').val());
+        colorEditor.setParentContainer($('#colorgrid'));
+        colorEditor.renderGrid();
+
+        $('input#edit_cols, input#edit_rows').change(function() {
+            colorEditor.storeColors();
+            console.log(colorEditor.storedColors);
+            colorEditor.setColsAndRows($('#edit_cols').val(), $('#edit_rows').val());
+            colorEditor.renderGrid();
+        });
+
+        $('input#edit_bgcol').change(function() {
+            colorEditor.setBackgroundColor($(this).val());
+            colorEditor.renderGrid();
+        });
+    });
+</script>

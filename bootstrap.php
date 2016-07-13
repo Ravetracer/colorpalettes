@@ -9,14 +9,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Silex\Application,
     Knp\Provider\ConsoleServiceProvider,
-    Colorpalettes\ResultToArrayService;
-
-class SilexApp extends Application
-{
-    use Silex\Application\MonologTrait;
-    use Silex\Application\TwigTrait;
-    use Silex\Application\UrlGeneratorTrait;
-}
+    Colorpalettes\ResultToArrayService,
+    Colorpalettes\SilexApp;
 
 /**
  * @var Application

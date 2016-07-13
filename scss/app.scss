@@ -50,22 +50,41 @@ table * {
 
 .colorBox {
 
+  border: none;
+  padding: 0;
+
   @include breakpoint('small') {
     width: 0.7em;
     height: 0.7em;
+    &.large {
+      width: 0.9em;
+      height: 0.9em;
+    }
   }
 
   @include breakpoint('large') {
     width: 0.9em;
     height: 0.9em;
+    &.large {
+      width: 1.1em;
+      height: 1.1em;
+    }
   }
 
   @include breakpoint('xlarge') {
       width: 0.9em;
       height: 0.9em;
+      &.large {
+        width: 1.5em;
+        height: 1.5em;
+      }
   }
 
   margin: 1px;
+
+  &.grid {
+    border: 1px solid #333;
+  }
 }
 
 .palgrid {

@@ -1,0 +1,39 @@
+{% extends 'layout.html.twig' %}
+
+{% block mainContent %}
+    <div class="row column">
+        <h1>Color Editor</h1>
+    </div>
+
+    <form>
+        <div class="row">
+            <div class="medium-2 columns">
+                <label>Columns:
+                    <input type="number" id="edit_cols" value="5">
+                </label>
+            </div>
+            <div class="medium-2 columns">
+                <label>Rows:
+                    <input type="number" id="edit_rows" value="5">
+                </label>
+            </div>
+            <div class="medium-2 columns end">
+                <label>Background color:
+                    <input type="color" class="colorBox large" id="edit_bgcol">
+                </label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="medium-1 columns">
+                Colorpicker: <input type="color" class="colorBox large" id="sourcecolor" draggable="true" ondragstart="dragcol(event)">
+            </div>
+        </div>
+
+        <div class="row" id="colorgrid"></div>
+    </form>
+{% endblock %}
+
+{% block additionalJS %}
+    {% include 'editor/js/editor.html.twig' %}
+{% endblock %}
