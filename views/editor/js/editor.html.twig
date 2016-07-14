@@ -12,6 +12,7 @@
         ev.preventDefault();
         var color = ev.dataTransfer.getData('text');
         ev.target.setAttribute('style', 'background-color:' + color);
+        ev.target.setAttribute('data-changed', '1');
     }
 
     var colorEditor = {
@@ -42,27 +43,68 @@
             this.parentContainer = container
         },
 
+        /**
+         * store current colors; ignore unchanged colors so background color can be changed for unset colors
+         */
         storeColors: function() {
+            this.storedColors = {};
             for (var x = 1; x <= this.cols; x++) {
                 for (var y = 1; y <= this.rows; y++) {
-                    var xyColor = $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color');
-                    this.storedColors[x.toString()+'-'+y.toString()] = xyColor;
+                    var colElement = $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]'),
+                        xyColor = colElement.css('background-color'),
+                        pos = x.toString()+'-'+y.toString();
+
+                    if (colElement.attr('data-changed') == '1') {
+                        this.storedColors[pos] = [xyColor, 1];
+                    } else {
+                        this.storedColors[pos] = [xyColor, 0];
+                    }
                 }
             }
         },
 
+        /**
+         * restore colors; set changed colors from array and unchanged with current background color
+         */
+        restoreColors: function() {
+            for (var x = 1; x <= this.cols; x++) {
+                for (var y = 1; y <= this.rows; y++) {
+                    var pos = x.toString()+'-'+y.toString();
+
+                    if (this.storedColors[pos][1] == 1) {
+                        $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', this.storedColors[pos][0]).attr('data-changed', '1');
+                    } else {
+                        $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', this.backgroundColor).attr('data-changed', '0');
+                    }
+                }
+            }
+        },
+
+        /**
+         * render the color grid
+         * - used on resize and background color change
+         */
         renderGrid: function() {
             var numColors = this.rows * this.cols,
                 colBreak = 1,
                 colX = 1,
                 colY = 1;
 
+            // backup colors
+            this.storeColors();
+
+            // clear parent container
             $(this.parentContainer).html('');
+
+            // walk through number of colors
             for (var cnt = 1; cnt <= numColors; cnt++) {
-                var newColorBox = '<div class="colorBox large float-left gridcolor" ondrop="dropcol(event)" ondragover="allowDrop(event)" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '"></div>';
+
+                // create new color boxes (@TODO: needs performance improvement!)
+                var newColorBox = '<div class="colorBox large float-left gridcolor" data-changed="0" ondrop="dropcol(event)" ondragover="allowDrop(event)" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '"></div>';
                 $(this.parentContainer).append(newColorBox);
                 colBreak++;
                 colX++;
+                // break to new row
                 if (colBreak > this.cols) {
                     $(this.parentContainer).append('<div class="clearfix"></div>');
                     colBreak = 1;
@@ -70,22 +112,27 @@
                     colY++;
                 }
             }
+            // restore backed up colors
+            this.restoreColors();
         }
     };
 
     $(document).ready(function () {
+        // initially draw color grid
         colorEditor.setColsAndRows($('#edit_cols').val(), $('#edit_rows').val());
         colorEditor.setParentContainer($('#colorgrid'));
         colorEditor.renderGrid();
 
-        $('input#edit_cols, input#edit_rows').change(function() {
+        // change grid size (currently on click)
+        $('input#edit_cols, input#edit_rows').on('click', function() {
             colorEditor.storeColors();
-            console.log(colorEditor.storedColors);
             colorEditor.setColsAndRows($('#edit_cols').val(), $('#edit_rows').val());
             colorEditor.renderGrid();
         });
 
+        // change background color
         $('input#edit_bgcol').change(function() {
+            colorEditor.storeColors();
             colorEditor.setBackgroundColor($(this).val());
             colorEditor.renderGrid();
         });
