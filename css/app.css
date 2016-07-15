@@ -3912,6 +3912,8 @@ table * {
         height: 1.5em; } }
   .colorBox.grid {
     border: 1px solid #333; }
+  .colorBox.colorBlack {
+    background-color: black; }
 
 .palgrid {
   background-color: #000;

@@ -1,5 +1,9 @@
 {% extends 'layout.html.twig' %}
 
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/color-sampler.min.css' }}" />
+{% endblock %}
+
 {% block mainContent %}
     <div class="row column">
         <h1>Color Editor</h1>
@@ -17,10 +21,13 @@
                     <input type="number" id="edit_rows" value="5">
                 </label>
             </div>
-            <div class="medium-2 columns end">
+            <div class="medium-2 columns">
                 <label>Background color:
                     <input type="color" class="colorBox large" id="edit_bgcol">
                 </label>
+            </div>
+            <div class="medium-2 columns end">
+                <input type="button" class="btn" value="Reset" id="resetPalette" />
             </div>
         </div>
 
@@ -28,12 +35,24 @@
             <div class="medium-1 columns">
                 Colorpicker: <input type="color" class="colorBox large" id="sourcecolor" draggable="true" ondragstart="dragcol(event)">
             </div>
+            <div class="medium-1 columns end">
+                CP2: <div class="colorBox large colorBlack" id="colorPickerImg" draggable="true" ondragstart="dragcol(event)"></div>
+            </div>
         </div>
 
-        <div class="row" id="colorgrid"></div>
+        <div class="row">
+            <div class="medium-9 columns">
+                <div id="colorgrid"></div>
+            </div>
+            <div class="medium-3 columns">
+                <canvas id="imagePicker" width="300" height="300"></canvas>
+            </div>
+        </div>
     </form>
 {% endblock %}
 
 {% block additionalJS %}
+    {#<script src="/js/jcanvas.min.js"></script>#}
+    <script src="/js/color-sampler.min.js"></script>
     {% include 'editor/js/editor.html.twig' %}
 {% endblock %}

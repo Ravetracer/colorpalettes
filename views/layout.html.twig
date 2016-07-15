@@ -7,6 +7,7 @@
         <title>Color Palettes</title>
         <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/app.css' }}" />
         <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/font-awesome.min.css'}}" />
+        {% block additionalCSS %}{% endblock %}
 
         <!-- Piwik -->
         <script type="text/javascript">

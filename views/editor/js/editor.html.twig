@@ -4,17 +4,31 @@
         ev.preventDefault();
     }
 
+    //
+    // drag either color picker value or background color of palette entry
+    //
     function dragcol(ev) {
-        ev.dataTransfer.setData('text', ev.srcElement.value);
+        if ($(ev.srcElement).val().length > 0) {
+            ev.dataTransfer.setData('text', $(ev.srcElement).val());
+        } else {
+            ev.dataTransfer.setData('text', $(ev.srcElement).css('background-color'));
+        }
     }
 
+    //
+    // drop color
+    //
     function dropcol(ev) {
         ev.preventDefault();
         var color = ev.dataTransfer.getData('text');
         ev.target.setAttribute('style', 'background-color:' + color);
         ev.target.setAttribute('data-changed', '1');
+        colorEditor.storeColors();
     }
 
+    //
+    // the main color editor
+    //
     var colorEditor = {
         cols: 0,
         rows: 0,
@@ -24,10 +38,12 @@
 
         setColumns: function(numColumns) {
             this.cols = parseInt(numColumns, 10);
+            this.saveInLocalStorage('columns');
         },
 
         setRows: function (numRows) {
             this.rows = parseInt(numRows, 10);
+            this.saveInLocalStorage('rows');
         },
 
         setColsAndRows: function (numColumns, numRows) {
@@ -41,6 +57,24 @@
 
         setParentContainer: function (container) {
             this.parentContainer = container
+        },
+
+        saveInLocalStorage: function(saveWhat) {
+            if (typeof(Storage) !== "undefined") {
+                switch (saveWhat) {
+                    case 'colors':
+                        localStorage.setItem('storedColors', JSON.stringify(this.storedColors));
+                        break;
+
+                    case 'columns':
+                        localStorage.setItem('numCols', this.cols);
+                        break;
+
+                    case 'rows':
+                        localStorage.setItem('numRows', this.rows);
+                        break;
+                }
+            }
         },
 
         /**
@@ -61,6 +95,8 @@
                     }
                 }
             }
+            // store in local storage, if possible
+            this.saveInLocalStorage('colors');
         },
 
         /**
@@ -71,27 +107,35 @@
                 for (var y = 1; y <= this.rows; y++) {
                     var pos = x.toString()+'-'+y.toString();
 
-                    if (this.storedColors[pos][1] == 1) {
-                        $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', this.storedColors[pos][0]).attr('data-changed', '1');
-                    } else {
-                        $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', this.backgroundColor).attr('data-changed', '0');
+                    if (this.storedColors[pos]) {
+                        if (this.storedColors[pos][1] == 1) {
+                            $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', this.storedColors[pos][0]).attr('data-changed', '1');
+                        } else {
+                            $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', this.backgroundColor).attr('data-changed', '0');
+                        }
                     }
                 }
             }
+        },
+
+        setStoredColors: function(storedColors) {
+            this.storedColors = storedColors;
         },
 
         /**
          * render the color grid
          * - used on resize and background color change
          */
-        renderGrid: function() {
+        renderGrid: function(ignoreStoreColors) {
             var numColors = this.rows * this.cols,
                 colBreak = 1,
                 colX = 1,
                 colY = 1;
 
             // backup colors
-            this.storeColors();
+            if (!ignoreStoreColors) {
+                this.storeColors();
+            }
 
             // clear parent container
             $(this.parentContainer).html('');
@@ -100,7 +144,7 @@
             for (var cnt = 1; cnt <= numColors; cnt++) {
 
                 // create new color boxes (@TODO: needs performance improvement!)
-                var newColorBox = '<div class="colorBox large float-left gridcolor" data-changed="0" ondrop="dropcol(event)" ondragover="allowDrop(event)" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '"></div>';
+                var newColorBox = '<div class="colorBox large float-left gridcolor" data-changed="0" ondrop="dropcol(event)" ondragover="allowDrop(event)" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '" draggable="true" ondragstart="dragcol(event)"></div>';
                 $(this.parentContainer).append(newColorBox);
                 colBreak++;
                 colX++;
@@ -114,14 +158,45 @@
             }
             // restore backed up colors
             this.restoreColors();
+        },
+
+        resetPalette: function(backgroundColor) {
+            this.storedColors = {};
+            this.saveInLocalStorage('colors');
+            this.renderGrid(true);
         }
     };
 
     $(document).ready(function () {
+
+        var numCols = $('#edit_cols').val(),
+            numRows = $('#edit_rows').val(),
+            parent  = $('#colorgrid'),
+            storedColors = null;
+
+        if (typeof(Storage) !== "undefined") {
+            if (localStorage.getItem('numCols') !== null) {
+                numCols = localStorage.getItem('numCols');
+                $('#edit_cols').val(numCols);
+            }
+
+            if (localStorage.getItem('numRows') !== null) {
+                numRows = localStorage.getItem('numRows');
+                $('#edit_rows').val(numRows);
+            }
+
+            if (localStorage.getItem('storedColors') !== null) {
+                storedColors = JSON.parse(localStorage.getItem('storedColors'));
+            }
+        }
+
         // initially draw color grid
-        colorEditor.setColsAndRows($('#edit_cols').val(), $('#edit_rows').val());
-        colorEditor.setParentContainer($('#colorgrid'));
-        colorEditor.renderGrid();
+        colorEditor.setColsAndRows(numCols, numRows);
+        colorEditor.setParentContainer(parent);
+        if (storedColors !== null) {
+            colorEditor.setStoredColors(storedColors);
+        }
+        colorEditor.renderGrid(true);
 
         // change grid size (currently on click)
         $('input#edit_cols, input#edit_rows').on('click', function() {
@@ -136,5 +211,28 @@
             colorEditor.setBackgroundColor($(this).val());
             colorEditor.renderGrid();
         });
+
+        $('#resetPalette').click(function() {
+            colorEditor.resetPalette();
+        });
+
+        /**
+         * image picker code
+         */
+        var canvas = document.getElementById('imagePicker'),
+            context = canvas.getContext('2d'),
+            img = new Image();
+
+        img.onload = function () {
+            context.drawImage(this, 0, 0);
+        };
+        img.src = '/testimage.png';
+
+        $('#imagePicker').colorSampler({
+            onSelect: function(color) {
+                $('#colorPickerImg').css('background-color', color);
+            }
+        });
+
     });
 </script>
