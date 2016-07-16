@@ -54,8 +54,8 @@ table * {
   padding: 0;
 
   @include breakpoint('small') {
-    width: 0.7em;
-    height: 0.7em;
+    width: 0.5em;
+    height: 0.5em;
     &.large {
       width: 0.9em;
       height: 0.9em;
@@ -63,8 +63,8 @@ table * {
   }
 
   @include breakpoint('large') {
-    width: 0.9em;
-    height: 0.9em;
+    width: 0.6em;
+    height: 0.6em;
     &.large {
       width: 1.1em;
       height: 1.1em;
@@ -72,8 +72,8 @@ table * {
   }
 
   @include breakpoint('xlarge') {
-      width: 0.9em;
-      height: 0.9em;
+      width: 0.75em;
+      height: 0.75em;
       &.large {
         width: 1.5em;
         height: 1.5em;

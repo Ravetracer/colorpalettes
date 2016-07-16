@@ -3890,23 +3890,23 @@ table * {
 .colorBox {
   border: none;
   padding: 0;
-  width: 0.7em;
-  height: 0.7em;
+  width: 0.5em;
+  height: 0.5em;
   margin: 1px; }
   .colorBox.large {
     width: 0.9em;
     height: 0.9em; }
   @media screen and (min-width: 64em) {
     .colorBox {
-      width: 0.9em;
-      height: 0.9em; }
+      width: 0.6em;
+      height: 0.6em; }
       .colorBox.large {
         width: 1.1em;
         height: 1.1em; } }
   @media screen and (min-width: 75em) {
     .colorBox {
-      width: 0.9em;
-      height: 0.9em; }
+      width: 0.75em;
+      height: 0.75em; }
       .colorBox.large {
         width: 1.5em;
         height: 1.5em; } }
