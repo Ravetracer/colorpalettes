@@ -12,31 +12,41 @@
     <form>
         <div class="row">
             <div class="medium-2 columns">
-                <label>Columns:
+                <label class="secondary label">
+                    Columns
                     <input type="number" id="edit_cols" value="5">
                 </label>
+
             </div>
             <div class="medium-2 columns">
-                <label>Rows:
+                <span class="secondary label">
+                    Rows
                     <input type="number" id="edit_rows" value="5">
-                </label>
+                </span>
             </div>
             <div class="medium-2 columns">
-                <label>Background color:
+                <label class="secondary label">
+                    Background color
                     <input type="color" class="colorBox large" id="edit_bgcol">
                 </label>
+
             </div>
             <div class="medium-2 columns end">
-                <input type="button" class="btn" value="Reset" id="resetPalette" />
+                <input type="button" class="alert button" value="Reset" id="resetPalette" />
             </div>
         </div>
 
         <div class="row">
-            <div class="medium-1 columns">
-                Colorpicker: <input type="color" class="colorBox large" id="sourcecolor" draggable="true" ondragstart="dragcol(event)">
+            <div class="medium-2 columns">
+                <span class="secondary label">Std. color picker
+                    <input type="color" class="colorBox large" id="sourcecolor" draggable="true" ondragstart="dragcol(event)">
+                </span>
             </div>
-            <div class="medium-1 columns end">
-                CP2: <div class="colorBox large colorBlack" id="colorPickerImg" draggable="true" ondragstart="dragcol(event)"></div>
+            <div class="medium-2 columns end">
+                <span class="secondary label">
+                    Color from image
+                    <div class="colorBox large colorBlack" id="colorPickerImg" draggable="true" ondragstart="dragcol(event)"></div>
+                </span>
             </div>
         </div>
 
@@ -45,14 +55,52 @@
                 <div id="colorgrid"></div>
             </div>
             <div class="medium-3 columns">
-                <canvas id="imagePicker" width="300" height="300"></canvas>
+                <div class="row">
+                    <div class="medium-12 columns">
+                        <input id="previewImageLoader" type="file" onchange="loadPreviewImage(this, 0, 0);"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="medium-12 columns">
+                        <button type="button" class="button" id="slideImgLeft">&lt;</button>
+                        <button type="button" class="button" id="slideImgRight">&gt;</button>
+                        <button type="button" class="button" id="slideImgUp">^</button>
+                        <button type="button" class="button" id="slideImgDown">V</button>
+                        <input type="number" value="15" id="imgSlideSteps"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="medium-11 columns end">
+                        <canvas id="imagePicker" width="250" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="medium-2 columns">
+                <label class="label">Palette name
+                    <input type="text" id="paletteName" />
+                </label>
+            </div>
+            <div class="medium-8 columns end">
+                <label class="label">Palette comment
+                    <input type="text" id="paletteComment" />
+                </label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="medium-2 columns">
+                <button type="button" class="button" id="savePalette">Save</button>
             </div>
         </div>
     </form>
 {% endblock %}
 
 {% block additionalJS %}
-    {#<script src="/js/jcanvas.min.js"></script>#}
     <script src="/js/color-sampler.min.js"></script>
+    <script src="/js/tinycolor-min.js"></script>
+    <script src="/js/download.js"></script>
     {% include 'editor/js/editor.html.twig' %}
 {% endblock %}

@@ -20,9 +20,16 @@
     //
     function dropcol(ev) {
         ev.preventDefault();
-        var color = ev.dataTransfer.getData('text');
+        var color = ev.dataTransfer.getData('text'),
+            bgCol = tinycolor($(ev.target).css('background-color')).toHexString(),
+            tColor = tinycolor(color).toHexString();
+
         ev.target.setAttribute('style', 'background-color:' + color);
-        ev.target.setAttribute('data-changed', '1');
+        if (bgCol === tColor) {
+            ev.target.setAttribute('data-changed', '1');
+        } else {
+            ev.target.setAttribute('data-changed', '0');
+        }
         colorEditor.storeColors();
     }
 
@@ -63,6 +70,7 @@
             if (typeof(Storage) !== "undefined") {
                 switch (saveWhat) {
                     case 'colors':
+                        localStorage.setItem('backgroundColor', this.backgroundColor);
                         localStorage.setItem('storedColors', JSON.stringify(this.storedColors));
                         break;
 
@@ -82,8 +90,8 @@
          */
         storeColors: function() {
             this.storedColors = {};
-            for (var x = 1; x <= this.cols; x++) {
-                for (var y = 1; y <= this.rows; y++) {
+            for (var y = 1; y <= this.rows; y++) {
+                for (var x = 1; x <= this.cols; x++) {
                     var colElement = $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]'),
                         xyColor = colElement.css('background-color'),
                         pos = x.toString()+'-'+y.toString();
@@ -103,8 +111,8 @@
          * restore colors; set changed colors from array and unchanged with current background color
          */
         restoreColors: function() {
-            for (var x = 1; x <= this.cols; x++) {
-                for (var y = 1; y <= this.rows; y++) {
+            for (var y = 1; y <= this.rows; y++) {
+                for (var x = 1; x <= this.cols; x++) {
                     var pos = x.toString()+'-'+y.toString();
 
                     if (this.storedColors[pos]) {
@@ -143,7 +151,6 @@
             // walk through number of colors
             for (var cnt = 1; cnt <= numColors; cnt++) {
 
-                // create new color boxes (@TODO: needs performance improvement!)
                 var newColorBox = '<div class="colorBox large float-left gridcolor" data-changed="0" ondrop="dropcol(event)" ondragover="allowDrop(event)" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '" draggable="true" ondragstart="dragcol(event)"></div>';
                 $(this.parentContainer).append(newColorBox);
                 colBreak++;
@@ -167,12 +174,38 @@
         }
     };
 
+    function loadPreviewImage(input, originX, originY) {
+        /**
+         * image picker code
+         */
+        var canvas = document.getElementById('imagePicker'),
+            context = canvas.getContext('2d'),
+            img = new Image();
+
+        img.onload = function () {
+            context.drawImage(this, originX, originY);
+        };
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     $(document).ready(function () {
 
         var numCols = $('#edit_cols').val(),
             numRows = $('#edit_rows').val(),
+            bgColor = $('#edit_bgcol').val(),
             parent  = $('#colorgrid'),
-            storedColors = null;
+            storedColors = null,
+            originX = 0,
+            originY = 0,
+            slideSpeed = parseInt($('#imgSlideSteps').val(), 10);
 
         if (typeof(Storage) !== "undefined") {
             if (localStorage.getItem('numCols') !== null) {
@@ -188,11 +221,17 @@
             if (localStorage.getItem('storedColors') !== null) {
                 storedColors = JSON.parse(localStorage.getItem('storedColors'));
             }
+
+            if (localStorage.getItem('backgroundColor') !== null) {
+                bgColor = localStorage.getItem('backgroundColor');
+                $('#edit_bgcol').val(bgColor);
+            }
         }
 
         // initially draw color grid
         colorEditor.setColsAndRows(numCols, numRows);
         colorEditor.setParentContainer(parent);
+        colorEditor.setBackgroundColor(bgColor);
         if (storedColors !== null) {
             colorEditor.setStoredColors(storedColors);
         }
@@ -216,23 +255,45 @@
             colorEditor.resetPalette();
         });
 
-        /**
-         * image picker code
-         */
-        var canvas = document.getElementById('imagePicker'),
-            context = canvas.getContext('2d'),
-            img = new Image();
-
-        img.onload = function () {
-            context.drawImage(this, 0, 0);
-        };
-        img.src = '/testimage.png';
-
         $('#imagePicker').colorSampler({
             onSelect: function(color) {
                 $('#colorPickerImg').css('background-color', color);
             }
         });
 
+        $('#slideImgLeft').click(function () {
+            originX-=slideSpeed;
+            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY);
+        });
+
+        $('#slideImgRight').click(function () {
+            originX+=slideSpeed;
+            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY);
+        });
+
+        $('#slideImgUp').click(function () {
+            originY-=slideSpeed;
+            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY);
+        });
+
+        $('#slideImgDown').click(function () {
+            originY+=slideSpeed;
+            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY);
+        });
+
+        $('#imgSlideSteps').change(function() {
+            slideSpeed = parseInt($(this).val(), 10);
+        });
+
+        $('#savePalette').click(function () {
+            var colorsToSave = JSON.stringify(colorEditor.storedColors),
+                palName = $('#paletteName').val(),
+                palComment = $('#paletteComment').val();
+            $.post('/editor/save', { 'paletteData': colorsToSave, 'paletteName': palName, 'paletteComment': palComment, 'columns': colorEditor.cols, 'rows': colorEditor.rows}, function(response) {
+                if (response.status === "success") {
+                    download(response.exportString, palName+'.gpl', 'text/plain');
+                }
+            }, 'json');
+        });
     });
 </script>

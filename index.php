@@ -6,12 +6,14 @@
  * Time: 17:06
  */
 
-use Colorpalettes\BasePalette,
-    Colorpalettes\Exporters\AdobeSwatchExchangeExporter,
-    Colorpalettes\Exporters\GimpPaletteExporter,
-    Symfony\Component\HttpFoundation\Response,
-    Colorpalettes\Importers\GimpPaletteImporter,
-    Symfony\Component\HttpFoundation\Request;
+use Colorpalettes\BasePalette;
+use Colorpalettes\Exporters\AdobeSwatchExchangeExporter;
+use Colorpalettes\Exporters\GimpPaletteExporter;
+use Symfony\Component\HttpFoundation\Response;
+use Colorpalettes\Importers\GimpPaletteImporter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Colorpalettes\BaseColor;
 
 $app = require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
@@ -115,6 +117,37 @@ $app->post('/convert', function(Request $request) use ($app) {
 
 $app->get('/editor', function () use ($app) {
     return $app->render('editor/index.html.twig');
+});
+
+$app->post('/editor/save', function (Request $request) use ($app) {
+    $palData = json_decode($request->get('paletteData'), true);
+    $cols = (int) $request->get('columns');
+    $rows = (int) $request->get('rows');
+
+    $exportPalette = new BasePalette();
+    $colors = [];
+    for ($y = 1; $y <= $rows; $y++) {
+        for ($x = 1; $x <= $cols; $x++) {
+            $currentEntry = $palData[$x.'-'.$y][0];
+            preg_match("/rgb\(([0-9]{1,3}), ([0-9]{1,3}), ([0-9]{1,3})\)/", $currentEntry, $matches);
+            $r = (int) $matches[1];
+            $g = (int) $matches[2];
+            $b = (int) $matches[3];
+            $currentColor = new BaseColor();
+            $currentColor->setRed($r)
+                ->setGreen($g)
+                ->setBlue($b)
+                ->setName(filter_var($request->get('paletteName'), FILTER_SANITIZE_STRING));
+            $colors[] = $currentColor;
+        }
+    }
+    $exportPalette->setColors($colors)
+        ->setColumns($cols)
+        ->setComment(filter_var($request->get('paletteComment'), FILTER_SANITIZE_STRING));
+
+    $exporter = new GimpPaletteExporter($exportPalette);
+
+    return new JsonResponse(['status' => 'success', 'exportString' => $exporter->getExportContents()]);
 });
 
 $app->run();
