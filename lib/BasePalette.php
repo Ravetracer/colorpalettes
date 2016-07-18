@@ -12,6 +12,7 @@ namespace Colorpalettes;
 use Symfony\Component\HttpFoundation\Response,
     Colorpalettes\Interfaces\ImporterInterface,
     Colorpalettes\Interfaces\ExporterInterface;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class BasePalette
 {
@@ -152,15 +153,12 @@ class BasePalette
     public function export(ExporterInterface $exporter)
     {
         $contents = $exporter->getExportContents();
-        $response = new Response($contents, 200, [
-            'Content-type'          => 'text/plain',
-            'Content-Description'   => 'File Transfer',
-            'Expires'               => '0',
-            'Cache-Control'         => 'must-revalidate',
-            'Pragma'                => 'public',
-            'Content-length'        => sizeof($contents),
-            'Content-Disposition'   => 'attachment; filename="' . $this->getFilename() . '.' . $exporter->getExportFileExtension() . '"',
-        ]);
+        $response = new Response($contents);
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $this->getFilename().'.'.$exporter->getExportFileExtension()
+        );
+        $response->headers->set('Content-Disposition', $disposition);
         return $response;
     }
 
