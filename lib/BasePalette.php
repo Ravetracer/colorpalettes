@@ -153,9 +153,13 @@ class BasePalette
     {
         $contents = $exporter->getExportContents();
         $response = new Response($contents, 200, [
-            'Content-type'          => 'application/octet-stream',
+            'Content-type'          => 'text/plain',
+            'Content-Description'   => 'File Transfer',
+            'Expires'               => '0',
+            'Cache-Control'         => 'must-revalidate',
+            'Pragma'                => 'public',
             'Content-length'        => sizeof($contents),
-            'Content-Disposition'   => 'attachment;filename="' . $this->getFilename() . '.' . $exporter->getExportFileExtension() . '"'
+            'Content-Disposition'   => 'attachment; filename="' . $this->getFilename() . '.' . $exporter->getExportFileExtension() . '"',
         ]);
         return $response;
     }

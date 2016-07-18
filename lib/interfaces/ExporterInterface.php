@@ -20,6 +20,8 @@ interface ExporterInterface
     public function getExportContents();
 
     /**
+     * Returns the file extension
+     *
      * @return string
      */
     public function getExportFileExtension();

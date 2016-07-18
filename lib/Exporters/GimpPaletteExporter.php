@@ -54,7 +54,7 @@ class GimpPaletteExporter implements ExporterInterface
     }
 
     /**
-     * @inheritdoc
+     * @return string
      */
     public function getExportFileExtension()
     {
