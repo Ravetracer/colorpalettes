@@ -1,38 +1,4 @@
 <script type="text/javascript">
-
-    function allowDrop(ev) {
-        ev.preventDefault();
-    }
-
-    //
-    // drag either color picker value or background color of palette entry
-    //
-    function dragcol(ev) {
-        if ($(ev.srcElement).val().length > 0) {
-            ev.dataTransfer.setData('text', $(ev.srcElement).val());
-        } else {
-            ev.dataTransfer.setData('text', $(ev.srcElement).css('background-color'));
-        }
-    }
-
-    //
-    // drop color
-    //
-    function dropcol(ev) {
-        ev.preventDefault();
-        var color = ev.dataTransfer.getData('text'),
-            bgCol = tinycolor($(ev.target).css('background-color')).toHexString(),
-            tColor = tinycolor(color).toHexString();
-
-        ev.target.setAttribute('style', 'background-color:' + color);
-        if (bgCol === tColor) {
-            ev.target.setAttribute('data-changed', '1');
-        } else {
-            ev.target.setAttribute('data-changed', '0');
-        }
-        colorEditor.storeColors();
-    }
-
     //
     // the main color editor
     //
@@ -93,7 +59,7 @@
             for (var y = 1; y <= this.rows; y++) {
                 for (var x = 1; x <= this.cols; x++) {
                     var colElement = $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]'),
-                        xyColor = colElement.css('background-color'),
+                        xyColor = tinycolor(colElement.css('background-color')).toHexString(),
                         pos = x.toString()+'-'+y.toString();
 
                     if (colElement.attr('data-changed') == '1') {
@@ -151,7 +117,7 @@
             // walk through number of colors
             for (var cnt = 1; cnt <= numColors; cnt++) {
 
-                var newColorBox = '<div class="colorBox large float-left gridcolor" data-changed="0" ondrop="dropcol(event)" ondragover="allowDrop(event)" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '" draggable="true" ondragstart="dragcol(event)"></div>';
+                var newColorBox = '<div class="colorBox large float-left gridcolor" data-changed="0" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '"></div>';
                 $(this.parentContainer).append(newColorBox);
                 colBreak++;
                 colX++;
@@ -238,7 +204,7 @@
         colorEditor.renderGrid(true);
 
         // change grid size (currently on click)
-        $('input#edit_cols, input#edit_rows').on('click', function() {
+        $('input#edit_cols, input#edit_rows').on('click, blur', function() {
             colorEditor.storeColors();
             colorEditor.setColsAndRows($('#edit_cols').val(), $('#edit_rows').val());
             colorEditor.renderGrid();
@@ -257,8 +223,27 @@
 
         $('#imagePicker').colorSampler({
             onSelect: function(color) {
-                $('#colorPickerImg').css('background-color', color);
+                var hexCol = tinycolor(color).toHexString();
+                $('#sourcecolor').val(hexCol);
             }
+        });
+
+        /**
+         * "draw" color onto grid
+         */
+        $('#colorgrid').on('click', '.gridcolor', function() {
+            var elem = $(this),
+                bgCol = tinycolor($('#edit_bgcol').val()).toHexString(),
+                srcCol = tinycolor($('#sourcecolor').val()).toHexString();
+
+            console.log(bgCol, srcCol);
+            elem.css('background-color', srcCol);
+            if (bgCol === srcCol) {
+                elem.attr('data-changed', '0');
+            } else {
+                elem.attr('data-changed', '1');
+            }
+            colorEditor.storeColors();
         });
 
         $('#slideImgLeft').click(function () {

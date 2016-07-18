@@ -16,8 +16,8 @@
                         <li>define your grid size with the input fields</li>
                         <li>choose your desired background color with the color picker</li>
                         <li>use "reset" for deleting all colors</li>
-                        <li>use the "std color picker" to choose a desired color, then drag and drop this to the grid</li>
-                        <li>you can load an image on the right and move it along with the buttons on top; choose the number of moved pixels with the input field below; pick a color in the image and drag and drop it from the specified field on top of the palette grid.</li>
+                        <li>use the "Current color" to choose a desired color, then just "draw" it onto the grid</li>
+                        <li>you can load an image on the right and move it along with the buttons on top; choose the number of moved pixels with the input field below; pick a color in the image and draw it on the grid.</li>
                         <li>when you're ready, give your palette a name and optionally a comment; click on "save" to store your palette as a .gpl file</li>
                         <li>the palette is automatically stored in the browsers local storage (html5), so if you close the tab or browser and call the editor again, your palette is still there (maybe this functionality is not working everywhere!! so beware!)</li>
                     </ul>
@@ -52,34 +52,7 @@
                 </span>
             </div>
             <div class="medium-2 columns">
-                <label class="secondary label">
-                    Background color
-                    <input type="color" class="colorBox large" id="edit_bgcol">
-                </label>
-
-            </div>
-            <div class="medium-2 columns end">
                 <input type="button" class="alert button" value="Reset" id="resetPalette" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="medium-2 columns">
-                <span class="secondary label">Std. color picker
-                    <input type="color" class="colorBox large" id="sourcecolor" draggable="true" ondragstart="dragcol(event)">
-                </span>
-            </div>
-            <div class="medium-2 columns end">
-                <span class="secondary label">
-                    Color from image
-                    <div class="colorBox large colorBlack" id="colorPickerImg" draggable="true" ondragstart="dragcol(event)"></div>
-                </span>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="medium-9 columns">
-                <div id="colorgrid"></div>
             </div>
             <div class="medium-3 columns">
                 <div class="row">
@@ -93,14 +66,34 @@
                         <button type="button" class="button" id="slideImgRight"><i class="fa fa-chevron-right"></i></button>
                         <button type="button" class="button" id="slideImgUp"><i class="fa fa-chevron-up"></i></button>
                         <button type="button" class="button" id="slideImgDown"><i class="fa fa-chevron-down"></i></button>
-                        <input type="number" value="15" id="imgSlideSteps"/>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="medium-11 columns end">
-                        <canvas id="imagePicker" width="250" height="300"></canvas>
-                    </div>
-                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="medium-2 columns">
+                <label class="secondary label">
+                    Background color
+                    <input type="color" class="colorBox large" id="edit_bgcol">
+                </label>
+            </div>
+            <div class="medium-2 columns">
+                <span class="secondary label">Current color
+                    <input type="color" class="colorBox large" id="sourcecolor">
+                </span>
+            </div>
+            <div class="medium-3 columns">
+                <input type="number" value="15" id="imgSlideSteps"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="medium-9 columns">
+                <div id="colorgrid"></div>
+            </div>
+            <div class="medium-3 columns">
+                <canvas id="imagePicker" width="250" height="300"></canvas>
             </div>
         </div>
 
