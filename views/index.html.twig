@@ -9,14 +9,12 @@
             Current number of palettes: {{ palettes|length }}</blockquote>
     </div>
 
-    {#
     <div class="row column">
-        <h3>Convert palette</h3>
-        <blockquote>Do you want to convert an ASE file to GPL or vice versa? Just use this handy tool:<br/>
-            <button class="button">Convert</button>
+        <h3>"2D" Palette editor</h3>
+        <blockquote>Do you want to create your own "2D" palette? I've created a basic editor which is still in alpha phase and comes without warranty!!:<br/>
+            <a href="{{ path('editor') }}">Color palette editor</a>
         </blockquote>
     </div>
-    #}
 
     <div class="row columns small-up-1 medium-up-2 large-up-3" data-equalizer data-equalize-by-row="true">
         {% for pal in palettes %}
@@ -24,9 +22,11 @@
         {% endfor %}
     </div>
 
+    {#
     <div class="reveal">
         <h3>Convert palette</h3>
         <form action="{{ path('convert_pal') }}" method="post" enctype="multipart/form-data">
         </form>
     </div>
+    #}
 {% endblock %}

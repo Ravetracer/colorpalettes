@@ -106,10 +106,12 @@ $app->get('/import/preview/{palName}', function ($palName) use ($app) {
 /**
  * Convert palette
  */
+/*
 $app->post('/convert', function(Request $request) use ($app) {
     echo "<pre>", print_r($request, true), "</pre>";
 })
 ->bind('convert_pal');
+*/
 
 /**
  * Palette editor
@@ -117,7 +119,8 @@ $app->post('/convert', function(Request $request) use ($app) {
 
 $app->get('/editor', function () use ($app) {
     return $app->render('editor/index.html.twig');
-});
+})
+->bind('editor');
 
 $app->post('/editor/save', function (Request $request) use ($app) {
     $palData = json_decode($request->get('paletteData'), true);
