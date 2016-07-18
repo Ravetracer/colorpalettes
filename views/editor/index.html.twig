@@ -6,7 +6,34 @@
 
 {% block mainContent %}
     <div class="row column">
-        <h1>Color Editor</h1>
+        <h1>Color Editor <span class="alert label"><strong>ALPHA</strong></span></h1>
+        <p class="lead">Attention! This palette editor is very early alpha and not completed at all! Use it at your own risk and please read the help below!</p>
+        <ul class="accordion" data-accordion data-allow-all-closed="true">
+            <li class="accordion-item" data-accordion-item>
+                <a href="#" class="accordion-title">Help</a>
+                <div class="accordion-content" data-tab-content>
+                    <ul>
+                        <li>define your grid size with the input fields</li>
+                        <li>choose your desired background color with the color picker</li>
+                        <li>use "reset" for deleting all colors</li>
+                        <li>use the "std color picker" to choose a desired color, then drag and drop this to the grid</li>
+                        <li>you can load an image on the right and move it along with the buttons on top; choose the number of moved pixels with the input field below; pick a color in the image and drag and drop it from the specified field on top of the palette grid.</li>
+                        <li>when you're ready, give your palette a name and optionally a comment; click on "save" to store your palette as a .gpl file</li>
+                        <li>the palette is automatically stored in the browsers local storage (html5), so if you close the tab or browser and call the editor again, your palette is still there</li>
+                    </ul>
+                    <br />
+                    <h4>Next:</h4>
+                    <ul>
+                        <li>storing in local storage will be made optional</li>
+                        <li>importing of palettes will be added</li>
+                        <li>exporting to .ase will be added</li>
+                        <li>UI is still made for functional use and will be improved!</li>
+                        <li>a JS color picker will be implemented in the future to support more browsers; currently it's the standard HTML5 input-type-color </li>
+                        <li>have ideas? let me know on Twitter by writing to @ravetracer 😀</li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
     </div>
 
     <form>

@@ -3918,3 +3918,6 @@ table * {
 .palgrid {
   background-color: #000;
   padding: 1em; }
+
+.accordion-content {
+  color: black; }
