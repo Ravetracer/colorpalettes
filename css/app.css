@@ -1259,12 +1259,12 @@ h6 {
     font-size: 1rem; } }
 
 a {
-  color: #2199e8;
+  color: #000;
   text-decoration: none;
   line-height: inherit;
   cursor: pointer; }
   a:hover, a:focus {
-    color: #1585cf; }
+    color: black; }
   a img {
     border: 0; }
 
@@ -2213,7 +2213,7 @@ select {
     width: 0;
     height: 0;
     border: inset 5px;
-    border-color: #2199e8 transparent transparent;
+    border-color: #000 transparent transparent;
     border-top-style: solid;
     border-bottom-width: 0;
     position: absolute;
@@ -2225,7 +2225,7 @@ select {
     width: 0;
     height: 0;
     border: inset 5px;
-    border-color: transparent #2199e8 transparent transparent;
+    border-color: transparent #000 transparent transparent;
     border-right-style: solid;
     border-left-width: 0;
     float: left;
@@ -2237,7 +2237,7 @@ select {
     width: 0;
     height: 0;
     border: inset 5px;
-    border-color: transparent transparent transparent #2199e8;
+    border-color: transparent transparent transparent #000;
     border-left-style: solid;
     border-right-width: 0; }
   .is-dropdown-submenu-parent.is-left-arrow.opens-inner .is-dropdown-submenu {
@@ -3223,7 +3223,7 @@ table.hover tr:nth-of-type(even):hover {
     clear: both; }
   .top-bar,
   .top-bar ul {
-    background-color: #e6e6e6; }
+    background-color: #8a8a8a; }
   .top-bar input {
     width: 200px;
     margin-right: 1rem; }

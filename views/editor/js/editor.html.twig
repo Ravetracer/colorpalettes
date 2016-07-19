@@ -204,7 +204,7 @@
         colorEditor.renderGrid(true);
 
         // change grid size (currently on click)
-        $('input#edit_cols, input#edit_rows').on('click, blur', function() {
+        $('input#edit_cols, input#edit_rows').on('click blur', function() {
             colorEditor.storeColors();
             colorEditor.setColsAndRows($('#edit_cols').val(), $('#edit_rows').val());
             colorEditor.renderGrid();
@@ -270,13 +270,15 @@
             slideSpeed = parseInt($(this).val(), 10);
         });
 
-        $('#savePalette').click(function () {
+        $('.savePalette').click(function () {
             var colorsToSave = JSON.stringify(colorEditor.storedColors),
                 palName = $('#paletteName').val(),
-                palComment = $('#paletteComment').val();
-            $.post('/editor/save', { 'paletteData': colorsToSave, 'paletteName': palName, 'paletteComment': palComment, 'columns': colorEditor.cols, 'rows': colorEditor.rows}, function(response) {
+                palComment = $('#paletteComment').val(),
+                saveType = $(this).attr('data-savetype');
+
+            $.post('/editor/save', { 'paletteData': colorsToSave, 'paletteName': palName, 'paletteComment': palComment, 'columns': colorEditor.cols, 'rows': colorEditor.rows, 'filetype': saveType}, function(response) {
                 if (response.status === "success") {
-                    download(response.exportString, palName+'.gpl', 'text/plain');
+                    download(window.atob(response.exportString), palName+'.'+response.extension, 'text/plain');
                 }
             }, 'json');
         });

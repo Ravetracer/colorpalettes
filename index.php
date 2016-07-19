@@ -126,6 +126,7 @@ $app->post('/editor/save', function (Request $request) use ($app) {
     $palData = json_decode($request->get('paletteData'), true);
     $cols = (int) $request->get('columns');
     $rows = (int) $request->get('rows');
+    $fileType = filter_var($request->get('filetype'), FILTER_SANITIZE_STRING);
 
     $exportPalette = new BasePalette();
     $colors = [];
@@ -149,8 +150,11 @@ $app->post('/editor/save', function (Request $request) use ($app) {
         ->setComment(filter_var($request->get('paletteComment'), FILTER_SANITIZE_STRING));
 
     $exporter = new GimpPaletteExporter($exportPalette);
+    if ($fileType === "ase") {
+        $exporter = new AdobeSwatchExchangeExporter($exportPalette);
+    }
 
-    return new JsonResponse(['status' => 'success', 'exportString' => $exporter->getExportContents()]);
+    return new JsonResponse(['status' => 'success', 'exportString' => base64_encode($exporter->getExportContents()), 'extension' => $exporter->getExportFileExtension()]);
 });
 
 $app->run();
