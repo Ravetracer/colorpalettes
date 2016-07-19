@@ -132,10 +132,10 @@ $app->post('/editor/save', function (Request $request) use ($app) {
     for ($y = 1; $y <= $rows; $y++) {
         for ($x = 1; $x <= $cols; $x++) {
             $currentEntry = $palData[$x.'-'.$y][0];
-            preg_match("/rgb\(([0-9]{1,3}), ([0-9]{1,3}), ([0-9]{1,3})\)/", $currentEntry, $matches);
-            $r = (int) $matches[1];
-            $g = (int) $matches[2];
-            $b = (int) $matches[3];
+            preg_match("/#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/", $currentEntry, $matches);
+            $r = (int) hexdec($matches[1]);
+            $g = (int) hexdec($matches[2]);
+            $b = (int) hexdec($matches[3]);
             $currentColor = new BaseColor();
             $currentColor->setRed($r)
                 ->setGreen($g)
