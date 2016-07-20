@@ -59,7 +59,7 @@
             for (var y = 1; y <= this.rows; y++) {
                 for (var x = 1; x <= this.cols; x++) {
                     var colElement = $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]'),
-                        xyColor = tinycolor(colElement.css('background-color')).toHexString(),
+                        xyColor = chroma(colElement.css('background-color')).hex().toLowerCase(),
                         pos = x.toString()+'-'+y.toString();
 
                     if (colElement.attr('data-changed') == '1') {
@@ -223,7 +223,7 @@
 
         $('#imagePicker').colorSampler({
             onSelect: function(color) {
-                var hexCol = tinycolor(color).toHexString();
+                var hexCol = chroma(color).hex().toLowerCase();
                 $('#sourcecolor').val(hexCol);
             }
         });
@@ -233,8 +233,8 @@
          */
         $('#colorgrid').on('click', '.gridcolor', function() {
             var elem = $(this),
-                bgCol = tinycolor($('#edit_bgcol').val()).toHexString(),
-                srcCol = tinycolor($('#sourcecolor').val()).toHexString();
+                bgCol = chroma($('#edit_bgcol').val()).hex().toLowerCase(),
+                srcCol = chroma($('#sourcecolor').val()).hex().toLowerCase();
 
             console.log(bgCol, srcCol);
             elem.css('background-color', srcCol);
