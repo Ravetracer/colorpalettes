@@ -67,10 +67,10 @@
                 </div>
                 <div class="row">
                     <div class="medium-12 columns">
-                        <button type="button" class="button" id="slideImgLeft"><i class="fa fa-chevron-left"></i></button>
-                        <button type="button" class="button" id="slideImgRight"><i class="fa fa-chevron-right"></i></button>
-                        <button type="button" class="button" id="slideImgUp"><i class="fa fa-chevron-up"></i></button>
-                        <button type="button" class="button" id="slideImgDown"><i class="fa fa-chevron-down"></i></button>
+                        <button type="button" class="button slideImage" data-direction='left'><i class="fa fa-chevron-left"></i></button>
+                        <button type="button" class="button slideImage" data-direction='right'><i class="fa fa-chevron-right"></i></button>
+                        <button type="button" class="button slideImage" data-direction='up'><i class="fa fa-chevron-up"></i></button>
+                        <button type="button" class="button slideImage" data-direction='down'><i class="fa fa-chevron-down"></i></button>
                     </div>
                 </div>
             </div>
@@ -79,22 +79,22 @@
         <div class="row">
             <div class="medium-2 columns">
                 <label class="secondary label">
-                    Background color
+                    BG color
                     <input type="color" class="colorBox large" id="edit_bgcol">
+                </label>
+                <label class="secondary label">
+                    Current color
+                    <input type="color" class="colorBox large" id="sourcecolor">
                 </label>
             </div>
             <div class="medium-2 columns">
-                <span class="secondary label">Current color
-                    <input type="color" class="colorBox large" id="sourcecolor">
-                </span>
+                <a href="#" class="button" id="undoAction"><i class="fa fa-undo"></i></a>
+                <a href="#" class="alert button" id="resetPalette">Reset</a>
             </div>
-            <div class="medium-2 columns">
-                <input type="button" class="alert button" value="Reset" id="resetPalette" />
-            </div>
-            <div class="medium-2 columns text-justify">
+            <div class="medium-4 columns">
                 <div class="button-group">
-                    <button type="button" class="button text-left savePalette" data-savetype="ase"><i class="fa fa-save"></i> ASE</button>
-                    <button type="button" class="button text-right savePalette" data-savetype="gpl"><i class="fa fa-save"></i> GPL</button>
+                    <a href="#" class="button savePalette" data-savetype="ase"><i class="fa fa-save"></i> ASE</a>
+                    <a href="#" class="button savePalette" data-savetype="gpl"><i class="fa fa-save"></i> GPL</a>
                 </div>
             </div>
             <div class="medium-3 columns">

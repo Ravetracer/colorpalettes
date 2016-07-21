@@ -1,4 +1,25 @@
 <script type="text/javascript">
+
+    /**
+     * Caching selectors
+     *
+     * @returns Object
+     * @constructor
+     */
+    function Selector_Cache() {
+        var collection = {};
+
+        function get_from_cache(selector) {
+            if (undefined === collection[selector]) {
+                collection[selector] = $(selector);
+            }
+            return collection[selector];
+        }
+        return { get: get_from_cache };
+    }
+
+    var sels = new Selector_Cache();
+
     //
     // the main color editor
     //
@@ -8,6 +29,8 @@
         backgroundColor: '#000000',
         parentContainer: null,
         storedColors: {},
+        drawColors: true,
+        history: [],
 
         setColumns: function(numColumns) {
             this.cols = parseInt(numColumns, 10);
@@ -58,14 +81,17 @@
             this.storedColors = {};
             for (var y = 1; y <= this.rows; y++) {
                 for (var x = 1; x <= this.cols; x++) {
-                    var colElement = $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]'),
-                        xyColor = chroma(colElement.css('background-color')).hex().toLowerCase(),
-                        pos = x.toString()+'-'+y.toString();
+                    var colElement = $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]');
 
-                    if (colElement.attr('data-changed') == '1') {
-                        this.storedColors[pos] = [xyColor, 1];
-                    } else {
-                        this.storedColors[pos] = [xyColor, 0];
+                    if (colElement.length) {
+                        var xyColor = chroma(colElement.css('background-color')).hex().toLowerCase(),
+                            pos = x.toString()+'-'+y.toString();
+
+                        if (colElement.attr('data-changed') == '1') {
+                            this.storedColors[pos] = [xyColor, 1];
+                        } else {
+                            this.storedColors[pos] = [xyColor, 0];
+                        }
                     }
                 }
             }
@@ -133,10 +159,27 @@
             this.restoreColors();
         },
 
-        resetPalette: function(backgroundColor) {
+        resetPalette: function() {
             this.storedColors = {};
             this.saveInLocalStorage('colors');
             this.renderGrid(true);
+        },
+
+        addToHistory: function (posX, posY, colorBefore, colorAfter) {
+            this.history.push({
+                'x':            posX,
+                'y':            posY,
+                'colBefore':    colorBefore,
+                'colAfter':     colorAfter,
+            });
+        },
+
+        undo: function () {
+            if (this.history.length) {
+                var lastAction = this.history.pop();
+                $('.gridcolor[data-colx="' + lastAction.x + '"][data-coly="' + lastAction.y + '"]').css('background-color', lastAction.colBefore);
+                this.storeColors();
+            }
         }
     };
 
@@ -164,24 +207,24 @@
 
     $(document).ready(function () {
 
-        var numCols = $('#edit_cols').val(),
-            numRows = $('#edit_rows').val(),
-            bgColor = $('#edit_bgcol').val(),
-            parent  = $('#colorgrid'),
+        var numCols = sels.get('#edit_cols').val(),
+            numRows = sels.get('#edit_rows').val(),
+            bgColor = sels.get('#edit_bgcol').val(),
+            parent  = sels.get('#colorgrid'),
             storedColors = null,
             originX = 0,
             originY = 0,
-            slideSpeed = parseInt($('#imgSlideSteps').val(), 10);
+            slideSpeed = parseInt(sels.get('#imgSlideSteps').val(), 10);
 
         if (typeof(Storage) !== "undefined") {
             if (localStorage.getItem('numCols') !== null) {
                 numCols = localStorage.getItem('numCols');
-                $('#edit_cols').val(numCols);
+                sels.get('#edit_cols').val(numCols);
             }
 
             if (localStorage.getItem('numRows') !== null) {
                 numRows = localStorage.getItem('numRows');
-                $('#edit_rows').val(numRows);
+                sels.get('#edit_rows').val(numRows);
             }
 
             if (localStorage.getItem('storedColors') !== null) {
@@ -190,7 +233,7 @@
 
             if (localStorage.getItem('backgroundColor') !== null) {
                 bgColor = localStorage.getItem('backgroundColor');
-                $('#edit_bgcol').val(bgColor);
+                sels.get('#edit_bgcol').val(bgColor);
             }
         }
 
@@ -203,40 +246,51 @@
         }
         colorEditor.renderGrid(true);
 
-        // change grid size (currently on click)
-        $('input#edit_cols, input#edit_rows').on('click blur', function() {
+        // change grid size
+        sels.get('input#edit_cols, input#edit_rows').on('click blur', function(e) {
             colorEditor.storeColors();
-            colorEditor.setColsAndRows($('#edit_cols').val(), $('#edit_rows').val());
+            colorEditor.setColsAndRows(sels.get('#edit_cols').val(), sels.get('#edit_rows').val());
             colorEditor.renderGrid();
         });
 
         // change background color
-        $('input#edit_bgcol').change(function() {
+        sels.get('#edit_bgcol').change(function() {
             colorEditor.storeColors();
             colorEditor.setBackgroundColor($(this).val());
             colorEditor.renderGrid();
         });
 
-        $('#resetPalette').click(function() {
+        sels.get('#resetPalette').click(function() {
             colorEditor.resetPalette();
         });
 
-        $('#imagePicker').colorSampler({
+        sels.get('#imagePicker').colorSampler({
             onSelect: function(color) {
                 var hexCol = chroma(color).hex().toLowerCase();
-                $('#sourcecolor').val(hexCol);
+                sels.get('#sourcecolor').val(hexCol);
             }
         });
 
         /**
          * "draw" color onto grid
          */
-        $('#colorgrid').on('click', '.gridcolor', function() {
-            var elem = $(this),
-                bgCol = chroma($('#edit_bgcol').val()).hex().toLowerCase(),
-                srcCol = chroma($('#sourcecolor').val()).hex().toLowerCase();
+        sels.get('#colorgrid').on('click', '.gridcolor', function() {
+            if (colorEditor.drawColors === false) {
+                return false;
+            }
 
-            console.log(bgCol, srcCol);
+            var elem = $(this),
+                curCol = chroma(elem.css('background-color')).hex().toLowerCase(),
+                bgCol = chroma(sels.get('#edit_bgcol').val()).hex().toLowerCase(),
+                srcCol = chroma(sels.get('#sourcecolor').val()).hex().toLowerCase();
+
+            colorEditor.addToHistory(
+                    elem.attr('data-colx'),
+                    elem.attr('data-coly'),
+                    curCol,
+                    srcCol
+            );
+
             elem.css('background-color', srcCol);
             if (bgCol === srcCol) {
                 elem.attr('data-changed', '0');
@@ -246,34 +300,47 @@
             colorEditor.storeColors();
         });
 
-        $('#slideImgLeft').click(function () {
-            originX-=slideSpeed;
+        /**
+         * undo last set
+         */
+        sels.get('#undoAction').click(function() {
+            colorEditor.undo();
+        });
+
+        /**
+         * slide image
+         */
+        sels.get('button.slideImage').click(function() {
+            var direction = $(this).attr('data-direction');
+
+            switch (direction) {
+                case 'left':
+                    originX-=slideSpeed;
+                    break;
+
+                case 'right':
+                    originX+=slideSpeed;
+                    break;
+
+                case 'up':
+                    originY-=slideSpeed;
+                    break;
+
+                case 'down':
+                    originY+=slideSpeed;
+                    break;
+            }
             loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY);
         });
 
-        $('#slideImgRight').click(function () {
-            originX+=slideSpeed;
-            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY);
-        });
-
-        $('#slideImgUp').click(function () {
-            originY-=slideSpeed;
-            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY);
-        });
-
-        $('#slideImgDown').click(function () {
-            originY+=slideSpeed;
-            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY);
-        });
-
-        $('#imgSlideSteps').change(function() {
+        sels.get('#imgSlideSteps').change(function() {
             slideSpeed = parseInt($(this).val(), 10);
         });
 
-        $('.savePalette').click(function () {
+        sels.get('.savePalette').click(function () {
             var colorsToSave = JSON.stringify(colorEditor.storedColors),
-                palName = $('#paletteName').val(),
-                palComment = $('#paletteComment').val(),
+                palName = sels.get('#paletteName').val(),
+                palComment = sels.get('#paletteComment').val(),
                 saveType = $(this).attr('data-savetype');
 
             $.post('/editor/save', { 'paletteData': colorsToSave, 'paletteName': palName, 'paletteComment': palComment, 'columns': colorEditor.cols, 'rows': colorEditor.rows, 'filetype': saveType}, function(response) {
