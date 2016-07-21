@@ -237,33 +237,34 @@
             }
         }
 
-        // initially draw color grid
-        colorEditor.setColsAndRows(numCols, numRows);
-        colorEditor.setParentContainer(parent);
-        colorEditor.setBackgroundColor(bgColor);
-        if (storedColors !== null) {
-            colorEditor.setStoredColors(storedColors);
-        }
-        colorEditor.renderGrid(true);
-
-        // change grid size
+        /**
+         * change grid size
+         */
         sels.get('input#edit_cols, input#edit_rows').on('click blur', function(e) {
             colorEditor.storeColors();
             colorEditor.setColsAndRows(sels.get('#edit_cols').val(), sels.get('#edit_rows').val());
             colorEditor.renderGrid();
         });
 
-        // change background color
+        /**
+         * change background color
+         */
         sels.get('#edit_bgcol').change(function() {
             colorEditor.storeColors();
             colorEditor.setBackgroundColor($(this).val());
             colorEditor.renderGrid();
         });
 
+        /**
+         * Delete all colors
+         */
         sels.get('#resetPalette').click(function() {
             colorEditor.resetPalette();
         });
 
+        /**
+         * Apply image picker functions
+         */
         sels.get('#imagePicker').colorSampler({
             onSelect: function(color) {
                 var hexCol = chroma(color).hex().toLowerCase();
@@ -308,7 +309,7 @@
         });
 
         /**
-         * slide image
+         * slide/move image
          */
         sels.get('button.slideImage').click(function() {
             var direction = $(this).attr('data-direction');
@@ -333,10 +334,16 @@
             loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY);
         });
 
+        /**
+         * Change slide steps of picker image
+         */
         sels.get('#imgSlideSteps').change(function() {
             slideSpeed = parseInt($(this).val(), 10);
         });
 
+        /**
+         * Save color palette
+         */
         sels.get('.savePalette').click(function () {
             var colorsToSave = JSON.stringify(colorEditor.storedColors),
                 palName = sels.get('#paletteName').val(),
@@ -349,5 +356,16 @@
                 }
             }, 'json');
         });
+
+        /**
+         * initialize at first start
+         */
+        colorEditor.setColsAndRows(numCols, numRows);
+        colorEditor.setParentContainer(parent);
+        colorEditor.setBackgroundColor(bgColor);
+        if (storedColors !== null) {
+            colorEditor.setStoredColors(storedColors);
+        }
+        colorEditor.renderGrid(true);
     });
 </script>

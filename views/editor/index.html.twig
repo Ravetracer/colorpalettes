@@ -67,10 +67,26 @@
                 </div>
                 <div class="row">
                     <div class="medium-12 columns">
-                        <button type="button" class="button slideImage" data-direction='left'><i class="fa fa-chevron-left"></i></button>
-                        <button type="button" class="button slideImage" data-direction='right'><i class="fa fa-chevron-right"></i></button>
-                        <button type="button" class="button slideImage" data-direction='up'><i class="fa fa-chevron-up"></i></button>
-                        <button type="button" class="button slideImage" data-direction='down'><i class="fa fa-chevron-down"></i></button>
+                        <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Move image to the left">
+                            <a href="#" class="button slideImage" data-direction='left'>
+                                <i class="fa fa-chevron-left"></i>
+                            </a>
+                        </span>
+                        <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Move image to the right">
+                            <a href="#" class="button slideImage" data-direction='right'>
+                                <i class="fa fa-chevron-right"></i>
+                            </a>
+                        </span>
+                        <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Move image upwards">
+                            <a href="#" class="button slideImage" data-direction='up'>
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </span>
+                        <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Move image downwards">
+                            <a href="#" class="button slideImage" data-direction='down'>
+                                <i class="fa fa-chevron-down"></i>
+                            </a>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -79,22 +95,40 @@
         <div class="row">
             <div class="medium-2 columns">
                 <label class="secondary label">
-                    BG color
-                    <input type="color" class="colorBox large" id="edit_bgcol">
+                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Current background color">
+                        BG color
+                        <input type="color" class="colorBox large" id="edit_bgcol">
+                    </span>
                 </label>
                 <label class="secondary label">
-                    Current color
-                    <input type="color" class="colorBox large" id="sourcecolor">
+                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Current 'draw' color">
+                        Cur. color
+                        <input type="color" class="colorBox large" id="sourcecolor">
+                    </span>
                 </label>
             </div>
             <div class="medium-2 columns">
-                <a href="#" class="button" id="undoAction"><i class="fa fa-undo"></i></a>
-                <a href="#" class="alert button" id="resetPalette">Reset</a>
+                <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Undo last action">
+                    <a href="#" class="button" id="undoAction" title="Undo last action">
+                        <i class="fa fa-history"></i>
+                    </a>
+                </span>
+                <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Delete all colors!">
+                    <a href="#" class="alert button" id="resetPalette">Reset</a>
+                </span>
             </div>
             <div class="medium-4 columns">
                 <div class="button-group">
-                    <a href="#" class="button savePalette" data-savetype="ase"><i class="fa fa-save"></i> ASE</a>
-                    <a href="#" class="button savePalette" data-savetype="gpl"><i class="fa fa-save"></i> GPL</a>
+                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Save as Adobe Swatch Exchange file">
+                        <a href="#" class="button savePalette" data-savetype="ase">
+                            <i class="fa fa-save"></i> ASE
+                        </a>
+                    </span>
+                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Save as Gimp palette file">
+                        <a href="#" class="button savePalette" data-savetype="gpl">
+                            <i class="fa fa-save"></i> GPL
+                        </a>
+                    </span>
                 </div>
             </div>
             <div class="medium-3 columns">
