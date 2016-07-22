@@ -29,8 +29,10 @@
         backgroundColor: '#000000',
         parentContainer: null,
         storedColors: {},
-        drawColors: true,
+        createRamp: false,
         history: [],
+        rampStart: [],
+        rampEnd: [],
 
         setColumns: function(numColumns) {
             this.cols = parseInt(numColumns, 10);
@@ -180,6 +182,53 @@
                 $('.gridcolor[data-colx="' + lastAction.x + '"][data-coly="' + lastAction.y + '"]').css('background-color', lastAction.colBefore);
                 this.storeColors();
             }
+        },
+
+        finishRamp: function() {
+            this.rampStart = [];
+            this.rampEnd = [];
+            this.createRamp = false;
+            sels.get('.gridcolor').removeClass('rampStart');
+            this.storeColors();
+        },
+
+        drawRamp: function() {
+            // check if both arrays are filled
+            if (this.rampStart.length > 0 && this.rampEnd.length > 0 &&
+                // check, if horizontal or vertical ramp
+                ((this.rampStart[0] == this.rampEnd[0]) || (this.rampStart[1] == this.rampEnd[1]))
+               ) {
+                var startX = this.rampStart[0]>this.rampEnd[0] ? this.rampEnd[0] : this.rampStart[0],
+                    endX = this.rampStart[0]>this.rampEnd[0] ? this.rampStart[0] : this.rampEnd[0],
+                    startY = this.rampStart[1]>this.rampEnd[1] ? this.rampEnd[1] : this.rampStart[1],
+                    endY = this.rampStart[1]>this.rampEnd[1] ? this.rampStart[1] : this.rampEnd[1],
+                    inX = this.rampStart[1] == this.rampEnd[1],
+                    inY = this.rampStart[0] == this.rampEnd[0],
+                    numCols = inX ? Math.abs(endX - startX) : Math.abs(endY - startY),
+                    switchCols = this.rampStart[0]>this.rampEnd[0] || this.rampStart[1]>this.rampEnd[1],
+                    ramp = switchCols ?
+                            chroma.scale([this.rampEnd[2], this.rampStart[2]]).colors(numCols+1) :
+                            chroma.scale([this.rampStart[2], this.rampEnd[2]]).colors(numCols+1),
+                    cnt = 0;
+                // draw in X direction else draw in Y direction
+                if (inX) {
+                    for (var sX = startX; sX <= endX; sX++) {
+                        sels.get('.gridcolor[data-colx="' + sX + '"][data-coly="' + startY + '"]').css('background-color', ramp[cnt]);
+                        sels.get('.gridcolor[data-colx="' + sX + '"][data-coly="' + startY + '"]').attr('data-changed','1');
+                        cnt++;
+                    }
+                    this.finishRamp();
+                } else if (inY) {
+                    for (var sY = startY; sY <= endY; sY++) {
+                        sels.get('.gridcolor[data-colx="' + startX + '"][data-coly="' + sY + '"]').css('background-color', ramp[cnt]);
+                        sels.get('.gridcolor[data-colx="' + startX + '"][data-coly="' + sY + '"]').attr('data-changed','1');
+                        cnt++;
+                    }
+                    this.finishRamp();
+                } else {
+                    this.finishRamp();
+                }
+            }
         }
     };
 
@@ -258,7 +307,8 @@
         /**
          * Delete all colors
          */
-        sels.get('#resetPalette').click(function() {
+        sels.get('#resetPalette').click(function(e) {
+            e.preventDefault();
             colorEditor.resetPalette();
         });
 
@@ -276,14 +326,35 @@
          * "draw" color onto grid
          */
         sels.get('#colorgrid').on('click', '.gridcolor', function() {
-            if (colorEditor.drawColors === false) {
-                return false;
-            }
-
             var elem = $(this),
                 curCol = chroma(elem.css('background-color')).hex().toLowerCase(),
                 bgCol = chroma(sels.get('#edit_bgcol').val()).hex().toLowerCase(),
                 srcCol = chroma(sels.get('#sourcecolor').val()).hex().toLowerCase();
+
+            /**
+             * Create color ramp
+             */
+            if (colorEditor.createRamp === true) {
+                if (colorEditor.rampStart.length < 1) {
+                    colorEditor.rampStart = [
+                            parseInt(elem.attr('data-colx'), 10),
+                            parseInt(elem.attr('data-coly'), 10),
+                            curCol
+                    ];
+                    elem.addClass('rampStart');
+                    sels.get('.defineStartIndicator').addClass('hide');
+                    sels.get('.defineEndIndicator').removeClass('hide');
+                } else if (colorEditor.rampEnd.length < 1) {
+                    colorEditor.rampEnd = [
+                            parseInt(elem.attr('data-colx'), 10),
+                            parseInt(elem.attr('data-coly'), 10),
+                            curCol
+                    ];
+                    sels.get('.defineEndIndicator').addClass('hide');
+                    colorEditor.drawRamp();
+                }
+                return true;
+            }
 
             colorEditor.addToHistory(
                     elem.attr('data-colx'),
@@ -304,14 +375,16 @@
         /**
          * undo last set
          */
-        sels.get('#undoAction').click(function() {
+        sels.get('#undoAction').click(function(e) {
+            e.preventDefault();
             colorEditor.undo();
         });
 
         /**
          * slide/move image
          */
-        sels.get('button.slideImage').click(function() {
+        sels.get('button.slideImage').click(function(e) {
+            e.preventDefault();
             var direction = $(this).attr('data-direction');
 
             switch (direction) {
@@ -355,6 +428,15 @@
                     download(window.atob(response.exportString), palName+'.'+response.extension, 'text/plain');
                 }
             }, 'json');
+        });
+
+        /**
+         * Create color ramp
+         */
+        sels.get('#startColorRamp').click(function(e) {
+            e.preventDefault();
+            colorEditor.createRamp = true;
+            sels.get('.defineStartIndicator').removeClass('hide');
         });
 
         /**

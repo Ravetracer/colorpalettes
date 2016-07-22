@@ -20,6 +20,7 @@
                         <li>you can load an image on the right and move it along with the buttons on top; choose the number of moved pixels with the input field below; pick a color in the image and draw it on the grid.</li>
                         <li>when you're ready, give your palette a name and optionally a comment; click on "<i class="fa fa-save"></i> ASE" or "<i class="fa fa-save"></i> GPL" to save store your palette as a .gpl or .ase file</li>
                         <li>the palette is automatically stored in the browsers local storage (html5), so if you close the tab or browser and call the editor again, your palette is still there (maybe this functionality is not working everywhere!! so beware!)</li>
+                        <li>do you need a color ramp between two colors? just click on "color ramp", click on the first color and then on the second one. a ramp will be created between them. keep in mind, that color ramps are only allowed horizontal or vertical!</li>
                     </ul>
                     <br />
                     <h4>Next:</h4>
@@ -117,7 +118,14 @@
                     <a href="#" class="alert button" id="resetPalette">Reset</a>
                 </span>
             </div>
-            <div class="medium-4 columns">
+            <div class="medium-2 columns">
+                <a href="#" class="button" id="startColorRamp">
+                    Color ramp
+                </a>
+                <span class="alert badge hide defineStartIndicator"><i class="fa fa-circle-o"></i></span>
+                <span class="warning badge hide defineEndIndicator"><i class="fa fa-circle"></i></span>
+            </div>
+            <div class="medium-2 columns">
                 <div class="button-group">
                     <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Save as Adobe Swatch Exchange file">
                         <a href="#" class="button savePalette" data-savetype="ase">
