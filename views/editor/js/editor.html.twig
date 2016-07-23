@@ -232,7 +232,7 @@
         }
     };
 
-    function loadPreviewImage(input, originX, originY) {
+    function loadPreviewImage(input, originX, originY, imageZoom) {
         /**
          * image picker code
          */
@@ -240,8 +240,21 @@
             context = canvas.getContext('2d'),
             img = new Image();
 
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        context.webkitImageSmoothingEnabled = false;
+        context.mozImageSmoothingEnabled = false;
+        context.imageSmoothingEnabled = false;
+
         img.onload = function () {
-            context.drawImage(this, originX, originY);
+            if (isNaN(imageZoom)) {
+                imageZoom = 1;
+            }
+            var iw = img.width * imageZoom,
+                ih = img.height * imageZoom;
+
+            context.drawImage(this, originX, originY, iw, ih);
+            //context.drawImage(this, originX, originY);
         };
 
         if (input.files && input.files[0]) {
@@ -263,7 +276,8 @@
             storedColors = null,
             originX = 0,
             originY = 0,
-            slideSpeed = parseInt(sels.get('#imgSlideSteps').val(), 10);
+            slideSpeed = parseInt(sels.get('#imgSlideSteps').val(), 10),
+            imageZoom = 1;
 
         if (typeof(Storage) !== "undefined") {
             if (localStorage.getItem('numCols') !== null) {
@@ -363,6 +377,7 @@
                     srcCol
             );
 
+            console.log(curCol, bgCol, srcCol);
             elem.css('background-color', srcCol);
             if (bgCol === srcCol) {
                 elem.attr('data-changed', '0');
@@ -383,7 +398,7 @@
         /**
          * slide/move image
          */
-        sels.get('button.slideImage').click(function(e) {
+        sels.get('a.slideImage').click(function(e) {
             e.preventDefault();
             var direction = $(this).attr('data-direction');
 
@@ -404,7 +419,34 @@
                     originY+=slideSpeed;
                     break;
             }
-            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY);
+            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY, imageZoom);
+        });
+
+        /**
+         * zoom image
+         */
+        sels.get('a.imageZoom').click(function(e) {
+            console.log(imageZoom);
+            e.preventDefault();
+            var zoomDir = $(this).attr('data-zoom');
+
+            switch (zoomDir) {
+                case 'in':
+                    console.log('zoom in');
+                    imageZoom+=.1;
+                    if (imageZoom > 5) {
+                        imageZoom = 5;
+                    }
+                    break;
+
+                case 'out':
+                    imageZoom-=.1;
+                    if (imageZoom <= 0) {
+                        imageZoom = 0.1;
+                    }
+                    break;
+            }
+            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY, imageZoom);
         });
 
         /**
