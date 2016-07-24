@@ -8,23 +8,6 @@
         <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/app.css' }}" />
         <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/font-awesome.min.css'}}" />
         {% block additionalCSS %}{% endblock %}
-
-        <!-- Piwik -->
-        <script type="text/javascript">
-            var _paq = _paq || [];
-            _paq.push(["setDomains", ["*.colorpalettes.ravetracer.de"]]);
-            _paq.push(['trackPageView']);
-            _paq.push(['enableLinkTracking']);
-            (function() {
-                var u="https://openbookcase.org/piwik/";
-                _paq.push(['setTrackerUrl', u+'piwik.php']);
-                _paq.push(['setSiteId', 13]);
-                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-                g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-            })();
-        </script>
-        <noscript><p><img src="https://openbookcase.org/piwik/piwik.php?idsite=13" style="border:0;" alt="" /></p></noscript>
-        <!-- End Piwik Code -->
     </head>
     <body>
         <div data-sticky-container>
