@@ -296,9 +296,30 @@
 
             if (localStorage.getItem('backgroundColor') !== null) {
                 bgColor = localStorage.getItem('backgroundColor');
-                sels.get('#edit_bgcol').val(bgColor);
+                sels.get('#edit_bgcol').attr('data-color', bgColor);
             }
         }
+
+        /**
+         * init color pickers
+         */
+        sels.get('#sourcecolor').spectrum({
+            showInput: true,
+            preferredFormat: 'hex',
+            showButtons: false,
+            change: function(color) {
+                sels.get('#sourcecolor').attr('data-color', '#' + color.toHex());
+            }
+        });
+
+        sels.get('#edit_bgcol').spectrum({
+            showInput: true,
+            preferredFormat: 'hex',
+            showButtons: false,
+            change: function(color) {
+                sels.get('#edit_bgcol').attr('data-color', '#' + color.toHex());
+            }
+        });
 
         /**
          * change grid size
@@ -314,7 +335,7 @@
          */
         sels.get('#edit_bgcol').change(function() {
             colorEditor.storeColors();
-            colorEditor.setBackgroundColor($(this).val());
+            colorEditor.setBackgroundColor($(this).attr('data-color'));
             colorEditor.renderGrid();
         });
 
@@ -332,7 +353,7 @@
         sels.get('#imagePicker').colorSampler({
             onSelect: function(color) {
                 var hexCol = chroma(color).hex().toLowerCase();
-                sels.get('#sourcecolor').val(hexCol);
+                sels.get('#sourcecolor').spectrum('set', hexCol);
             }
         });
 
@@ -342,8 +363,8 @@
         sels.get('#colorgrid').on('click', '.gridcolor', function() {
             var elem = $(this),
                 curCol = chroma(elem.css('background-color')).hex().toLowerCase(),
-                bgCol = chroma(sels.get('#edit_bgcol').val()).hex().toLowerCase(),
-                srcCol = chroma(sels.get('#sourcecolor').val()).hex().toLowerCase();
+                bgCol = chroma(sels.get('#edit_bgcol').attr('data-color')).hex().toLowerCase(),
+                srcCol = chroma(sels.get('#sourcecolor').attr('data-color')).hex().toLowerCase();
 
             /**
              * Create color ramp
@@ -377,7 +398,6 @@
                     srcCol
             );
 
-            console.log(curCol, bgCol, srcCol);
             elem.css('background-color', srcCol);
             if (bgCol === srcCol) {
                 elem.attr('data-changed', '0');
@@ -426,13 +446,11 @@
          * zoom image
          */
         sels.get('a.imageZoom').click(function(e) {
-            console.log(imageZoom);
             e.preventDefault();
             var zoomDir = $(this).attr('data-zoom');
 
             switch (zoomDir) {
                 case 'in':
-                    console.log('zoom in');
                     imageZoom+=.1;
                     if (imageZoom > 5) {
                         imageZoom = 5;

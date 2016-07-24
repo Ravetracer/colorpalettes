@@ -1,9 +1,5 @@
 {% extends 'layout.html.twig' %}
 
-{% block additionalCSS %}
-    <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/color-sampler.min.css' }}" />
-{% endblock %}
-
 {% block mainContent %}
     <div class="row column">
         <h1>Color Editor <span class="alert label"><strong>ALPHA</strong></span></h1>
@@ -107,14 +103,14 @@
             <div class="medium-2 columns">
                 <label class="secondary label">
                     <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Current background color">
-                        BG color
-                        <input type="color" class="colorBox large" id="edit_bgcol">
+                        Background<br/>
+                        <input type="text" class="colorBox large" id="edit_bgcol" data-color="#000000">
                     </span>
                 </label>
                 <label class="secondary label">
                     <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Current 'draw' color">
-                        Cur. color
-                        <input type="color" class="colorBox large" id="sourcecolor">
+                        Current<br/>
+                        <input type="text" class="colorBox large" id="sourcecolor" data-color="#000000"/>
                     </span>
                 </label>
             </div>
@@ -165,7 +161,13 @@
     </form>
 {% endblock %}
 
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/color-sampler.min.css' }}" />
+    <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/spectrum.css' }}" />
+{% endblock %}
+
 {% block additionalJS %}
+    <script src="/js/spectrum.js"></script>
     <script src="/js/color-sampler.min.js"></script>
     <script src="/js/chroma.min.js"></script>
     <script src="/js/download.js"></script>
