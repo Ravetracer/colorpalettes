@@ -17,6 +17,7 @@
                         <li class="menu-text">Color Palettes</li>
                         <li><a href="{{ path('homepage') }}">Index</a></li>
                         <li><a href="{{ path('editor') }}">Editor <span class="alert badge"><strong>ALPHA</strong></span></a></li>
+                        {% block additionalMenuEntries %}{% endblock %}
                     </ul>
                 </div>
             </nav>

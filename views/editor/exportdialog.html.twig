@@ -1,0 +1,29 @@
+<div class="reveal" id="exportPaletteDialog" data-reveal>
+    <form>
+        <div class="row">
+            <div class="medium-6 columns">
+                <label>Palette name
+                    <input type="text" id="paletteName" />
+                </label>
+            </div>
+            <div class="medium-6 columns">
+                <label>Palette comment
+                    <input type="text" id="paletteComment" />
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="medium-8 columns">
+                <div class="button-group">
+                    <a href="#" class="button savePalette" data-savetype="ase"><i class="fa fa-save"></i> Export as .ase</a>
+                    <a href="#" class="button savePalette" data-savetype="gpl"><i class="fa fa-save"></i> Export as .gpl</a>
+                </div>
+            </div>
+            <div class="medium-4 columns text-right">
+                <button class="button" data-close aria-label="Cancel" type="button">
+                    <i class="fa fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -354,6 +354,7 @@
             onSelect: function(color) {
                 var hexCol = chroma(color).hex().toLowerCase();
                 sels.get('#sourcecolor').spectrum('set', hexCol);
+                sels.get('#sourcecolor').attr('data-color', hexCol);
             }
         });
 
@@ -477,7 +478,9 @@
         /**
          * Save color palette
          */
-        sels.get('.savePalette').click(function () {
+        sels.get('.savePalette').click(function (e) {
+            e.preventDefault();
+
             var colorsToSave = JSON.stringify(colorEditor.storedColors),
                 palName = sels.get('#paletteName').val(),
                 palComment = sels.get('#paletteComment').val(),

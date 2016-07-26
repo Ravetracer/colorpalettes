@@ -2,34 +2,8 @@
 
 {% block mainContent %}
     <div class="row column">
-        <h1>Color Editor <span class="alert label"><strong>ALPHA</strong></span></h1>
+        <h2>Color Editor <span class="alert label"><strong>ALPHA</strong></span></h2>
         <p class="lead">Attention! This palette editor is very early alpha and not completed at all! Use it at your own risk and please read the help below!</p>
-        <ul class="accordion" data-accordion data-allow-all-closed="true">
-            <li class="accordion-item" data-accordion-item>
-                <a href="#" class="accordion-title">Help</a>
-                <div class="accordion-content" data-tab-content>
-                    <ul>
-                        <li>define your grid size with the input fields</li>
-                        <li>choose your desired background color with the color picker</li>
-                        <li>use "reset" for deleting all colors</li>
-                        <li>use the "Current color" to choose a desired color, then just "draw" it onto the grid</li>
-                        <li>you can load an image on the right and move it along with the buttons on top; choose the number of moved pixels with the input field below; pick a color in the image and draw it on the grid.</li>
-                        <li>when you're ready, give your palette a name and optionally a comment; click on "<i class="fa fa-save"></i> ASE" or "<i class="fa fa-save"></i> GPL" to save store your palette as a .gpl or .ase file</li>
-                        <li>the palette is automatically stored in the browsers local storage (html5), so if you close the tab or browser and call the editor again, your palette is still there (maybe this functionality is not working everywhere!! so beware!)</li>
-                        <li>do you need a color ramp between two colors? just click on "color ramp", click on the first color and then on the second one. a ramp will be created between them. keep in mind, that color ramps are only allowed horizontal or vertical!</li>
-                    </ul>
-                    <br />
-                    <h4>Next:</h4>
-                    <ul>
-                        <li>storing in local storage will be made optional</li>
-                        <li>importing of palettes will be added</li>
-                        <li>UI is still made for functional use and will be improved!</li>
-                        <li>a JS color picker will be implemented in the future to support more browsers; currently it's the standard HTML5 input-type-color </li>
-                        <li>have ideas? let me know on Twitter by writing to @ravetracer 😀</li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
     </div>
 
     <form>
@@ -47,13 +21,29 @@
                 </span>
             </div>
             <div class="medium-2 columns">
-                <label class="label">Palette name
-                    <input type="text" id="paletteName" />
+                <label class="secondary label">
+                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Current background color">
+                        Background<br/>
+                        <input type="text" class="colorBox large" id="edit_bgcol" data-color="#000000">
+                    </span>
+                </label>
+                <label class="secondary label">
+                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Current 'draw' color">
+                        Current<br/>
+                        <input type="text" class="colorBox large" id="sourcecolor" data-color="#000000"/>
+                    </span>
                 </label>
             </div>
+            <div class="medium-1 columns">
+                <a href="#" class="small button" id="startColorRamp">
+                    Color ramp
+                </a>
+                <span class="alert badge hide defineStartIndicator"><i class="fa fa-circle-o"></i></span>
+                <span class="warning badge hide defineEndIndicator"><i class="fa fa-circle"></i></span>
+            </div>
             <div class="medium-2 columns">
-                <label class="label">Palette comment
-                    <input type="text" id="paletteComment" />
+                <label class="secondary label">Image slide speed in px
+                    <input type="number" value="15" id="imgSlideSteps"/>
                 </label>
             </div>
             <div class="medium-3 columns">
@@ -100,57 +90,6 @@
         </div>
 
         <div class="row">
-            <div class="medium-2 columns">
-                <label class="secondary label">
-                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Current background color">
-                        Background<br/>
-                        <input type="text" class="colorBox large" id="edit_bgcol" data-color="#000000">
-                    </span>
-                </label>
-                <label class="secondary label">
-                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Current 'draw' color">
-                        Current<br/>
-                        <input type="text" class="colorBox large" id="sourcecolor" data-color="#000000"/>
-                    </span>
-                </label>
-            </div>
-            <div class="medium-2 columns">
-                <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Undo last action">
-                    <a href="#" class="button" id="undoAction" title="Undo last action">
-                        <i class="fa fa-history"></i>
-                    </a>
-                </span>
-                <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Delete all colors!">
-                    <a href="#" class="alert button" id="resetPalette">Reset</a>
-                </span>
-            </div>
-            <div class="medium-2 columns">
-                <a href="#" class="button" id="startColorRamp">
-                    Color ramp
-                </a>
-                <span class="alert badge hide defineStartIndicator"><i class="fa fa-circle-o"></i></span>
-                <span class="warning badge hide defineEndIndicator"><i class="fa fa-circle"></i></span>
-            </div>
-            <div class="medium-2 columns">
-                <div class="button-group">
-                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Save as Adobe Swatch Exchange file">
-                        <a href="#" class="button savePalette" data-savetype="ase">
-                            <i class="fa fa-save"></i> ASE
-                        </a>
-                    </span>
-                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="1" title="Save as Gimp palette file">
-                        <a href="#" class="button savePalette" data-savetype="gpl">
-                            <i class="fa fa-save"></i> GPL
-                        </a>
-                    </span>
-                </div>
-            </div>
-            <div class="medium-3 columns">
-                <input type="number" value="15" id="imgSlideSteps"/>
-            </div>
-        </div>
-
-        <div class="row">
             <div class="medium-9 columns">
                 <div id="colorgrid"></div>
             </div>
@@ -159,6 +98,34 @@
             </div>
         </div>
     </form>
+
+    {% include 'editor/help.html.twig' %}
+    {% include 'editor/exportdialog.html.twig' %}
+{% endblock %}
+
+{% block additionalMenuEntries %}
+    <li>
+        <ul class="dropdown menu" data-dropdown-menu>
+            <li>
+                <a href="#">File</a>
+                <ul class="menu vertical align-right">
+                    <li><a data-open="exportPaletteDialog"><i class="fa fa-save"></i> Export palette</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <ul class="dropdown menu" data-dropdown-menu>
+            <li>
+                <a href="#">Edit</a>
+                <ul class="menu vertical align-right">
+                    <li><a href="#" class="small button" id="undoAction"><i class="fa fa-history"></i> Undo last action</a></li>
+                    <li><a href="#" class="small alert button" id="resetPalette">Reset palette</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li><a data-open="editorHelpDialog">Help</a></li>
 {% endblock %}
 
 {% block additionalCSS %}
