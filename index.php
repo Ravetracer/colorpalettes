@@ -157,4 +157,14 @@ $app->post('/editor/save', function (Request $request) use ($app) {
     return new JsonResponse(['status' => 'success', 'exportString' => base64_encode($exporter->getExportContents()), 'extension' => $exporter->getExportFileExtension()]);
 });
 
+$app->post('/editor/importGpl', function (Request $request) use ($app) {
+    $gplData = $request->get('palettefile');
+
+    $pal = new BasePalette();
+    $importer = new GimpPaletteImporter($gplData);
+    $pal->import($importer);
+    $pal->calculateColorCount();
+    return new JsonResponse(['numCols' => $pal->getColorCount()]);
+});
+
 $app->run();

@@ -267,6 +267,21 @@
         }
     }
 
+    function loadGimpPalette(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var paletteFile = e.target.result;
+                $.post('/editor/importGpl', {'palettefile': paletteFile}, function(response) {
+                    console.log(response);
+                }, 'json');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
     $(document).ready(function () {
 
         var numCols = sels.get('#edit_cols').val(),

@@ -2,8 +2,7 @@
 
 {% block mainContent %}
     <div class="row column">
-        <h2>Color Editor <span class="alert label"><strong>ALPHA</strong></span></h2>
-        <p class="lead">Attention! This palette editor is very early alpha and not completed at all! Use it at your own risk and please read the help below!</p>
+        <p class="lead">Attention! This palette editor is very early alpha and not completed at all! Use it at your own risk and please consider reading the help!</p>
     </div>
 
     <form>
@@ -40,6 +39,7 @@
                 </a>
                 <span class="alert badge hide defineStartIndicator"><i class="fa fa-circle-o"></i></span>
                 <span class="warning badge hide defineEndIndicator"><i class="fa fa-circle"></i></span>
+                <input id="importGplFile" type="file" onchange="loadGimpPalette(this);"/>
             </div>
             <div class="medium-2 columns">
                 <label class="secondary label">Image slide speed in px
@@ -109,6 +109,7 @@
             <li>
                 <a href="#">File</a>
                 <ul class="menu vertical align-right">
+                    <li><a href="#"><i class="fa fa-upload" id="importGplFile"></i> Import .gpl file</a></li>
                     <li><a data-open="exportPaletteDialog"><i class="fa fa-save"></i> Export palette</a></li>
                 </ul>
             </li>

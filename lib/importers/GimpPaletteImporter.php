@@ -54,6 +54,9 @@ class GimpPaletteImporter implements ImporterInterface
             if (strcmp(trim($this->paletteFile[0]), "GIMP Palette") === 0) {
                 $this->isValid = true;
             }
+        } elseif ($this->isPaletteString($fileName)) {
+            $this->paletteFile = explode('\n', $fileName);
+            $this->isValid = true;
         }
     }
 
@@ -148,5 +151,14 @@ class GimpPaletteImporter implements ImporterInterface
             }
         }
         return $colors;
+    }
+
+    /**
+     * @param $inputString
+     * @return string
+     */
+    private function isPaletteString($inputString)
+    {
+        return strstr($inputString, "GIMP Palette");
     }
 }
