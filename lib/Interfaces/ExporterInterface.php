@@ -1,5 +1,5 @@
 <?php
-namespace Colorpalettes\interfaces;
+namespace Colorpalettes\Interfaces;
 
 use Colorpalettes\BasePalette;
 

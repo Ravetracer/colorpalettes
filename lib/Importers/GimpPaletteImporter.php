@@ -1,9 +1,9 @@
 <?php
 
-namespace Colorpalettes\importers;
+namespace Colorpalettes\Importers;
 
 use Colorpalettes\BaseColor;
-use Colorpalettes\interfaces\ImporterInterface;
+use Colorpalettes\Interfaces\ImporterInterface;
 
 /**
  * Class GimpPaletteImporter

@@ -1,6 +1,6 @@
 <?php
 
-namespace Colorpalettes\interfaces;
+namespace Colorpalettes\Interfaces;
 
 /**
  * Interface ImporterInterface

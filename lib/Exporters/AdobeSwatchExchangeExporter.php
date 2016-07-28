@@ -1,6 +1,6 @@
 <?php
 
-namespace Colorpalettes\exporters;
+namespace Colorpalettes\Exporters;
 
 use Colorpalettes\BasePalette;
 use Colorpalettes\BaseColor;
