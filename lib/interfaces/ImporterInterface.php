@@ -1,7 +1,11 @@
 <?php
 
-namespace Colorpalettes\Interfaces;
+namespace Colorpalettes\interfaces;
 
+/**
+ * Interface ImporterInterface
+ * @package Colorpalettes\Interfaces
+ */
 interface ImporterInterface
 {
     /**

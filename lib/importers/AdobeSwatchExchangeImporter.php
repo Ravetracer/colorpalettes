@@ -1,10 +1,10 @@
 <?php
 
-namespace Colorpalettes\Importers;
+namespace Colorpalettes\importers;
 
-use Colorpalettes\ASEDecoder,
-    Colorpalettes\BaseColor,
-    Colorpalettes\Interfaces\ImporterInterface;
+use Colorpalettes\ASEDecoder;
+use Colorpalettes\BaseColor;
+use Colorpalettes\interfaces\ImporterInterface;
 
 /**
  * Created by PhpStorm.
@@ -31,7 +31,7 @@ class AdobeSwatchExchangeImporter implements ImporterInterface
 
     /**
      * GimpPalette constructor.
-     * @param $fileName
+     * @param string $fileName
      */
     public function __construct($fileName)
     {
@@ -106,6 +106,7 @@ class AdobeSwatchExchangeImporter implements ImporterInterface
                 ->setName($currentEntry['title']);
             $colors[] = $col;
         }
+
         return $colors;
     }
 }

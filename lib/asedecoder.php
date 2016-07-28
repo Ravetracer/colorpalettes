@@ -8,6 +8,11 @@ namespace Colorpalettes;
 class ASEDecoder
 {
 
+    /**
+     * Decodes an ASE file
+     * @param string $file
+     * @return array
+     */
     public static function decodeFile($file)
     {
         $swatches = array();
@@ -21,48 +26,50 @@ class ASEDecoder
 
         // get the ase version number
         $data = fread($fp, 4);
-        $header_version = unpack("n*", $data);
-        $version = $header_version[1] . "." . $header_version[2];
+        $headerVersion = unpack("n*", $data);
+        $version = $headerVersion[1].".".$headerVersion[2];
 
         // get the number of chunks
         $data = fread($fp, 4);
-        $chunk_count_array = unpack("N", $data);
-        $chunk_count = $chunk_count_array[1];
-        for ($chunk = 0; $chunk < $chunk_count; $chunk++) {
+        $chunkCountArray = unpack("N", $data);
+        $chunkCount = $chunkCountArray[1];
+        for ($chunk = 0; $chunk < $chunkCount; $chunk++) {
             $data = fread($fp, 4);
-            $chunk_type_array = unpack("H*", $data);
-            $chunk_type = $chunk_type_array[1];
+            $chunkTypeArray = unpack("H*", $data);
+            $chunkType = $chunkTypeArray[1];
 
             $data = fread($fp, 2);
-            $chunk_size_array = unpack("n", $data);
-            $chunk_size = $chunk_size_array[1] - 2;
+            $chunkSizeArray = unpack("n", $data);
+            $chunkSize = $chunkSizeArray[1] - 2;
 
             $data = fread($fp, 2);
-            $chuck_char_count_array = unpack("n", $data);
-            $chunk_char_count = $chuck_char_count_array[1];
+            $chuckCharCountArray = unpack("n", $data);
+            $chunkCharCount = $chuckCharCountArray[1];
 
-            switch ($chunk_type) {
+            switch ($chunkType) {
                 case "c0010000": // pallate name chunk
-                    $data = fread($fp, $chunk_char_count * 2);
+                    $data = fread($fp, $chunkCharCount * 2);
                     $name = utf8_decode($data);
                     break;
                 case "00010000": // swatch chunk
                 case "00000000": // final chunk
-                    $data = fread($fp, $chunk_char_count * 2);
-                    $color_title = utf8_decode($data);
+                    $data = fread($fp, $chunkCharCount * 2);
+                    $colorTitle = utf8_decode($data);
                     $data = fread($fp, 4);
-                    $color_space = trim($data);
-                    switch ($color_space) {
+                    $colorSpace = trim($data);
+                    $r = $g = $b = 0;
+                    $rh = $gh = $bh = 0;
+                    switch ($colorSpace) {
                         case "RGB":
                             $rr = fread($fp, 4);
                             $gr = fread($fp, 4);
                             $br = fread($fp, 4);
-                            $rh = self::dec2hex((int)round((self::toFloat($rr) * 255), 0));
-                            $gh = self::dec2hex((int)round((self::toFloat($gr) * 255), 0));
-                            $bh = self::dec2hex((int)round((self::toFloat($br) * 255), 0));
-                            $r = (int)round((self::toFloat($rr) * 255), 0);
-                            $g = (int)round((self::toFloat($gr) * 255), 0);
-                            $b = (int)round((self::toFloat($br) * 255), 0);
+                            $rh = self::dec2hex((int) round((self::toFloat($rr) * 255), 0));
+                            $gh = self::dec2hex((int) round((self::toFloat($gr) * 255), 0));
+                            $bh = self::dec2hex((int) round((self::toFloat($br) * 255), 0));
+                            $r = (int) round((self::toFloat($rr) * 255), 0);
+                            $g = (int) round((self::toFloat($gr) * 255), 0);
+                            $b = (int) round((self::toFloat($br) * 255), 0);
                             break;
                         case "CMYK":
                             $c = self::toFloat(fread($fp, 4));
@@ -75,36 +82,37 @@ class ASEDecoder
                             $b = $out->b;
                             break;
                         case "GRAY":
-                            $val = dechex((int)round((self::toFloat(fread($fp, 4)) * 255), 0));
+                            $val = dechex((int) round((self::toFloat(fread($fp, 4)) * 255), 0));
                             $r = $val;
                             $g = $val;
                             $b = $val;
                             break;
                         case "LAB":
-                            $L = self::toFloat(fread($fp, 4));
+                            $l = self::toFloat(fread($fp, 4));
                             $a = self::toFloat(fread($fp, 4));
                             $b = self::toFloat(fread($fp, 4));
-                            $out = self::labToRgb($L, $a, $b);
+                            $out = self::labToRgb($l, $a, $b);
                             $r = $out->r;
                             $g = $out->g;
                             $b = $out->b;
                             break;
                         default:
-                            $data = fread($fp, $chunk_size - 2);
+                            $data = fread($fp, $chunkSize - 2);
                             break;
                     }
                     $data = fread($fp, 2); // end of chunk
                     $swatches[] = [
-                        'hex' => '"#' . $rh . $gh . $bh . '" ',
+                        'hex' => '"#'.$rh.$gh.$bh.'" ',
                         'r' => $r,
                         'g' => $g,
                         'b' => $b,
-                        'title' => $color_title
+                        'title' => $colorTitle,
                     ];
                     break;
             }
         }
         fclose($fp);
+
         return $swatches;
     }
 
@@ -116,85 +124,86 @@ class ASEDecoder
         } else {
             $a = unpack("f*", strrev($data));
         }
-        return (float)$a[1];
+        return (float) $a[1];
     }
 
 
     private static function cmykToRgb($c, $m, $y, $k)
     {
-        $o = new stdclass();
+        $o = new \stdClass();
         $r = 1 - ($c * (1 - $k)) - $k;
         $g = 1 - ($m * (1 - $k)) - $k;
         $b = 1 - ($y * (1 - $k)) - $k;
-        $o->r = self::dec2hex((int)round($r * 255));
-        $o->g = self::dec2hex((int)round($g * 255));
-        $o->b = self::dec2hex((int)round($b * 255));
+        $o->r = self::dec2hex((int) round($r * 255));
+        $o->g = self::dec2hex((int) round($g * 255));
+        $o->b = self::dec2hex((int) round($b * 255));
+
         return $o;
     }
 
 
-    private static function labToRgb($L, $a, $b)
+    private static function labToRgb($l, $a, $b)
     {
-        $o = new stdclass();
-        $ref_X = 95.047;
-        $ref_Y = 100.000;
-        $ref_Z = 108.883;
+        $o = new \stdClass();
+        $refX = 95.047;
+        $refY = 100.000;
+        $refZ = 108.883;
 
-        $var_Y = ($L + 16) / 116;
-        $var_X = $a / 500 + $var_Y;
-        $var_Z = $var_Y - $b / 200;
+        $varY = ($l + 16) / 116;
+        $varX = $a / 500 + $varY;
+        $varZ = $varY - $b / 200;
 
-        if ($var_Y ^ 3 > 0.008856) {
-            $var_Y = $var_Y ^ 3;
+        if ($varY ^ 3 > 0.008856) {
+            $varY = $varY ^ 3;
         } else {
-            $var_Y = ($var_Y - 16 / 116) / 7.787;
+            $varY = ($varY - 16 / 116) / 7.787;
         }
 
-        if ($var_X ^ 3 > 0.008856) {
-            $var_X = $var_X ^ 3;
+        if ($varX ^ 3 > 0.008856) {
+            $varX = $varX ^ 3;
         } else {
-            $var_X = ($var_X - 16 / 116) / 7.787;
+            $varX = ($varX - 16 / 116) / 7.787;
         }
 
-        if ($var_Z ^ 3 > 0.008856) {
-            $var_Z = $var_Z ^ 3;
+        if ($varZ ^ 3 > 0.008856) {
+            $varZ = $varZ ^ 3;
         } else {
-            $var_Z = ($var_Z - 16 / 116) / 7.787;
+            $varZ = ($varZ - 16 / 116) / 7.787;
         }
 
-        $X = $ref_X * $var_X; //ref_X =  95.047     Observer= 2ďż˝, Illuminant= D65
-        $Y = $ref_Y * $var_Y; //ref_Y = 100.000
-        $Z = $ref_Z * $var_Z; //ref_Z = 108.883
+        $x = $refX * $varX; //ref_X =  95.047     Observer= 2ďż˝, Illuminant= D65
+        $y = $refY * $varY; //ref_Y = 100.000
+        $z = $refZ * $varZ; //ref_Z = 108.883
 
-        $var_X = $X / 100; //X from 0 to  95.047      (Observer = 2ďż˝, Illuminant = D65)
-        $var_Y = $Y / 100; //Y from 0 to 100.000
-        $var_Z = $Z / 100; //Z from 0 to 108.883
+        $varX = $x / 100; //X from 0 to  95.047      (Observer = 2ďż˝, Illuminant = D65)
+        $varY = $y / 100; //Y from 0 to 100.000
+        $varZ = $z / 100; //Z from 0 to 108.883
 
-        $var_R = $var_X * 3.2406 + $var_Y * -1.5372 + $var_Z * -0.4986;
-        $var_G = $var_X * -0.9689 + $var_Y * 1.8758 + $var_Z * 0.0415;
-        $var_B = $var_X * 0.0557 + $var_Y * -0.2040 + $var_Z * 1.0570;
+        $varR = $varX * 3.2406 + $varY * -1.5372 + $varZ * -0.4986;
+        $varG = $varX * -0.9689 + $varY * 1.8758 + $varZ * 0.0415;
+        $varB = $varX * 0.0557 + $varY * -0.2040 + $varZ * 1.0570;
 
-        if ($var_R > 0.0031308) {
-            $var_R = 1.055 * ($var_R ^ (1 / 2.4)) - 0.055;
+        if ($varR > 0.0031308) {
+            $varR = 1.055 * ($varR ^ (1 / 2.4)) - 0.055;
         } else {
-            $var_R = 12.92 * $var_R;
+            $varR = 12.92 * $varR;
         }
 
-        if ($var_G > 0.0031308) {
-            $var_G = 1.055 * ($var_G ^ (1 / 2.4)) - 0.055;
+        if ($varG > 0.0031308) {
+            $varG = 1.055 * ($varG ^ (1 / 2.4)) - 0.055;
         } else {
-            $var_G = 12.92 * $var_G;
+            $varG = 12.92 * $varG;
         }
 
-        if ($var_B > 0.0031308) {
-            $var_B = 1.055 * ($var_B ^ (1 / 2.4)) - 0.055;
+        if ($varB > 0.0031308) {
+            $varB = 1.055 * ($varB ^ (1 / 2.4)) - 0.055;
         } else {
-            $var_B = 12.92 * $var_B;
+            $varB = 12.92 * $varB;
         }
 
-        $o->r = self::dec2hex((int)round($var_R * 255));
-        $o->g = self::dec2hex((int)round($var_G * 255));
-        $o->b = self::dec2hex((int)round($var_B * 255));
+        $o->r = self::dec2hex((int) round($varR * 255));
+        $o->g = self::dec2hex((int) round($varG * 255));
+        $o->b = self::dec2hex((int) round($varB * 255));
 
         return $o;
     }
@@ -208,7 +217,7 @@ class ASEDecoder
             $ret = "0";
         }
         $ret .= $string;
+
         return $ret;
     }
 }
-

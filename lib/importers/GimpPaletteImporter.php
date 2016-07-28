@@ -1,14 +1,13 @@
 <?php
 
-namespace Colorpalettes\Importers;
+namespace Colorpalettes\importers;
 
-use Colorpalettes\BaseColor,
-    Colorpalettes\Interfaces\ImporterInterface;
+use Colorpalettes\BaseColor;
+use Colorpalettes\interfaces\ImporterInterface;
+
 /**
- * Created by PhpStorm.
- * User: cnielebock
- * Date: 19.01.16
- * Time: 11:41
+ * Class GimpPaletteImporter
+ * @package Colorpalettes\importers
  */
 class GimpPaletteImporter implements ImporterInterface
 {
@@ -44,7 +43,7 @@ class GimpPaletteImporter implements ImporterInterface
 
     /**
      * GimpPalette constructor.
-     * @param $fileName
+     * @param string $fileName
      */
     public function __construct($fileName)
     {
@@ -105,7 +104,7 @@ class GimpPaletteImporter implements ImporterInterface
      */
     public function getColumns()
     {
-        return (int)$this->columns;
+        return (int) $this->columns;
     }
 
     /**
@@ -132,27 +131,28 @@ class GimpPaletteImporter implements ImporterInterface
             // fetch columns
             preg_match("/(Columns|columns): ([0-9]+)/", $currentEntry, $columnMatch);
             if (count($columnMatch)) {
-                $this->columns = (int)$columnMatch[2];
+                $this->columns = (int) $columnMatch[2];
             }
 
             // fetch comment
             preg_match("/^#(.*)/", $currentEntry, $commentMatch);
             if (count($commentMatch)) {
-                $this->comment .= trim(filter_var($commentMatch[1], FILTER_SANITIZE_STRING)) . "\n";
+                $this->comment .= trim(filter_var($commentMatch[1], FILTER_SANITIZE_STRING))."\n";
             }
 
             // fetch color
             preg_match("/([0-9]{1,3})\s+([0-9]{1,3})\s+([0-9]{1,3})(\s(.*)|)/", trim($currentEntry), $colorMatch);
             if (count($colorMatch)) {
                 $newCol = new BaseColor();
-                $newCol->setRed((int)$colorMatch[1])
-                    ->setGreen((int)$colorMatch[2])
-                    ->setBlue((int)$colorMatch[3])
+                $newCol->setRed((int) $colorMatch[1])
+                    ->setGreen((int) $colorMatch[2])
+                    ->setBlue((int) $colorMatch[3])
                     ->setName(trim(filter_var($colorMatch[4], FILTER_SANITIZE_STRING)));
 
                 $colors[] = $newCol;
             }
         }
+
         return $colors;
     }
 

@@ -9,6 +9,10 @@ namespace Colorpalettes;
 
 use Silex\Application;
 
+/**
+ * Class SilexApp
+ * @package Colorpalettes
+ */
 class SilexApp extends Application
 {
     use Application\MonologTrait;

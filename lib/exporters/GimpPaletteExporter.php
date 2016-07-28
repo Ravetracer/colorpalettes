@@ -1,16 +1,14 @@
 <?php
 
-namespace Colorpalettes\Exporters;
+namespace Colorpalettes\exporters;
 
-use Colorpalettes\BasePalette,
-    Colorpalettes\BaseColor,
-    Colorpalettes\Interfaces\ExporterInterface;
+use Colorpalettes\BasePalette;
+use Colorpalettes\BaseColor;
+use Colorpalettes\Interfaces\ExporterInterface;
 
 /**
- * Created by PhpStorm.
- * User: cnielebock
- * Date: 19.01.16
- * Time: 11:41
+ * Class GimpPaletteExporter
+ * @package Colorpalettes\exporters
  */
 class GimpPaletteExporter implements ExporterInterface
 {
@@ -36,20 +34,15 @@ class GimpPaletteExporter implements ExporterInterface
      */
     public function getExportContents()
     {
-        $export = "GIMP Palette\n"
-                . "Name: " . $this->palette->getName() . "\n"
-                . "Columns: " . $this->palette->getColumns() . "\n"
-                . "# " . $this->palette->getComment() . "\n";
+        $export = "GIMP Palette\n"."Name: ".$this->palette->getName()."\n"."Columns: ".$this->palette->getColumns()."\n"."# ".$this->palette->getComment()."\n";
 
         /**
          * @var $currentColor BaseColor
          */
         foreach ($this->palette->getColors() as $currentColor) {
-            $export .= str_pad((String)$currentColor->getRed(), 3, " ", STR_PAD_LEFT) . " "
-                     . str_pad((String)$currentColor->getGreen(), 3, " ", STR_PAD_LEFT) . " "
-                     . str_pad((String)$currentColor->getBlue(), 3, " ", STR_PAD_LEFT) . "\t"
-                     . $currentColor->getName() . "\n";
+            $export .= str_pad((String) $currentColor->getRed(), 3, " ", STR_PAD_LEFT)." ".str_pad((String) $currentColor->getGreen(), 3, " ", STR_PAD_LEFT)." ".str_pad((String) $currentColor->getBlue(), 3, " ", STR_PAD_LEFT)."\t".$currentColor->getName()."\n";
         }
+
         return $export;
     }
 

@@ -1,8 +1,12 @@
 <?php
-namespace Colorpalettes\Interfaces;
+namespace Colorpalettes\interfaces;
 
 use Colorpalettes\BasePalette;
 
+/**
+ * Interface ExporterInterface
+ * @package Colorpalettes\interfaces
+ */
 interface ExporterInterface
 {
     /**

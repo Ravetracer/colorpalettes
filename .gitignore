@@ -5,4 +5,4 @@ npm-debug.log
 vendor
 logs
 dev_temp
-phploy.*
+/phploy.*

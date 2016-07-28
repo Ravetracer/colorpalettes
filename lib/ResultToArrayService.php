@@ -10,8 +10,16 @@ namespace Colorpalettes;
 
 use Spot\Query;
 
+/**
+ * Class ResultToArrayService
+ * @package Colorpalettes
+ */
 class ResultToArrayService
 {
+    /**
+     * @param Query $dbResult
+     * @return array
+     */
     public function getPaletteArray(Query $dbResult)
     {
         $pals = [];
@@ -37,6 +45,7 @@ class ResultToArrayService
 
             $pals[] = $newPal;
         }
+
         return $pals;
     }
 }

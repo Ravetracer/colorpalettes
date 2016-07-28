@@ -288,11 +288,11 @@
                 var paletteFile = e.target.result;
                 $.post('/editor/importGpl', {'palettefile': paletteFile}, function(response) {
                     sels.get('#edit_cols').val(response.columns);
-                    sels.get('#edit_rows').val(response.colors.length / response.columns);
+                    sels.get('#edit_rows').val(Math.ceil(response.colors.length / response.columns));
                     sels.get('#paletteName').val(response.name);
                     sels.get('#paletteComment').val(response.comment);
 
-                    colorEditor.setColsAndRows(response.columns, (response.colors.length / response.columns));
+                    colorEditor.setColsAndRows(response.columns, Math.ceil(response.colors.length / response.columns));
                     colorEditor.renderGrid(true);
                     colorEditor.setColorsFromSerialArray(response.colors);
                     colorEditor.renderGrid(true);

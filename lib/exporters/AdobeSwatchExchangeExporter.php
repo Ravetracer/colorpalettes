@@ -1,10 +1,10 @@
 <?php
 
-namespace Colorpalettes\Exporters;
+namespace Colorpalettes\exporters;
 
-use Colorpalettes\BasePalette,
-    Colorpalettes\BaseColor,
-    Colorpalettes\Interfaces\ExporterInterface;
+use Colorpalettes\BasePalette;
+use Colorpalettes\BaseColor;
+use Colorpalettes\Interfaces\ExporterInterface;
 
 /**
  * Created by PhpStorm.
@@ -43,20 +43,23 @@ class AdobeSwatchExchangeExporter implements ExporterInterface
         foreach ($this->palette->getColors() as $currentColor) {
             $expColors[] = [
                 $currentColor->getHexValue(),
-                $currentColor->getName()
+                $currentColor->getName(),
             ];
         }
 
-        $asePal = [[
-            "title"     => $this->palette->getName(),
-            "colors"    => $expColors,
-        ]];
+        $asePal = [
+            [
+                "title"     => $this->palette->getName(),
+                "colors"    => $expColors,
+            ],
+        ];
 
         return $this->mkASE($asePal);
     }
 
     /**
-     * @inheritdoc
+     * Get the export file extension
+     * @return string
      */
     public function getExportFileExtension()
     {
@@ -90,8 +93,9 @@ class AdobeSwatchExchangeExporter implements ExporterInterface
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
      */
-    private function mkASE($palettes) {
-        $internal_encoding = mb_internal_encoding();
+    private function mkASE($palettes)
+    {
+        $internalEncoding = mb_internal_encoding();
         mb_internal_encoding("UTF-8");
 
         ob_start();
@@ -103,55 +107,55 @@ class AdobeSwatchExchangeExporter implements ExporterInterface
             ++$numPalettes;
         }
 
-        echo "ASEF"; # File signature
-        echo pack("n*",1,0); # Version
-        echo pack("N",$totalColors + ($numPalettes * 2)); # Total number of blocks
+        echo "ASEF"; // File signature
+        echo pack("n*", 1, 0); // Version
+        echo pack("N", $totalColors + ($numPalettes * 2)); // Total number of blocks
 
         foreach ($palettes as $palette) {
-            echo pack("n",0xC001); # Group start
+            echo pack("n", 0xC001); // Group start
 
-            # Length of this block - see below
+            // Length of this block - see below
 
-            $title  = (mb_convert_encoding($palette["title"],"UTF-16BE","UTF-8") . pack("n",0));
-            $buffer = pack("n",(strlen($title) / 2)); # Length of the group title
-            $buffer .= $title; # Group title
+            $title  = (mb_convert_encoding($palette["title"], "UTF-16BE", "UTF-8").pack("n", 0));
+            $buffer = pack("n", (strlen($title) / 2)); // Length of the group title
+            $buffer .= $title; // Group title
 
-            echo pack("N",strlen($buffer)); # Length of this block
+            echo pack("N", strlen($buffer)); // Length of this block
             echo $buffer;
 
             foreach ($palette["colors"] as $color) {
-                echo pack("n",1); # Color entry
+                echo pack("n", 1); // Color entry
 
-                # Length of this block - see below
+                // Length of this block - see below
 
-                $title  = (mb_convert_encoding($color[1],"UTF-16BE","UTF-8") . pack("n",0));
-                $buffer = pack("n",(strlen($title) / 2)); # Length of the title
-                $buffer .= $title; # Title
+                $title  = (mb_convert_encoding($color[1], "UTF-16BE", "UTF-8").pack("n", 0));
+                $buffer = pack("n", (strlen($title) / 2)); // Length of the title
+                $buffer .= $title; // Title
 
-                # Colors
-                list ($r,$g,$b) = array_map("intval",sscanf($color[0],"%2x%2x%2x"));
+                // Colors
+                list ($r, $g, $b) = array_map("intval", sscanf($color[0], "%2x%2x%2x"));
                 $r /= 255;
                 $g /= 255;
                 $b /= 255;
 
                 $buffer .= "RGB ";
-                $buffer .= strrev(pack("f",$r));
-                $buffer .= strrev(pack("f",$g));
-                $buffer .= strrev(pack("f",$b));
-                $buffer .= pack("n",0); # Color type - 0x00 "Global"
+                $buffer .= strrev(pack("f", $r));
+                $buffer .= strrev(pack("f", $g));
+                $buffer .= strrev(pack("f", $b));
+                $buffer .= pack("n", 0); // Color type - 0x00 "Global"
 
-                echo pack("N",strlen($buffer)); # Length of this block
+                echo pack("N", strlen($buffer)); // Length of this block
                 echo $buffer;
             }
-            echo pack("n",0xC002); # Group end
+            echo pack("n", 0xC002); // Group end
 
-            echo pack("N",0); # Length of "Group end" block, which is 0
+            echo pack("N", 0); // Length of "Group end" block, which is 0
         }
 
         $return = ob_get_contents();
         ob_end_clean();
 
-        mb_internal_encoding($internal_encoding);
+        mb_internal_encoding($internalEncoding);
 
         return $return;
     }
