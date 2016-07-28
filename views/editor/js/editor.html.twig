@@ -124,6 +124,19 @@
             this.storedColors = storedColors;
         },
 
+        setColorsFromSerialArray: function(colorArray) {
+            var arCnt = 0;
+            for (var y = 1; y <= this.rows; y++) {
+                for (var x = 1; x <= this.cols; x++) {
+                    var xyColor = chroma(colorArray[arCnt]).hex().toLowerCase(),
+                        pos = x.toString()+'-'+y.toString();
+                    this.storedColors[pos] = [xyColor, 1];
+                    $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', xyColor).attr('data-changed', '1');
+                    arCnt++;
+                }
+            }
+        },
+
         /**
          * render the color grid
          * - used on resize and background color change
@@ -274,7 +287,15 @@
             reader.onload = function(e) {
                 var paletteFile = e.target.result;
                 $.post('/editor/importGpl', {'palettefile': paletteFile}, function(response) {
-                    console.log(response);
+                    sels.get('#edit_cols').val(response.columns);
+                    sels.get('#edit_rows').val(response.colors.length / response.columns);
+                    sels.get('#paletteName').val(response.name);
+                    sels.get('#paletteComment').val(response.comment);
+
+                    colorEditor.setColsAndRows(response.columns, (response.colors.length / response.columns));
+                    colorEditor.renderGrid(true);
+                    colorEditor.setColorsFromSerialArray(response.colors);
+                    colorEditor.renderGrid(true);
                 }, 'json');
             };
             reader.readAsDataURL(input.files[0]);

@@ -10,6 +10,11 @@ namespace Colorpalettes;
 
 use MischiefCollective\ColorJizz\Formats\RGB;
 use MischiefCollective\ColorJizz\Formats\Hex;
+
+/**
+ * Class BaseColor
+ * @package Colorpalettes
+ */
 class BaseColor
 {
     /**
@@ -37,7 +42,7 @@ class BaseColor
      */
     public function getRed()
     {
-        return (int)$this->red;
+        return (int) $this->red;
     }
 
     /**
@@ -46,7 +51,8 @@ class BaseColor
      */
     public function setRed($red = 0)
     {
-        $this->red = (int)$red;
+        $this->red = (int) $red;
+
         return $this;
     }
 
@@ -55,7 +61,7 @@ class BaseColor
      */
     public function getGreen()
     {
-        return (int)$this->green;
+        return (int) $this->green;
     }
 
     /**
@@ -64,7 +70,8 @@ class BaseColor
      */
     public function setGreen($green = 0)
     {
-        $this->green = (int)$green;
+        $this->green = (int) $green;
+
         return $this;
     }
 
@@ -73,7 +80,7 @@ class BaseColor
      */
     public function getBlue()
     {
-        return (int)$this->blue;
+        return (int) $this->blue;
     }
 
     /**
@@ -82,7 +89,8 @@ class BaseColor
      */
     public function setBlue($blue = 0)
     {
-        $this->blue = (int)$blue;
+        $this->blue = (int) $blue;
+
         return $this;
     }
 
@@ -93,6 +101,7 @@ class BaseColor
     public function setName($name = "")
     {
         $this->colorName = filter_var($name, FILTER_SANITIZE_STRING);
+
         return $this;
     }
 
@@ -102,7 +111,16 @@ class BaseColor
     public function getHexValue()
     {
         $rgb = new RGB($this->getRed(), $this->getGreen(), $this->getBlue());
+
         return $rgb->toHex();
+    }
+
+    /**
+     * @return string
+     */
+    public function getCssHex()
+    {
+        return '#'.sprintf('%02x', $this->getRed()).sprintf('%02x', $this->getGreen()).sprintf('%02x', $this->getBlue());
     }
 
     /**

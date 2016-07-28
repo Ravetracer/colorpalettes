@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Colorpalettes\BaseColor;
 
-$app = require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
+$app = require_once __DIR__.DIRECTORY_SEPARATOR.'bootstrap.php';
 
 /**
  * Index page
@@ -28,7 +28,7 @@ $app->get('/', function () use ($app) {
     $pals = $resultConv->getPaletteArray($result);
 
     return $app->render('index.html.twig', [
-        'palettes' => $pals
+        'palettes' => $pals,
     ]);
 })
 ->bind('homepage');
@@ -38,13 +38,14 @@ $app->get('/', function () use ($app) {
  */
 $app->get('/export/ase/{id}', function ($id) use ($app) {
     $mapper = $app['spot']->mapper('Entity\Palette');
-    $result = $mapper->where(['id' => (int)$id]);
+    $result = $mapper->where(['id' => (int) $id]);
 
     /**
      * @var BasePalette $pal
      */
     $pal = $app["result_to_array"]->getPaletteArray($result)[0];
     $exporter = new AdobeSwatchExchangeExporter($pal);
+
     return $pal->export($exporter);
 })
 ->bind('ase_export');
@@ -54,13 +55,15 @@ $app->get('/export/ase/{id}', function ($id) use ($app) {
  */
 $app->get('/export/gpl/{id}', function ($id) use ($app) {
     $mapper = $app['spot']->mapper('Entity\Palette');
-    $result = $mapper->where(['id' => (int)$id]);
+
+    $result = $mapper->where(['id' => (int) $id]);
 
     /**
      * @var BasePalette $pal
      */
     $pal = $app["result_to_array"]->getPaletteArray($result)[0];
     $exporter = new GimpPaletteExporter($pal);
+
     return $pal->export($exporter);
 })
 ->bind('gpl_export');
@@ -69,18 +72,18 @@ $app->get('/export/gpl/{id}', function ($id) use ($app) {
  * Preview route for showing new files in the import folder
  */
 $app->get('/previewImports', function () use ($app) {
-    $previewFiles = glob(__DIR__ . '/import/*.gpl');
+    $previewFiles = glob(__DIR__.'/import/*.gpl');
 
     if (count($previewFiles) <= 0) {
         return new Response('Currently no import files available');
     }
 
-    array_walk($previewFiles, function(&$item) {
+    array_walk($previewFiles, function (&$item) {
         $item = basename($item, '.gpl');
     });
 
     return $app->render('previewFiles.html.twig', [
-        'files' => $previewFiles
+        'files' => $previewFiles,
     ]);
 });
 
@@ -89,7 +92,7 @@ $app->get('/previewImports', function () use ($app) {
  */
 $app->get('/import/preview/{palName}', function ($palName) use ($app) {
 
-    $fname = __DIR__ . '/import/' . filter_var($palName, FILTER_SANITIZE_STRING) . '.gpl';
+    $fname = __DIR__.'/import/'.filter_var($palName, FILTER_SANITIZE_STRING).'.gpl';
     if (!file_exists($fname)) {
         return new Response("File does not exists!");
     }
@@ -99,7 +102,7 @@ $app->get('/import/preview/{palName}', function ($palName) use ($app) {
     $pal->calculateColorCount();
 
     return $app->render('preview.html.twig', [
-        'pal' => $pal
+        'pal' => $pal,
     ]);
 });
 
@@ -157,14 +160,36 @@ $app->post('/editor/save', function (Request $request) use ($app) {
     return new JsonResponse(['status' => 'success', 'exportString' => base64_encode($exporter->getExportContents()), 'extension' => $exporter->getExportFileExtension()]);
 });
 
+/**
+ * Import .gpl file
+ */
 $app->post('/editor/importGpl', function (Request $request) use ($app) {
-    $gplData = base64_decode(str_replace('data:;base64,', '', $request->get('palettefile')));
+    /**
+     * decode submitted Base64 string and replacing standard LF (ASCII char dec. 10) with \n and standard TAB (ASCII char dec. 9) with \t for splitting the array
+     */
+    $gplData = str_replace([chr(10), chr(9)], ['\n', ' '], base64_decode(str_replace('data:;base64,', '', $request->get('palettefile'))));
 
     $pal = new BasePalette();
     $importer = new GimpPaletteImporter($gplData);
     $pal->import($importer);
     $pal->calculateColorCount();
-    return new JsonResponse(['numCols' => $pal->getColorCount(), 'name' => $pal->getName(), 'raw' => $gplData]);
+    $response = [
+        "columns"       => $pal->getColumns(),
+        "name"          => $pal->getName(),
+        "comment"       => $pal->getComment(),
+        "numColors"     => $pal->getColorCount(),
+        "numColsReal"   => count($pal->getColors()),
+        "colors"        => [],
+    ];
+
+    /**
+     * @var $currentColor BaseColor
+     */
+    foreach ($pal->getColors() as $currentColor) {
+        $response["colors"][] = $currentColor->getCssHex();
+    }
+
+    return new JsonResponse($response);
 });
 
 $app->run();

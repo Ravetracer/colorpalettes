@@ -8,12 +8,15 @@
 
 namespace Colorpalettes;
 
-
-use Symfony\Component\HttpFoundation\Response,
-    Colorpalettes\Interfaces\ImporterInterface,
-    Colorpalettes\Interfaces\ExporterInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Colorpalettes\Interfaces\ImporterInterface;
+use Colorpalettes\Interfaces\ExporterInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
+/**
+ * Class BasePalette
+ * @package Colorpalettes
+ */
 class BasePalette
 {
     protected $comment = "";
@@ -30,7 +33,8 @@ class BasePalette
      */
     public function setId($id = 0)
     {
-        $this->id = (int)$id;
+        $this->id = (int) $id;
+
         return $this;
     }
 
@@ -39,7 +43,7 @@ class BasePalette
      */
     public function getId()
     {
-        return (int)$this->id;
+        return (int) $this->id;
     }
 
     /**
@@ -58,7 +62,8 @@ class BasePalette
      */
     public function setColumns($cols = 1)
     {
-        $this->columns = (int)$cols;
+        $this->columns = (int) $cols;
+
         return $this;
     }
 
@@ -79,6 +84,7 @@ class BasePalette
     public function setComment($comment = '')
     {
         $this->comment = trim(filter_var($comment, FILTER_SANITIZE_STRING));
+
         return $this;
     }
 
@@ -100,6 +106,7 @@ class BasePalette
     public function setName($name = '')
     {
         $this->name = filter_var($name, FILTER_SANITIZE_STRING);
+
         return $this;
     }
 
@@ -119,9 +126,10 @@ class BasePalette
      * @param array $colorArray
      * @return $this
      */
-    public function setColors(Array $colorArray = [])
+    public function setColors(array $colorArray = [])
     {
         $this->colors = $colorArray;
+
         return $this;
     }
 
@@ -139,8 +147,10 @@ class BasePalette
                  ->setComment($importer->getComment())
                  ->setFilename($importer->getFilename())
                  ->setColumns($importer->getColumns());
+
             return true;
         }
+
         return false;
     }
 
@@ -159,6 +169,7 @@ class BasePalette
             $this->getFilename().'.'.$exporter->getExportFileExtension()
         );
         $response->headers->set('Content-Disposition', $disposition);
+
         return $response;
     }
 
@@ -177,6 +188,7 @@ class BasePalette
     public function setFilename($filename)
     {
         $this->filename = $filename;
+
         return $this;
     }
 
@@ -196,7 +208,7 @@ class BasePalette
             $currentCombination = [
                 $currentColor->getRed(),
                 $currentColor->getGreen(),
-                $currentColor->getBlue()
+                $currentColor->getBlue(),
             ];
             if (!in_array($currentCombination, $existingCombinations)) {
                 $colCount++;
@@ -204,6 +216,7 @@ class BasePalette
             }
         }
         $this->colorCount = $colCount;
+
         return $this;
     }
 
@@ -217,6 +230,7 @@ class BasePalette
         if ($this->colorCount <= 0) {
             $this->calculateColorCount();
         }
-        return (int)$this->colorCount;
+
+        return (int) $this->colorCount;
     }
 }

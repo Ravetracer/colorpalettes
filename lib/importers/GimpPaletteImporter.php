@@ -48,8 +48,8 @@ class GimpPaletteImporter implements ImporterInterface
      */
     public function __construct($fileName)
     {
-        $this->fileName = $fileName;
         if (file_exists($fileName)) {
+            $this->fileName = $fileName;
             $this->paletteFile = file($fileName);
             if (strcmp(trim($this->paletteFile[0]), "GIMP Palette") === 0) {
                 $this->isValid = true;
@@ -111,7 +111,7 @@ class GimpPaletteImporter implements ImporterInterface
     /**
      * Parse palette file
      *
-     * @return bool
+     * @return bool|array
      */
     public function getParsedColors()
     {
@@ -124,6 +124,9 @@ class GimpPaletteImporter implements ImporterInterface
             preg_match("/(Name|name): (.*)/", $currentEntry, $nameMatch);
             if (count($nameMatch)) {
                 $this->paletteName = trim(filter_var($nameMatch[2], FILTER_SANITIZE_STRING));
+                if (strlen($this->fileName) <= 0) {
+                    $this->fileName = str_replace(' ', '_', $this->paletteName).'.gpl';
+                }
             }
 
             // fetch columns
