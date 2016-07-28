@@ -126,10 +126,13 @@
 
         setColorsFromSerialArray: function(colorArray) {
             var arCnt = 0;
+            this.storedColors = {};
+
             for (var y = 1; y <= this.rows; y++) {
                 for (var x = 1; x <= this.cols; x++) {
                     var xyColor = chroma(colorArray[arCnt]).hex().toLowerCase(),
                         pos = x.toString()+'-'+y.toString();
+
                     this.storedColors[pos] = [xyColor, 1];
                     $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', xyColor).attr('data-changed', '1');
                     arCnt++;
@@ -296,6 +299,7 @@
                     colorEditor.renderGrid(true);
                     colorEditor.setColorsFromSerialArray(response.colors);
                     colorEditor.renderGrid(true);
+                    colorEditor.storeColors();
                 }, 'json');
             };
             reader.readAsDataURL(input.files[0]);

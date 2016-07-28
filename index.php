@@ -174,7 +174,7 @@ $app->post('/editor/importGpl', function (Request $request) use ($app) {
     $pal->import($importer);
     $pal->calculateColorCount();
     $response = [
-        "columns"       => $pal->getColumns() > 1 ? $pal->getColumns() : 16,
+        "columns"       => $pal->getColumns() > 1 ? $pal->getColumns() : (count($pal->getColors()) >= 16 ? 16 : count($pal->getColors())),
         "name"          => $pal->getName(),
         "comment"       => $pal->getComment(),
         "numColors"     => $pal->getColorCount(),
