@@ -161,7 +161,7 @@
             // walk through number of colors
             for (var cnt = 1; cnt <= numColors; cnt++) {
 
-                var newColorBox = '<div class="colorBox large float-left gridcolor" data-changed="0" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '"></div>';
+                var newColorBox = '<div id="' + colX + '-' + colY + '" class="colorBox large float-left gridcolor" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" data-changed="0" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '"></div>';
                 $(this.parentContainer).append(newColorBox);
                 colBreak++;
                 colX++;
@@ -306,7 +306,33 @@
         }
     }
 
+    /**
+     * Drag'n'Drop functionality for switching colors
+     */
 
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var srcId = ev.dataTransfer.getData('text'),
+                targetId = ev.target.id,
+                srcCol = chroma(sels.get('#'+srcId).css('background-color')).hex().toLowerCase(),
+                saveCol = chroma(sels.get('#'+targetId).css('background-color')).hex().toLowerCase();
+
+        sels.get('#'+targetId).css('background-color', srcCol);
+        sels.get('#'+srcId).css('background-color', saveCol);
+        colorEditor.storeColors();
+    }
+
+    /**
+     * main app
+     */
     $(document).ready(function () {
 
         var numCols = sels.get('#edit_cols').val(),
