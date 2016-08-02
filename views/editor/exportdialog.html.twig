@@ -24,8 +24,9 @@
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-lg-6 text-left">
-                        <a href="#" class="btn btn-primary savePalette" data-savetype="ase"><i class="fa fa-save"></i> .ase</a>
-                        <a href="#" class="btn btn-primary savePalette" data-savetype="gpl"><i class="fa fa-save"></i> .gpl</a>
+                        {% for exportFormat in app.config.exportFormats %}
+                            <a href="#" class="btn btn-primary savePalette" data-savetype="{{ exportFormat.format }}"><i class="fa fa-save"></i> .{{ exportFormat.format }}</a>
+                        {% endfor %}
                     </div>
                     <div class="col-lg-6">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -8,6 +8,7 @@
 
 use Colorpalettes\BasePalette;
 use Colorpalettes\Exporters\AdobeSwatchExchangeExporter;
+use Colorpalettes\Exporters\AdobeColorfileExporter;
 use Colorpalettes\Exporters\GimpPaletteExporter;
 use Symfony\Component\HttpFoundation\Response;
 use Colorpalettes\Importers\GimpPaletteImporter;
@@ -29,7 +30,7 @@ $app->get('/', function () use ($app) {
     $pals = $resultConv->getPaletteArray($result);
 
     return $app->render('index.html.twig', [
-        'palettes' => $pals,
+        'palettes'  => $pals,
     ]);
 })
 ->bind('homepage');
@@ -70,6 +71,24 @@ $app->get('/export/gpl/{id}', function ($id) use ($app) {
 ->bind('gpl_export');
 
 /**
+ * Export palette to Adobe Color file (ACO)
+ */
+$app->get('/export/aco/{id}', function ($id) use ($app) {
+    $mapper = $app['spot']->mapper('Entity\Palette');
+
+    $result = $mapper->where(['id' => (int) $id]);
+
+    /**
+     * @var BasePalette $pal
+     */
+    $pal = $app["result_to_array"]->getPaletteArray($result)[0];
+    $exporter = new AdobeColorfileExporter($pal);
+
+    return $pal->export($exporter);
+})
+->bind('aco_export');
+
+/**
  * Preview route for showing new files in the import folder
  */
 $app->get('/previewImports', function () use ($app) {
@@ -108,16 +127,6 @@ $app->get('/import/preview/{palName}', function ($palName) use ($app) {
 });
 
 /**
- * Convert palette
- */
-/*
-$app->post('/convert', function(Request $request) use ($app) {
-    echo "<pre>", print_r($request, true), "</pre>";
-})
-->bind('convert_pal');
-*/
-
-/**
  * Palette editor
  */
 
@@ -153,9 +162,18 @@ $app->post('/editor/save', function (Request $request) use ($app) {
         ->setColumns($cols)
         ->setComment(filter_var($request->get('paletteComment'), FILTER_SANITIZE_STRING));
 
-    $exporter = new GimpPaletteExporter($exportPalette);
-    if ($fileType === "ase") {
-        $exporter = new AdobeSwatchExchangeExporter($exportPalette);
+    switch ($fileType) {
+        case 'gpl':
+            $exporter = new GimpPaletteExporter($exportPalette);
+            break;
+
+        case 'ase':
+            $exporter = new AdobeSwatchExchangeExporter($exportPalette);
+            break;
+
+        case 'aco':
+            $exporter = new AdobeColorfileExporter($exportPalette);
+            break;
     }
 
     return new JsonResponse(['status' => 'success', 'exportString' => base64_encode($exporter->getExportContents()), 'extension' => $exporter->getExportFileExtension()]);

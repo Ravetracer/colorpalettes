@@ -14,12 +14,11 @@
     <div class="row palbuttons">
         <div class="col-lg-12">
             <div class="btn-group" role="group">
-                <a href="{{ path('gpl_export', {id: pal.getId() }) }}" class="btn btn-primary">
-                    <i class="fa fa-download"></i> .gpl
-                </a>
-                <a href="{{ path('ase_export', {id: pal.getId() }) }}" class="btn btn-primary">
-                    <i class="fa fa-download"></i> .ase
-                </a>
+                {% for configEntry in app.config.exportFormats %}
+                    <a href="{{ path(configEntry.pathalias, {id: pal.getId() }) }}" class="btn btn-primary">
+                        <i class="fa fa-download"></i> .{{ configEntry.format }}
+                    </a>
+                {% endfor %}
             </div>
         </div>
     </div>
