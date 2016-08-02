@@ -11,6 +11,7 @@ use Colorpalettes\Exporters\AdobeSwatchExchangeExporter;
 use Colorpalettes\Exporters\GimpPaletteExporter;
 use Symfony\Component\HttpFoundation\Response;
 use Colorpalettes\Importers\GimpPaletteImporter;
+use Colorpalettes\Importers\AdobeSwatchExchangeImporter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Colorpalettes\BaseColor;
@@ -188,6 +189,40 @@ $app->post('/editor/importGpl', function (Request $request) use ($app) {
     foreach ($pal->getColors() as $currentColor) {
         $response["colors"][] = $currentColor->getCssHex();
     }
+
+    return new JsonResponse($response);
+});
+
+/**
+ * import ASE file
+ */
+$app->post('/editor/importASE', function (Request $request) use ($app) {
+    $aseData = base64_decode(str_replace('data:;base64,', '', $request->get('palettefile')));
+
+    $fName = 'import/ase_editor_import_'.microtime();
+    file_put_contents($fName, $aseData);
+
+    $pal = new BasePalette();
+    $importer = new AdobeSwatchExchangeImporter($fName);
+    $pal->import($importer);
+    $pal->setName('tmpPalette');
+    $pal->calculateColorCount();
+    $response = [
+        "columns"       => count($pal->getColors()) >= 16 ? 16 : count($pal->getColors()),
+        "name"          => $pal->getName(),
+        "comment"       => $pal->getComment(),
+        "numColors"     => $pal->getColorCount(),
+        "numColsReal"   => count($pal->getColors()),
+        "colors"        => [],
+    ];
+
+    /**
+     * @var $currentColor BaseColor
+     */
+    foreach ($pal->getColors() as $currentColor) {
+        $response["colors"][] = $currentColor->getCssHex();
+    }
+    unlink($fName);
 
     return new JsonResponse($response);
 });

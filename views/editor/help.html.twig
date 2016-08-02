@@ -1,27 +1,34 @@
-<div class="reveal" id="editorHelpDialog" data-reveal>
-    <h4>Help (in short terms):</h4>
-    <ul>
-        <li>define your grid size with the input fields</li>
-        <li>choose your desired background color with the color picker</li>
-        <li>use "reset" for deleting all colors</li>
-        <li>use the "Current color" to choose a desired color, then just "draw" it onto the grid</li>
-        <li>you can load an image on the right and move it along with the buttons on top; choose the number of moved pixels with the input field below; pick a color in the image and draw it on the grid.</li>
-        <li>when you're ready, give your palette a name and optionally a comment; use the file functions in the menu to save your palette as .gpl or .ase file</li>
-        <li>the palette is automatically stored in the browsers local storage (html5), so if you close the tab or browser and call the editor again, your palette should be still there (maybe this works not in every browser, so beware!)</li>
-        <li>do you need a color ramp between two colors? just click on "color ramp", click on the first color and then on the second one. a ramp will be created between them. keep in mind, that color ramps are only allowed horizontal or vertical!</li>
-        <li>you can import a .gpl file by clicking on the button below the color ramp button, it will be loaded into the editor and sets name and comment in the file export dialog</li>
-        <li>if you want to switch colors, just drag'n'drop them</li>
-    </ul>
-    <br />
-    <h4>Next steps todo:</h4>
-    <ul>
-        <li>storing in local storage will be made optional</li>
-        <li>importing of palettes will be added (.ase import will be added)</li>
-        <li>UI is still made for functional use and will be improved!</li>
-        <li>have ideas? let me know on Twitter by writing to @ravetracer 😀</li>
-    </ul>
-
-    <button class="close-button" data-close aria-label="Close" type="button">
-        <span aria-hidden="true">&times;</span>
-    </button>
+<div class="modal fade" tabindex="-1" id="editorHelpDialog" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Help (in short terms)</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="help">
+                    <li>define your grid size with the input fields</li>
+                    <li>choose your desired background color with the color picker</li>
+                    <li>use "reset" for deleting all colors</li>
+                    <li>use the "Current color" to choose a desired color, then just "draw" it onto the grid</li>
+                    <li>you can load an image on the right and move it along with the buttons on top; choose the number of moved pixels with the input field below; pick a color in the image and draw it on the grid.</li>
+                    <li>when you're ready, give your palette a name and optionally a comment; use the file functions in the menu to save your palette as .gpl or .ase file</li>
+                    <li>the palette is automatically stored in the browsers local storage (html5), so if you close the tab or browser and call the editor again, your palette should be still there (maybe this works not in every browser, so beware!)</li>
+                    <li>do you need a color ramp between two colors? just click on "color ramp", click on the first color and then on the second one. a ramp will be created between them. keep in mind, that color ramps are only allowed horizontal or vertical!</li>
+                    <li>you can import a .gpl file by clicking on the button below the color ramp button, it will be loaded into the editor and sets name and comment in the file export dialog</li>
+                    <li>if you want to switch colors, just drag'n'drop them</li>
+                </ul>
+                <br />
+                <h4>Next steps todo:</h4>
+                <ul class="help">
+                    <li>storing in local storage will be made optional</li>
+                    <li>UI is still made for functional use and will be improved!</li>
+                    <li>have ideas? let me know on Twitter by writing to @ravetracer 😀</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>

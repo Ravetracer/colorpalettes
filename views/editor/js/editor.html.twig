@@ -283,6 +283,11 @@
         }
     }
 
+    // @TODO: improve loading functions / merge
+
+    /**
+     * Load GIMP gpl file
+     */
     function loadGimpPalette(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -290,6 +295,32 @@
             reader.onload = function(e) {
                 var paletteFile = e.target.result;
                 $.post('/editor/importGpl', {'palettefile': paletteFile}, function(response) {
+                    sels.get('#edit_cols').val(response.columns);
+                    sels.get('#edit_rows').val(Math.ceil(response.colors.length / response.columns));
+                    sels.get('#paletteName').val(response.name);
+                    sels.get('#paletteComment').val(response.comment);
+
+                    colorEditor.setColsAndRows(response.columns, Math.ceil(response.colors.length / response.columns));
+                    colorEditor.renderGrid(true);
+                    colorEditor.setColorsFromSerialArray(response.colors);
+                    colorEditor.renderGrid(true);
+                    colorEditor.storeColors();
+                }, 'json');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    /**
+     * Load ASE file
+     */
+    function loadAsePalette(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var paletteFile = e.target.result;
+                $.post('/editor/importASE', {'palettefile': paletteFile}, function(response) {
                     sels.get('#edit_cols').val(response.columns);
                     sels.get('#edit_rows').val(Math.ceil(response.colors.length / response.columns));
                     sels.get('#paletteName').val(response.name);
@@ -326,21 +357,11 @@
             saveCol = chroma(sels.get('#'+targetId).css('background-color')).hex().toLowerCase(),
             bgCol = chroma(sels.get('#edit_bgcol').attr('data-color')).hex().toLowerCase();
 
-
-
         sels.get('#'+targetId).attr('data-changed', bgCol === srcCol ? '0' : 1);
         sels.get('#'+targetId).css('background-color', srcCol);
         sels.get('#'+srcId).attr('data-changed', bgCol === saveCol ? '0' : 1);
         sels.get('#'+srcId).css('background-color', saveCol);
         colorEditor.storeColors();
-
-        /*
-        if (bgCol === srcCol) {
-            elem.attr('data-changed', '0');
-        } else {
-            elem.attr('data-changed', '1');
-        }
-        */
     }
 
     /**
@@ -360,12 +381,14 @@
 
         if (typeof(Storage) !== "undefined") {
             if (localStorage.getItem('numCols') !== null) {
-                numCols = localStorage.getItem('numCols');
+                numCols = parseInt(localStorage.getItem('numCols'), 10);
+                numCols = numCols > 0 ? numCols : 5;
                 sels.get('#edit_cols').val(numCols);
             }
 
             if (localStorage.getItem('numRows') !== null) {
-                numRows = localStorage.getItem('numRows');
+                numRows = parseInt(localStorage.getItem('numRows'), 10);
+                numRows = numRows > 0 ? numRows : 5;
                 sels.get('#edit_rows').val(numRows);
             }
 
@@ -380,7 +403,7 @@
         }
 
         /**
-         * init color pickers
+         * init color picker for draw color
          */
         sels.get('#sourcecolor').spectrum({
             showInput: true,
@@ -391,6 +414,9 @@
             }
         });
 
+        /**
+         * init color picker for background color
+         */
         sels.get('#edit_bgcol').spectrum({
             showInput: true,
             preferredFormat: 'hex',
@@ -457,15 +483,12 @@
                             curCol
                     ];
                     elem.addClass('rampStart');
-                    sels.get('.defineStartIndicator').addClass('hide');
-                    sels.get('.defineEndIndicator').removeClass('hide');
                 } else if (colorEditor.rampEnd.length < 1) {
                     colorEditor.rampEnd = [
                             parseInt(elem.attr('data-colx'), 10),
                             parseInt(elem.attr('data-coly'), 10),
                             curCol
                     ];
-                    sels.get('.defineEndIndicator').addClass('hide');
                     colorEditor.drawRamp();
                 }
                 return true;

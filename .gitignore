@@ -1,8 +1,5 @@
 .DS_Store
-bower_components
-node_modules
-npm-debug.log
 vendor
 logs
 dev_temp
-/phploy.*
+.sass-cache

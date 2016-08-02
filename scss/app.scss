@@ -1,48 +1,11 @@
-@charset 'utf-8';
+@charset "utf-8";
 
-@import 'settings';
-@import 'foundation';
-@import 'motion-ui';
+@import 'animations';
+@import 'bootstrap/variables';
 
-@include foundation-global-styles;
-@include foundation-grid;
-//@include foundation-flex-grid;
-@include foundation-typography;
-@include foundation-button;
-@include foundation-forms;
-@include foundation-visibility-classes;
-@include foundation-float-classes;
-@include foundation-accordion;
-@include foundation-accordion-menu;
-@include foundation-badge;
-@include foundation-breadcrumbs;
-@include foundation-button-group;
-@include foundation-callout;
-@include foundation-close-button;
-@include foundation-drilldown-menu;
-@include foundation-dropdown;
-@include foundation-dropdown-menu;
-@include foundation-flex-video;
-@include foundation-label;
-@include foundation-media-object;
-@include foundation-menu;
-@include foundation-off-canvas;
-@include foundation-orbit;
-@include foundation-pagination;
-@include foundation-progress-bar;
-@include foundation-slider;
-@include foundation-sticky;
-@include foundation-reveal;
-@include foundation-switch;
-@include foundation-table;
-@include foundation-tabs;
-@include foundation-thumbnail;
-@include foundation-title-bar;
-@include foundation-tooltip;
-@include foundation-top-bar;
-
-@include motion-ui-transitions;
-@include motion-ui-animations;
+body {
+  padding-top: 70px;
+}
 
 table * {
   line-height: 0;
@@ -50,10 +13,7 @@ table * {
 
 .colorBox {
 
-  border: none;
-  padding: 0;
-
-  @include breakpoint('small') {
+  @media screen and (max-width: 639px) {
     width: 0.5em;
     height: 0.5em;
     &.large {
@@ -62,7 +22,7 @@ table * {
     }
   }
 
-  @include breakpoint('large') {
+  @media screen and (max-width: 1023px) {
     width: 0.6em;
     height: 0.6em;
     &.large {
@@ -71,7 +31,7 @@ table * {
     }
   }
 
-  @include breakpoint('xlarge') {
+  @media screen and (min-width: 1024px) {
       width: 0.75em;
       height: 0.75em;
       &.large {
@@ -80,7 +40,10 @@ table * {
       }
   }
 
+  border: none;
+  padding: 0;
   margin: 1px;
+  float: left;
 
   &.rampStart {
     border: 2px solid red;
@@ -92,11 +55,31 @@ table * {
 }
 
 .palgrid {
-  //line-height: 0;
-  background-color: $black;
+  border-left: 2px solid $gray-dark;
+  background-color: black;
   padding: 1em;
 }
 
 .accordion-content {
   color: black;
+}
+
+.palbuttons {
+  margin-bottom: 2em;
+}
+
+ul.help {
+  li {
+    margin-bottom: 1em;
+    &:before {
+      font-family: "FontAwesome";
+      content: '\f0da';
+      float: left;
+      width: 1.4em;
+    }
+  }
+}
+
+.picker-canvas {
+  border: 2px solid black;
 }

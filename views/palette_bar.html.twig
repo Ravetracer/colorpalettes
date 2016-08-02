@@ -1,21 +1,26 @@
-<div class="column">
-    <div class="row column palgrid" data-equalizer-watch>
-        {% include 'palette_grid.html.twig' %}
+<div class="col-lg-4 col-md-12 col-sm-12">
+    <div class="row palgrid">
+        <div class="col-lg-12">
+            {% include 'palette_grid.html.twig' %}
+        </div>
     </div>
-    <div class="row column">
-        <h4>{{ pal.getName()|raw }}</h4>
-        <p>Number of colors: {{ pal.getColorCount() }}<br/>
-        Comment: {{ pal.getComment() ? pal.getComment()|nl2br : 'n.a.' }}</p>
-
+    <div class="row palinfos">
+        <div class="col-lg-12">
+            <h4>{{ pal.getName()|raw }}</h4>
+            <p>Number of colors: {{ pal.getColorCount() }}<br/>
+            Comment: {{ pal.getComment() ? pal.getComment()|nl2br : 'n.a.' }}</p>
+        </div>
     </div>
-    <div class="row column">
-        <div class="small button-group">
-            <a href="{{ path('gpl_export', {id: pal.getId() }) }}" class="button">
-                <i class="fa fa-download"></i> .gpl
-            </a>
-            <a href="{{ path('ase_export', {id: pal.getId() }) }}" class="button">
-                <i class="fa fa-download"></i> .ase
-            </a>
+    <div class="row palbuttons">
+        <div class="col-lg-12">
+            <div class="btn-group" role="group">
+                <a href="{{ path('gpl_export', {id: pal.getId() }) }}" class="btn btn-primary">
+                    <i class="fa fa-download"></i> .gpl
+                </a>
+                <a href="{{ path('ase_export', {id: pal.getId() }) }}" class="btn btn-primary">
+                    <i class="fa fa-download"></i> .ase
+                </a>
+            </div>
         </div>
     </div>
 </div>

@@ -1,14 +1,6 @@
 {% set columnNumber = 1 %}
 {% for color in pal.getColors() %}
-    <div
-            {#data-tooltip
-            aria-haspopup="true"#}
-            class="colorBox float-left {#has-tip#}"
-            {#data-disable-hover="false"
-            data-options="fadeInDuration:100;hoverDelay:100"
-            tabindex="2"#}
-            title="{{ color.getName() }}: #{{ color.getHexValue() }}"
-            style="background-color: #{{ color.getHexValue() }}"></div>
+    <div class="colorBox" title="{{ color.getName() }}: #{{ color.getHexValue() }}" style="background-color: #{{ color.getHexValue() }}"></div>
     {% set columnNumber = columnNumber+1 %}
     {% if columnNumber > pal.getColumns() %}
         <div class="clearfix"></div>
