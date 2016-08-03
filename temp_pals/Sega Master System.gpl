@@ -1,0 +1,36 @@
+GIMP Palette
+Name: Sega Master System
+Columns: 1
+#
+  0   0   0	Swatch 1
+  0   0  85	Swatch 2
+ 85   0   0	Swatch 3
+ 85   0  85	Swatch 4
+  0  85   0	Swatch 5
+170   0   0	Swatch 6
+  0  85  85	Swatch 7
+ 85  85   0	Swatch 8
+255   0   0	Swatch 9
+ 85  85  85	Swatch 10
+ 85  85 170	Swatch 11
+170  85   0	Swatch 12
+170  85  85	Swatch 13
+170  85 170	Swatch 14
+255  85   0	Swatch 15
+ 85 170   0	Swatch 16
+255  85  85	Swatch 17
+ 85 170 170	Swatch 18
+170 170   0	Swatch 19
+170 170  85	Swatch 20
+170 170 170	Swatch 21
+255 170   0	Swatch 22
+170 170 255	Swatch 23
+255 170  85	Swatch 24
+255 170 170	Swatch 25
+255 170 255	Swatch 26
+170 255   0	Swatch 27
+170 255 170	Swatch 28
+170 255 255	Swatch 29
+255 255  85	Swatch 30
+255 255 170	Swatch 31
+255 255 255	Swatch 32

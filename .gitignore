@@ -1,0 +1,5 @@
+.DS_Store
+vendor
+logs
+dev_temp
+.sass-cache

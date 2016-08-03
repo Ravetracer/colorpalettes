@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Color Palettes</title>
+        <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/bootstrap_3_3_7.css'}}" />
+        <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/app.css' }}" />
+        <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/font-awesome.min.css'}}" />
+        {% block additionalCSS %}{% endblock %}
+    </head>
+    <body>
+
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#colpal-navigation" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Color Palettes</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="colpal-navigation">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ path('homepage') }}">Index</a></li>
+                        <li><a href="{{ path('editor') }}">Editor <span class="label label-danger"><strong>ALPHA</strong></span></a></li>
+                        {% block additionalMenuEntries %}{% endblock %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            {% block mainContent %}{% endblock %}
+        </div>
+
+        <script type="text/javascript" src="/js/jquery-3.1.0.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.matchHeight-min.js"></script>
+        <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+        {% block additionalJS %}{% endblock %}
+    </body>
+</html>

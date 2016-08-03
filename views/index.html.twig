@@ -1,0 +1,28 @@
+{% extends 'layout.html.twig' %}
+
+{% block mainContent %}
+    <div class="row">
+        <div class="col-lg-12">
+            <blockquote>You want to create game graphics for some kind of retro style game but don't know which colors to use?<br />
+                Here's a small selection of color palettes I found in the web which you can export to GIMP palette or AdobeSwatchExchange file.<br/><br/>
+                Current number of palettes: {{ palettes|length }}
+            </blockquote>
+        </div>
+    </div>
+
+    {% set cnt = 1 %}
+    {% for pal in palettes %}
+        {% if cnt == 1 %}<div class="row">{% endif %}
+        {% include 'palette_bar.html.twig' %}
+        {% set cnt = cnt+1 %}
+        {% if cnt > 3 %}</div>{% set cnt = 1 %}{% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block additionalJS %}
+    <script type="text/javascript">
+        $('.palgrid').matchHeight();
+        $('.palinfos').matchHeight();
+        $('.palbuttons').matchHeight();
+    </script>
+{% endblock %}

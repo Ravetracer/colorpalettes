@@ -1,0 +1,10 @@
+exportFormats:
+    - format: ase
+      description: Adobe Swatch Exchange
+      pathalias: ase_export
+    - format: aco
+      description: Adobe Color file
+      pathalias: aco_export
+    - format: gpl
+      description: Gimp Palette
+      pathalias: gpl_export

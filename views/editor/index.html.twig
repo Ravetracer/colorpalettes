@@ -1,0 +1,127 @@
+{% extends 'layout.html.twig' %}
+
+{% block mainContent %}
+    <br />
+    <form>
+        <div class="row">
+            <div class="row">
+                <div class="col-lg-1">
+                    <div class="form-group">
+                        <label for="edit_cols">Cols</label>
+                        <input type="number" id="edit_cols" value="5" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-1">
+                    <div class="form-group">
+                        <label for="edit_rows">Rows</label>
+                        <input class="form-control" type="number" id="edit_rows" value="5">
+                    </div>
+                </div>
+                <div class="col-lg-1">
+                    <div class="form-group">
+                        <label for="edit_bgcol">Background</label>
+                        <input type="text" class="colorBox large" id="edit_bgcol" data-color="#000000">
+                    </div>
+                </div>
+                <div class="col-lg-1">
+                    <div class="form-group">
+                        <label for="sourcecolor">Current</label>
+                        <input type="text" class="colorBox large" id="sourcecolor" data-color="#000000"/>
+                    </div>
+                </div>
+                <div class="col-lg-1">
+                    <a href="#" class="btn btn-primary" id="startColorRamp">Color ramp</a>
+                </div>
+                <div class="col-lg-2">
+                    <div class="form-group">
+                        <label for="imgSlideSteps">Image slide steps</label>
+                        <input class="form-control" type="number" value="15" id="imgSlideSteps"/>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <input id="previewImageLoader" type="file" onchange="loadPreviewImage(this, 0, 0);"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <span title="Move image to the left">
+                                <a href="#" class="btn btn-info slideImage" data-direction='left'><i class="fa fa-chevron-left"></i></a>
+                            </span>
+                            <span title="Move image to the right">
+                                <a href="#" class="btn btn-info slideImage" data-direction='right'><i class="fa fa-chevron-right"></i></a>
+                            </span>
+                            <span title="Move image upwards">
+                                <a href="#" class="btn btn-info slideImage" data-direction='up'><i class="fa fa-chevron-up"></i></a>
+                            </span>
+                            <span title="Move image downwards">
+                                <a href="#" class="btn btn-info slideImage" data-direction='down'><i class="fa fa-chevron-down"></i></a>
+                            </span>
+                            <span title="Zoom in">
+                                <a href="#" class="btn btn-info imageZoom" data-zoom="in"><i class="fa fa-plus-circle"></i></a>
+                            </span>
+                            <span title="Zoom out">
+                                <a href="#" class="btn btn-info imageZoom" data-zoom="out"><i class="fa fa-minus-circle"></i></a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-7">
+                <div id="colorgrid"></div>
+            </div>
+            <div class="col-lg-5">
+                <canvas class="picker-canvas" id="imagePicker" width="300" height="300"></canvas>
+            </div>
+        </div>
+    </form>
+
+    {% include 'editor/help.html.twig' %}
+    {% include 'editor/exportdialog.html.twig' %}
+{% endblock %}
+
+{% block additionalMenuEntries %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">File <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="#">
+                    <label for="importGplFile"><i class="fa fa-upload"></i> Import .gpl file</label>
+                    <input id="importGplFile" type="file" class="sr-only" onchange="colorEditor.loadPalette(this, 'gpl');"/>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <label for="importAseFile"><i class="fa fa-upload"></i> Import .ase file</label>
+                    <input id="importAseFile" type="file" class="sr-only" onchange="colorEditor.loadPalette(this, 'ase');"/>
+                </a>
+            </li>
+            <li><a data-toggle="modal" data-target="#exportPaletteDialog"><i class="fa fa-save"></i> Export palette</a></li>
+        </ul>
+    </li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Edit <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="#" id="undoAction"><i class="fa fa-history"></i> Undo last action</a></li>
+            <li><a href="#" class="bg-danger" id="resetPalette">Reset palette</a></li>
+        </ul>
+    </li>
+    <li><a data-toggle="modal" data-target="#editorHelpDialog">Help</a></li>
+{% endblock %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/color-sampler.min.css' }}" />
+    <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/css/spectrum.css' }}" />
+{% endblock %}
+
+{% block additionalJS %}
+    <script src="/js/spectrum.js"></script>
+    <script src="/js/color-sampler.min.js"></script>
+    <script src="/js/chroma.min.js"></script>
+    <script src="/js/download.js"></script>
+    {% include 'editor/js/editor.html.twig' %}
+{% endblock %}

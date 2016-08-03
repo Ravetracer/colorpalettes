@@ -1,0 +1,36 @@
+GIMP Palette
+Name: Grafxkid's TodayLandPalette
+Columns: 1
+#
+ 99  13  38	Reds0
+181  45  27	Reds1
+240 117   8	Reds2
+251 197  49	Reds3
+ 62  32  32	Skin0
+133  62  51	Skin1
+202 117  56	Skin2
+245 185 125	Skin3
+219 110  83	Skin4
+ 14  53  62	Greens0
+ 21 105  72	Greens1
+ 89 179  45	Greens2
+211 229  73	Greens3
+ 30 182 120	Greens4
+ 28 100 112	Greens5
+ 37  30 106	Blues0
+ 33  74 167	Blues1
+ 10 152 216	Blues2
+ 73 227 218	Blues3
+ 71  18  92	Violett0
+152  30 130	Violett1
+238  98 131	Violett2
+249 178 167	Violett3
+ 62  48  48	Browns0
+109  93  91	Browns1
+176 162 141	Browns2
+239 239 233	Browns3
+126 174 163	Bluegreen0
+ 69 105 117	Bluegreen1
+ 40  53  74	Bluegreen2
+ 17  10   3	Dark
+255 255 255	Light

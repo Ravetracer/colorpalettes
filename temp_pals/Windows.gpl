@@ -1,0 +1,19 @@
+GIMP Palette
+Name: Windows 16 Color Palette
+#
+  0   0   0	Black
+  0   0 255	Blue
+  0 128   0	Cyan
+  0 255   0	Green
+192   0 192	Magenta
+255   0   0	Red
+255 255   0	Yellow
+255 255 255	White
+  0   0 128	Dark blue
+  0 128 128	Dark cyan
+  0 128   0	Dark green
+128   0 128	Dark magenta
+128   0   0	Dark red
+192 192   0	Dark yellow
+192 192 192	Light gray
+128 128 128	Dark gray

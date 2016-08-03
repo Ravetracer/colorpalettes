@@ -1,0 +1,20 @@
+GIMP Palette
+Name: C64-deekay
+Columns: 1
+#
+  0   0   0 Black
+ 24  16 144 Blue
+ 71  43  27 Brown
+136  32   0 Red
+ 72  72  72 Dark Grey
+168  56 160 Purple
+160  72   0 Orange
+ 80 144 208 Light Blue
+128 128 128 Grey 
+ 80 184  24 Green
+200 120 112 Light Red
+104 208 168 Cyan
+184 184 184 Light Grey
+240 232  88 Yellow
+152 255 152 Light Green     
+255 255 255 White

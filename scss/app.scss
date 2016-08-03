@@ -1,0 +1,85 @@
+@charset "utf-8";
+
+@import 'animations';
+@import 'bootstrap/variables';
+
+body {
+  padding-top: 70px;
+}
+
+table * {
+  line-height: 0;
+}
+
+.colorBox {
+
+  @media screen and (max-width: 639px) {
+    width: 0.5em;
+    height: 0.5em;
+    &.large {
+      width: 0.9em;
+      height: 0.9em;
+    }
+  }
+
+  @media screen and (max-width: 1023px) {
+    width: 0.6em;
+    height: 0.6em;
+    &.large {
+      width: 1.1em;
+      height: 1.1em;
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+      width: 0.75em;
+      height: 0.75em;
+      &.large {
+        width: 1.5em;
+        height: 1.5em;
+      }
+  }
+
+  border: none;
+  padding: 0;
+  margin: 1px;
+  float: left;
+
+  &.rampStart {
+    border: 2px solid red;
+  }
+
+  &.colorBlack {
+    background-color: black;
+  }
+}
+
+.palgrid {
+  border-left: 2px solid $gray-dark;
+  background-color: black;
+  padding: 1em;
+}
+
+.accordion-content {
+  color: black;
+}
+
+.palbuttons {
+  margin-bottom: 2em;
+}
+
+ul.help {
+  li {
+    margin-bottom: 1em;
+    &:before {
+      font-family: "FontAwesome";
+      content: '\f0da';
+      float: left;
+      width: 1.4em;
+    }
+  }
+}
+
+.picker-canvas {
+  border: 2px solid black;
+}

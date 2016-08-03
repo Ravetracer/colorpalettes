@@ -1,0 +1,626 @@
+<script type="text/javascript">
+
+    /**
+     * Caching selectors
+     *
+     * @returns Object
+     * @constructor
+     */
+    function Selector_Cache() {
+        var collection = {};
+
+        function get_from_cache(selector) {
+            if (undefined === collection[selector]) {
+                collection[selector] = $(selector);
+            }
+            return collection[selector];
+        }
+        return { get: get_from_cache };
+    }
+
+    var sels = new Selector_Cache();
+
+    //
+    // the main color editor
+    //
+    var colorEditor = {
+        cols: 0,
+        rows: 0,
+        backgroundColor: '#000000',
+        parentContainer: null,
+        storedColors: {},
+        createRamp: false,
+        history: [],
+        rampStart: [],
+        rampEnd: [],
+
+        setColumns: function(numColumns) {
+            this.cols = parseInt(numColumns, 10);
+            this.saveInLocalStorage('columns');
+        },
+
+        setRows: function (numRows) {
+            this.rows = parseInt(numRows, 10);
+            this.saveInLocalStorage('rows');
+        },
+
+        setColsAndRows: function (numColumns, numRows) {
+            this.setColumns(numColumns);
+            this.setRows(numRows);
+        },
+
+        setBackgroundColor: function (backgroundColor) {
+            this.backgroundColor = backgroundColor;
+        },
+
+        setParentContainer: function (container) {
+            this.parentContainer = container
+        },
+
+        saveInLocalStorage: function(saveWhat) {
+            if (typeof(Storage) !== "undefined") {
+                switch (saveWhat) {
+                    case 'colors':
+                        localStorage.setItem('backgroundColor', this.backgroundColor);
+                        localStorage.setItem('storedColors', JSON.stringify(this.storedColors));
+                        break;
+
+                    case 'columns':
+                        localStorage.setItem('numCols', this.cols);
+                        break;
+
+                    case 'rows':
+                        localStorage.setItem('numRows', this.rows);
+                        break;
+                }
+            }
+        },
+
+        /**
+         * store current colors; ignore unchanged colors so background color can be changed for unset colors
+         */
+        storeColors: function() {
+            this.storedColors = {};
+            for (var y = 1; y <= this.rows; y++) {
+                for (var x = 1; x <= this.cols; x++) {
+                    var colElement = $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]');
+
+                    if (colElement.length) {
+                        var xyColor = chroma(colElement.css('background-color')).hex().toLowerCase(),
+                            pos = x.toString()+'-'+y.toString();
+
+                        if (colElement.attr('data-changed') == '1') {
+                            this.storedColors[pos] = [xyColor, 1];
+                        } else {
+                            this.storedColors[pos] = [xyColor, 0];
+                        }
+                    }
+                }
+            }
+            // store in local storage, if possible
+            this.saveInLocalStorage('colors');
+        },
+
+        /**
+         * restore colors; set changed colors from array and unchanged with current background color
+         */
+        restoreColors: function() {
+            for (var y = 1; y <= this.rows; y++) {
+                for (var x = 1; x <= this.cols; x++) {
+                    var pos = x.toString()+'-'+y.toString();
+
+                    if (this.storedColors[pos]) {
+                        if (this.storedColors[pos][1] == 1) {
+                            $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', this.storedColors[pos][0]).attr('data-changed', '1');
+                        } else {
+                            $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', this.backgroundColor).attr('data-changed', '0');
+                        }
+                    }
+                }
+            }
+        },
+
+        /**
+         * set stored colors
+         */
+        setStoredColors: function(storedColors) {
+            this.storedColors = storedColors;
+        },
+
+        /**
+         * set stored colors from serial array
+         */
+        setColorsFromSerialArray: function(colorArray) {
+            var arCnt = 0;
+            this.storedColors = {};
+
+            for (var y = 1; y <= this.rows; y++) {
+                for (var x = 1; x <= this.cols; x++) {
+                    var xyColor = chroma(colorArray[arCnt]).hex().toLowerCase(),
+                        pos = x.toString()+'-'+y.toString();
+
+                    this.storedColors[pos] = [xyColor, 1];
+                    $('.gridcolor[data-colx="' + x + '"][data-coly="' + y + '"]').css('background-color', xyColor).attr('data-changed', '1');
+                    arCnt++;
+                }
+            }
+        },
+
+        /**
+         * render the color grid
+         * - used on resize and background color change
+         */
+        renderGrid: function(ignoreStoreColors) {
+            var numColors = this.rows * this.cols,
+                colBreak = 1,
+                colX = 1,
+                colY = 1;
+
+            // backup colors
+            if (!ignoreStoreColors) {
+                this.storeColors();
+            }
+
+            // clear parent container
+            $(this.parentContainer).html('');
+
+            // walk through number of colors
+            for (var cnt = 1; cnt <= numColors; cnt++) {
+
+                var newColorBox = '<div id="' + colX + '-' + colY + '" class="colorBox large float-left gridcolor" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" data-changed="0" style="background-color: ' + this.backgroundColor + '" data-colx="' + colX + '" data-coly="' + colY + '"></div>';
+                $(this.parentContainer).append(newColorBox);
+                colBreak++;
+                colX++;
+                // break to new row
+                if (colBreak > this.cols) {
+                    $(this.parentContainer).append('<div class="clearfix"></div>');
+                    colBreak = 1;
+                    colX = 1;
+                    colY++;
+                }
+            }
+            // restore backed up colors
+            this.restoreColors();
+        },
+
+        /**
+         * reset colors
+         */
+        resetPalette: function() {
+            this.storedColors = {};
+            this.saveInLocalStorage('colors');
+            this.renderGrid(true);
+        },
+
+        /**
+         * add history item
+         *
+         * @param posX
+         * @param posY
+         * @param colorBefore
+         * @param colorAfter
+         */
+        addToHistory: function (posX, posY, colorBefore, colorAfter) {
+            this.history.push({
+                'x':            posX,
+                'y':            posY,
+                'colBefore':    colorBefore,
+                'colAfter':     colorAfter,
+            });
+        },
+
+        /**
+         * undo last action (only works with single drawings; currently doesn't work with color ramps)
+         */
+        undo: function () {
+            if (this.history.length) {
+                var lastAction = this.history.pop();
+                $('.gridcolor[data-colx="' + lastAction.x + '"][data-coly="' + lastAction.y + '"]').css('background-color', lastAction.colBefore);
+                this.storeColors();
+            }
+        },
+
+        /**
+         * finish color ramp and draw it
+         */
+        finishRamp: function() {
+            this.rampStart = [];
+            this.rampEnd = [];
+            this.createRamp = false;
+            sels.get('.gridcolor').removeClass('rampStart');
+            this.storeColors();
+        },
+
+        /**
+         * draw color ramp
+         */
+        drawRamp: function() {
+            // check if both arrays are filled
+            if (this.rampStart.length > 0 && this.rampEnd.length > 0 &&
+                // check, if horizontal or vertical ramp
+                ((this.rampStart[0] == this.rampEnd[0]) || (this.rampStart[1] == this.rampEnd[1]))
+               ) {
+                var startX = this.rampStart[0]>this.rampEnd[0] ? this.rampEnd[0] : this.rampStart[0],
+                    endX = this.rampStart[0]>this.rampEnd[0] ? this.rampStart[0] : this.rampEnd[0],
+                    startY = this.rampStart[1]>this.rampEnd[1] ? this.rampEnd[1] : this.rampStart[1],
+                    endY = this.rampStart[1]>this.rampEnd[1] ? this.rampStart[1] : this.rampEnd[1],
+                    inX = this.rampStart[1] == this.rampEnd[1],
+                    inY = this.rampStart[0] == this.rampEnd[0],
+                    numCols = inX ? Math.abs(endX - startX) : Math.abs(endY - startY),
+                    switchCols = this.rampStart[0]>this.rampEnd[0] || this.rampStart[1]>this.rampEnd[1],
+                    ramp = switchCols ?
+                            chroma.scale([this.rampEnd[2], this.rampStart[2]]).colors(numCols+1) :
+                            chroma.scale([this.rampStart[2], this.rampEnd[2]]).colors(numCols+1),
+                    cnt = 0;
+                // draw in X direction else draw in Y direction
+                if (inX) {
+                    for (var sX = startX; sX <= endX; sX++) {
+                        sels.get('.gridcolor[data-colx="' + sX + '"][data-coly="' + startY + '"]').css('background-color', ramp[cnt]);
+                        sels.get('.gridcolor[data-colx="' + sX + '"][data-coly="' + startY + '"]').attr('data-changed','1');
+                        cnt++;
+                    }
+                    this.finishRamp();
+                } else if (inY) {
+                    for (var sY = startY; sY <= endY; sY++) {
+                        sels.get('.gridcolor[data-colx="' + startX + '"][data-coly="' + sY + '"]').css('background-color', ramp[cnt]);
+                        sels.get('.gridcolor[data-colx="' + startX + '"][data-coly="' + sY + '"]').attr('data-changed','1');
+                        cnt++;
+                    }
+                    this.finishRamp();
+                } else {
+                    this.finishRamp();
+                }
+            }
+        },
+
+        /**
+         * Load palette in editor
+         *
+         * @param input
+         * @param type
+         */
+        loadPalette: function (input, type) {
+            var routes = {
+                'gpl': 'importGpl',
+                'ase': 'importASE'
+            };
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var paletteFile = e.target.result;
+                    $.post('/editor/' + routes[type], {'palettefile': paletteFile}, function(response) {
+                        sels.get('#edit_cols').val(response.columns);
+                        sels.get('#edit_rows').val(Math.ceil(response.colors.length / response.columns));
+                        sels.get('#paletteName').val(response.name);
+                        sels.get('#paletteComment').val(response.comment);
+
+                        colorEditor.setColsAndRows(response.columns, Math.ceil(response.colors.length / response.columns));
+                        colorEditor.renderGrid(true);
+                        colorEditor.setColorsFromSerialArray(response.colors);
+                        colorEditor.renderGrid(true);
+                        colorEditor.storeColors();
+                    }, 'json');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    };
+
+    /**
+     * load picker image to canvas
+     */
+    function loadPreviewImage(input, originX, originY, imageZoom) {
+        /**
+         * image picker code
+         */
+        var canvas = document.getElementById('imagePicker'),
+            context = canvas.getContext('2d'),
+            img = new Image();
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        context.webkitImageSmoothingEnabled = false;
+        context.mozImageSmoothingEnabled = false;
+        context.imageSmoothingEnabled = false;
+
+        img.onload = function () {
+            if (isNaN(imageZoom)) {
+                imageZoom = 1;
+            }
+            var iw = img.width * imageZoom,
+                ih = img.height * imageZoom;
+
+            context.drawImage(this, originX, originY, iw, ih);
+        };
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    /**
+     * Drag'n'Drop functionality for switching colors
+     */
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var srcId = ev.dataTransfer.getData('text'),
+            targetId = ev.target.id,
+            srcCol = chroma(sels.get('#'+srcId).css('background-color')).hex().toLowerCase(),
+            saveCol = chroma(sels.get('#'+targetId).css('background-color')).hex().toLowerCase(),
+            bgCol = chroma(sels.get('#edit_bgcol').attr('data-color')).hex().toLowerCase();
+
+        sels.get('#'+targetId).attr('data-changed', bgCol === srcCol ? '0' : 1);
+        sels.get('#'+targetId).css('background-color', srcCol);
+        sels.get('#'+srcId).attr('data-changed', bgCol === saveCol ? '0' : 1);
+        sels.get('#'+srcId).css('background-color', saveCol);
+        colorEditor.storeColors();
+    }
+
+    /**
+     * main app
+     */
+    $(document).ready(function () {
+
+        var numCols = sels.get('#edit_cols').val(),
+            numRows = sels.get('#edit_rows').val(),
+            bgColor = sels.get('#edit_bgcol').val(),
+            parent  = sels.get('#colorgrid'),
+            storedColors = null,
+            originX = 0,
+            originY = 0,
+            slideSpeed = parseInt(sels.get('#imgSlideSteps').val(), 10),
+            imageZoom = 1;
+
+        if (typeof(Storage) !== "undefined") {
+            if (localStorage.getItem('numCols') !== null) {
+                numCols = parseInt(localStorage.getItem('numCols'), 10);
+                numCols = numCols > 0 ? numCols : 5;
+                sels.get('#edit_cols').val(numCols);
+            }
+
+            if (localStorage.getItem('numRows') !== null) {
+                numRows = parseInt(localStorage.getItem('numRows'), 10);
+                numRows = numRows > 0 ? numRows : 5;
+                sels.get('#edit_rows').val(numRows);
+            }
+
+            if (localStorage.getItem('storedColors') !== null) {
+                storedColors = JSON.parse(localStorage.getItem('storedColors'));
+            }
+
+            if (localStorage.getItem('backgroundColor') !== null) {
+                bgColor = localStorage.getItem('backgroundColor');
+                sels.get('#edit_bgcol').attr('data-color', bgColor);
+            }
+        }
+
+        /**
+         * init color picker for draw color
+         */
+        sels.get('#sourcecolor').spectrum({
+            showInput: true,
+            preferredFormat: 'hex',
+            showButtons: false,
+            change: function(color) {
+                sels.get('#sourcecolor').attr('data-color', '#' + color.toHex());
+            }
+        });
+
+        /**
+         * init color picker for background color
+         */
+        sels.get('#edit_bgcol').spectrum({
+            showInput: true,
+            preferredFormat: 'hex',
+            showButtons: false,
+            change: function(color) {
+                sels.get('#edit_bgcol').attr('data-color', '#' + color.toHex());
+            }
+        });
+
+        /**
+         * change grid size
+         */
+        sels.get('input#edit_cols, input#edit_rows').on('click blur', function(e) {
+            colorEditor.storeColors();
+            colorEditor.setColsAndRows(sels.get('#edit_cols').val(), sels.get('#edit_rows').val());
+            colorEditor.renderGrid();
+        });
+
+        /**
+         * change background color
+         */
+        sels.get('#edit_bgcol').change(function() {
+            colorEditor.storeColors();
+            colorEditor.setBackgroundColor($(this).attr('data-color'));
+            colorEditor.renderGrid();
+        });
+
+        /**
+         * Delete all colors
+         */
+        sels.get('#resetPalette').click(function(e) {
+            e.preventDefault();
+            colorEditor.resetPalette();
+        });
+
+        /**
+         * Apply image picker functions
+         */
+        sels.get('#imagePicker').colorSampler({
+            onSelect: function(color) {
+                var hexCol = chroma(color).hex().toLowerCase();
+                sels.get('#sourcecolor').spectrum('set', hexCol);
+                sels.get('#sourcecolor').attr('data-color', hexCol);
+            }
+        });
+
+        /**
+         * "draw" color onto grid
+         */
+        sels.get('#colorgrid').on('click', '.gridcolor', function() {
+            var elem = $(this),
+                curCol = chroma(elem.css('background-color')).hex().toLowerCase(),
+                bgCol = chroma(sels.get('#edit_bgcol').attr('data-color')).hex().toLowerCase(),
+                srcCol = chroma(sels.get('#sourcecolor').attr('data-color')).hex().toLowerCase();
+
+            /**
+             * Create color ramp
+             */
+            if (colorEditor.createRamp === true) {
+                if (colorEditor.rampStart.length < 1) {
+                    colorEditor.rampStart = [
+                            parseInt(elem.attr('data-colx'), 10),
+                            parseInt(elem.attr('data-coly'), 10),
+                            curCol
+                    ];
+                    elem.addClass('rampStart');
+                } else if (colorEditor.rampEnd.length < 1) {
+                    colorEditor.rampEnd = [
+                            parseInt(elem.attr('data-colx'), 10),
+                            parseInt(elem.attr('data-coly'), 10),
+                            curCol
+                    ];
+                    colorEditor.drawRamp();
+                }
+                return true;
+            }
+
+            colorEditor.addToHistory(
+                    elem.attr('data-colx'),
+                    elem.attr('data-coly'),
+                    curCol,
+                    srcCol
+            );
+
+            elem.css('background-color', srcCol);
+            if (bgCol === srcCol) {
+                elem.attr('data-changed', '0');
+            } else {
+                elem.attr('data-changed', '1');
+            }
+            colorEditor.storeColors();
+        });
+
+        /**
+         * undo last set
+         */
+        sels.get('#undoAction').click(function(e) {
+            e.preventDefault();
+            colorEditor.undo();
+        });
+
+        /**
+         * slide/move image
+         */
+        sels.get('a.slideImage').click(function(e) {
+            e.preventDefault();
+            var direction = $(this).attr('data-direction');
+
+            switch (direction) {
+                case 'left':
+                    originX-=slideSpeed;
+                    break;
+
+                case 'right':
+                    originX+=slideSpeed;
+                    break;
+
+                case 'up':
+                    originY-=slideSpeed;
+                    break;
+
+                case 'down':
+                    originY+=slideSpeed;
+                    break;
+            }
+            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY, imageZoom);
+        });
+
+        /**
+         * zoom image
+         */
+        sels.get('a.imageZoom').click(function(e) {
+            e.preventDefault();
+            var zoomDir = $(this).attr('data-zoom');
+
+            switch (zoomDir) {
+                case 'in':
+                    imageZoom+=.1;
+                    if (imageZoom > 5) {
+                        imageZoom = 5;
+                    }
+                    break;
+
+                case 'out':
+                    imageZoom-=.1;
+                    if (imageZoom <= 0) {
+                        imageZoom = 0.1;
+                    }
+                    break;
+            }
+            loadPreviewImage(document.getElementById('previewImageLoader'), originX, originY, imageZoom);
+        });
+
+        /**
+         * Change slide steps of picker image
+         */
+        sels.get('#imgSlideSteps').change(function() {
+            slideSpeed = parseInt($(this).val(), 10);
+        });
+
+        /**
+         * Save color palette
+         */
+        sels.get('.savePalette').click(function (e) {
+            e.preventDefault();
+
+            var colorsToSave = JSON.stringify(colorEditor.storedColors),
+                palName = sels.get('#paletteName').val(),
+                palComment = sels.get('#paletteComment').val(),
+                saveType = $(this).attr('data-savetype');
+
+            $.post('/editor/save', { 'paletteData': colorsToSave, 'paletteName': palName, 'paletteComment': palComment, 'columns': colorEditor.cols, 'rows': colorEditor.rows, 'filetype': saveType}, function(response) {
+                if (response.status === "success") {
+                    download(window.atob(response.exportString), palName+'.'+response.extension, 'text/plain');
+                }
+            }, 'json');
+        });
+
+        /**
+         * Create color ramp
+         */
+        sels.get('#startColorRamp').click(function(e) {
+            e.preventDefault();
+            colorEditor.createRamp = true;
+            sels.get('.defineStartIndicator').removeClass('hide');
+        });
+
+        /**
+         * initialize at first start
+         */
+        colorEditor.setColsAndRows(numCols, numRows);
+        colorEditor.setParentContainer(parent);
+        colorEditor.setBackgroundColor(bgColor);
+        if (storedColors !== null) {
+            colorEditor.setStoredColors(storedColors);
+        }
+        colorEditor.renderGrid(true);
+    });
+</script>
