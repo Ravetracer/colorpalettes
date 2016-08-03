@@ -120,10 +120,16 @@
             }
         },
 
+        /**
+         * set stored colors
+         */
         setStoredColors: function(storedColors) {
             this.storedColors = storedColors;
         },
 
+        /**
+         * set stored colors from serial array
+         */
         setColorsFromSerialArray: function(colorArray) {
             var arCnt = 0;
             this.storedColors = {};
@@ -177,12 +183,23 @@
             this.restoreColors();
         },
 
+        /**
+         * reset colors
+         */
         resetPalette: function() {
             this.storedColors = {};
             this.saveInLocalStorage('colors');
             this.renderGrid(true);
         },
 
+        /**
+         * add history item
+         *
+         * @param posX
+         * @param posY
+         * @param colorBefore
+         * @param colorAfter
+         */
         addToHistory: function (posX, posY, colorBefore, colorAfter) {
             this.history.push({
                 'x':            posX,
@@ -192,6 +209,9 @@
             });
         },
 
+        /**
+         * undo last action (only works with single drawings; currently doesn't work with color ramps)
+         */
         undo: function () {
             if (this.history.length) {
                 var lastAction = this.history.pop();
@@ -200,6 +220,9 @@
             }
         },
 
+        /**
+         * finish color ramp and draw it
+         */
         finishRamp: function() {
             this.rampStart = [];
             this.rampEnd = [];
@@ -208,6 +231,9 @@
             this.storeColors();
         },
 
+        /**
+         * draw color ramp
+         */
         drawRamp: function() {
             // check if both arrays are filled
             if (this.rampStart.length > 0 && this.rampEnd.length > 0 &&
@@ -245,9 +271,46 @@
                     this.finishRamp();
                 }
             }
+        },
+
+        /**
+         * Load palette in editor
+         *
+         * @param input
+         * @param type
+         */
+        loadPalette: function (input, type) {
+            var routes = {
+                'gpl': 'importGpl',
+                'ase': 'importASE'
+            };
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var paletteFile = e.target.result;
+                    $.post('/editor/' + routes[type], {'palettefile': paletteFile}, function(response) {
+                        sels.get('#edit_cols').val(response.columns);
+                        sels.get('#edit_rows').val(Math.ceil(response.colors.length / response.columns));
+                        sels.get('#paletteName').val(response.name);
+                        sels.get('#paletteComment').val(response.comment);
+
+                        colorEditor.setColsAndRows(response.columns, Math.ceil(response.colors.length / response.columns));
+                        colorEditor.renderGrid(true);
+                        colorEditor.setColorsFromSerialArray(response.colors);
+                        colorEditor.renderGrid(true);
+                        colorEditor.storeColors();
+                    }, 'json');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
     };
 
+    /**
+     * load picker image to canvas
+     */
     function loadPreviewImage(input, originX, originY, imageZoom) {
         /**
          * image picker code
@@ -270,7 +333,6 @@
                 ih = img.height * imageZoom;
 
             context.drawImage(this, originX, originY, iw, ih);
-            //context.drawImage(this, originX, originY);
         };
 
         if (input.files && input.files[0]) {
@@ -278,60 +340,6 @@
 
             reader.onload = function(e) {
                 img.src = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    // @TODO: improve loading functions / merge
-
-    /**
-     * Load GIMP gpl file
-     */
-    function loadGimpPalette(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                var paletteFile = e.target.result;
-                $.post('/editor/importGpl', {'palettefile': paletteFile}, function(response) {
-                    sels.get('#edit_cols').val(response.columns);
-                    sels.get('#edit_rows').val(Math.ceil(response.colors.length / response.columns));
-                    sels.get('#paletteName').val(response.name);
-                    sels.get('#paletteComment').val(response.comment);
-
-                    colorEditor.setColsAndRows(response.columns, Math.ceil(response.colors.length / response.columns));
-                    colorEditor.renderGrid(true);
-                    colorEditor.setColorsFromSerialArray(response.colors);
-                    colorEditor.renderGrid(true);
-                    colorEditor.storeColors();
-                }, 'json');
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    /**
-     * Load ASE file
-     */
-    function loadAsePalette(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                var paletteFile = e.target.result;
-                $.post('/editor/importASE', {'palettefile': paletteFile}, function(response) {
-                    sels.get('#edit_cols').val(response.columns);
-                    sels.get('#edit_rows').val(Math.ceil(response.colors.length / response.columns));
-                    sels.get('#paletteName').val(response.name);
-                    sels.get('#paletteComment').val(response.comment);
-
-                    colorEditor.setColsAndRows(response.columns, Math.ceil(response.colors.length / response.columns));
-                    colorEditor.renderGrid(true);
-                    colorEditor.setColorsFromSerialArray(response.colors);
-                    colorEditor.renderGrid(true);
-                    colorEditor.storeColors();
-                }, 'json');
             };
             reader.readAsDataURL(input.files[0]);
         }

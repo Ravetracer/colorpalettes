@@ -91,13 +91,13 @@
             <li>
                 <a href="#">
                     <label for="importGplFile"><i class="fa fa-upload"></i> Import .gpl file</label>
-                    <input id="importGplFile" type="file" class="sr-only" onchange="loadGimpPalette(this);"/>
+                    <input id="importGplFile" type="file" class="sr-only" onchange="colorEditor.loadPalette(this, 'gpl');"/>
                 </a>
             </li>
             <li>
                 <a href="#">
                     <label for="importAseFile"><i class="fa fa-upload"></i> Import .ase file</label>
-                    <input id="importAseFile" type="file" class="sr-only" onchange="loadAsePalette(this);"/>
+                    <input id="importAseFile" type="file" class="sr-only" onchange="colorEditor.loadPalette(this, 'ase');"/>
                 </a>
             </li>
             <li><a data-toggle="modal" data-target="#exportPaletteDialog"><i class="fa fa-save"></i> Export palette</a></li>

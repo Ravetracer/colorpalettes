@@ -20,14 +20,23 @@ use Colorpalettes\SilexApp;
 $app = new SilexApp();
 $app['debug'] = true;
 
+/**
+ * register monolog
+ */
 $app->register(new Silex\Provider\MonologServiceProvider(), [
     'monolog.logfile'   => __DIR__.'/logs/devlog.log',
 ]);
 
+/**
+ * register twig
+ */
 $app->register(new Silex\Provider\TwigServiceProvider(), [
     'twig.path'         => __DIR__.'/views',
 ]);
 
+/**
+ * register console
+ */
 $app->register(
     new ConsoleServiceProvider(),
     [
@@ -37,6 +46,9 @@ $app->register(
     ]
 );
 
+/**
+ * register security service provider (currently not in use!)
+ */
 $app->register(new Silex\Provider\SecurityServiceProvider(), [
     'security.firewalls' => [
         'admin' => array(
@@ -50,6 +62,9 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), [
     ],
 ]);
 
+/**
+ * register doctrine for sqlite db
+ */
 $app->register(new Silex\Provider\DoctrineServiceProvider(), [
     'db.options'    => [
         'driver'    => 'pdo_sqlite',
@@ -57,6 +72,9 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), [
     ],
 ]);
 
+/**
+ * register spot; service provider for tiny ORM functionalities
+ */
 $app->register(new Dijky\Silex\Provider\SpotServiceProvider(), [
     'spot.connections' => [
         'colpals' => [
@@ -66,11 +84,16 @@ $app->register(new Dijky\Silex\Provider\SpotServiceProvider(), [
     ],
 ]);
 
+/**
+ * register configuration and URL generator service providers
+ */
 $app->register(new DerAlex\Silex\YamlConfigServiceProvider(__DIR__.'/config/parameters.yml'));
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 /**
  * return DB result as palette array
+ *
+ * @return ResultToArrayService
  */
 $app["result_to_array"] = function () {
     return new ResultToArrayService();
