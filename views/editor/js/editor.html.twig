@@ -29,6 +29,7 @@
         backgroundColor: '#000000',
         parentContainer: null,
         storedColors: {},
+        paletteBackup: {},
         createRamp: false,
         history: [],
         rampStart: [],
@@ -307,7 +308,15 @@
             }
         },
 
+        /**
+         * Adjust saturation
+         *
+         * @param type
+         */
         adjustSaturation: function (type) {
+            if ($.isEmptyObject(this.paletteBackup)) {
+                this.paletteBackup = JSON.parse(JSON.stringify(this.storedColors));
+            }
             for (var y = 1; y <= this.rows; y++) {
                 for (var x = 1; x <= this.cols; x++) {
                     var pos = x.toString()+'-'+y.toString();
@@ -319,9 +328,18 @@
                 }
             }
             this.renderGrid(true);
+            this.storeColors();
         },
 
+        /**
+         * Adjust brightness
+         *
+         * @param type
+         */
         adjustBrightness: function (type) {
+            if ($.isEmptyObject(this.paletteBackup)) {
+                this.paletteBackup = JSON.parse(JSON.stringify(this.storedColors));
+            }
             for (var y = 1; y <= this.rows; y++) {
                 for (var x = 1; x <= this.cols; x++) {
                     var pos = x.toString()+'-'+y.toString();
@@ -333,6 +351,17 @@
                 }
             }
             this.renderGrid(true);
+            this.storeColors();
+        },
+
+        /**
+         * recover backed up palette
+         */
+        recoverBackup: function() {
+            if (!$.isEmptyObject(this.paletteBackup)) {
+                this.storedColors = JSON.parse(JSON.stringify(this.paletteBackup));
+                this.renderGrid(true);
+            }
         }
     };
 
@@ -654,6 +683,13 @@
          */
         $('.adjustbrightness').click(function() {
             colorEditor.adjustBrightness($(this).attr('data-type'));
+        });
+
+        /**
+         * recover palette backup
+         */
+        $('.resetadjustments').click(function() {
+            colorEditor.recoverBackup();
         });
 
         /**
