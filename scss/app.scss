@@ -83,3 +83,12 @@ ul.help {
 .picker-canvas {
   border: 2px solid black;
 }
+
+.github-ribbon {
+  fill: black;
+  color: $gray-dark;
+  position: absolute;
+  top: 50px;
+  border: 0;
+  right: 0;
+}
