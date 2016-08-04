@@ -305,6 +305,34 @@
                 };
                 reader.readAsDataURL(input.files[0]);
             }
+        },
+
+        adjustSaturation: function (type) {
+            for (var y = 1; y <= this.rows; y++) {
+                for (var x = 1; x <= this.cols; x++) {
+                    var pos = x.toString()+'-'+y.toString();
+                    if (type === "increase") {
+                        this.storedColors[pos][0] = chroma(this.storedColors[pos][0]).saturate(.2);
+                    } else if (type === "decrease") {
+                        this.storedColors[pos][0] = chroma(this.storedColors[pos][0]).desaturate(.2);
+                    }
+                }
+            }
+            this.renderGrid(true);
+        },
+
+        adjustBrightness: function (type) {
+            for (var y = 1; y <= this.rows; y++) {
+                for (var x = 1; x <= this.cols; x++) {
+                    var pos = x.toString()+'-'+y.toString();
+                    if (type === "increase") {
+                        this.storedColors[pos][0] = chroma(this.storedColors[pos][0]).brighten(.2);
+                    } else if (type === "decrease") {
+                        this.storedColors[pos][0] = chroma(this.storedColors[pos][0]).darken(.2);
+                    }
+                }
+            }
+            this.renderGrid(true);
         }
     };
 
@@ -498,6 +526,7 @@
                             curCol
                     ];
                     colorEditor.drawRamp();
+                    sels.get('#startColorRamp').toggleClass('btn-primary').toggleClass('btn-warning');
                 }
                 return true;
             }
@@ -609,7 +638,22 @@
         sels.get('#startColorRamp').click(function(e) {
             e.preventDefault();
             colorEditor.createRamp = true;
+            $(this).toggleClass('btn-primary').toggleClass('btn-warning');
             sels.get('.defineStartIndicator').removeClass('hide');
+        });
+
+        /**
+         * adjust saturation
+         */
+        $('.adjustsaturation').click(function() {
+            colorEditor.adjustSaturation($(this).attr('data-type'));
+        });
+
+        /**
+         * adjust brightness
+         */
+        $('.adjustbrightness').click(function() {
+            colorEditor.adjustBrightness($(this).attr('data-type'));
         });
 
         /**
@@ -622,5 +666,7 @@
             colorEditor.setStoredColors(storedColors);
         }
         colorEditor.renderGrid(true);
+
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>

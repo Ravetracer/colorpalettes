@@ -29,8 +29,18 @@
                         <input type="text" class="colorBox large" id="sourcecolor" data-color="#000000"/>
                     </div>
                 </div>
-                <div class="col-lg-1">
-                    <a href="#" class="btn btn-primary" id="startColorRamp">Color ramp</a>
+                <div class="col-lg-3">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="btn-group">
+                                <a href="#" class="btn btn-sm btn-primary" id="startColorRamp" data-toggle="tooltip" data-placement="top" title="Create color ramp"><i class="fa fa-signal"></i></a>
+                                <a href="#" class="btn btn-sm btn-info adjustsaturation" data-type="increate" data-toggle="tooltip" data-placement="top" title="increase saturation"><i class="fa fa-tachometer"></i> <i class="fa fa-caret-up"></i></a>
+                                <a href="#" class="btn btn-sm btn-info adjustsaturation" data-type="decrease" data-toggle="tooltip" data-placement="top" title="decrease saturation"><i class="fa fa-tachometer"></i> <i class="fa fa-caret-down"></i></a>
+                                <a href="#" class="btn btn-sm btn-info adjustbrightness" data-type="increase" data-toggle="tooltip" data-placement="top" title="lighten"><i class="fa fa-adjust"></i> <i class="fa fa-caret-up"></i></a>
+                                <a href="#" class="btn btn-sm btn-info adjustbrightness" data-type="decrease" data-toggle="tooltip" data-placement="top" title="darken"><i class="fa fa-adjust"></i> <i class="fa fa-caret-down"></i></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-2">
                     <div class="form-group">
@@ -59,10 +69,10 @@
                                 <a href="#" class="btn btn-info slideImage" data-direction='down'><i class="fa fa-chevron-down"></i></a>
                             </span>
                             <span title="Zoom in">
-                                <a href="#" class="btn btn-info imageZoom" data-zoom="in"><i class="fa fa-plus-circle"></i></a>
+                                <a href="#" class="btn btn-info imageZoom" data-zoom="in"><i class="fa fa-search-plus"></i></a>
                             </span>
                             <span title="Zoom out">
-                                <a href="#" class="btn btn-info imageZoom" data-zoom="out"><i class="fa fa-minus-circle"></i></a>
+                                <a href="#" class="btn btn-info imageZoom" data-zoom="out"><i class="fa fa-search-minus"></i></a>
                             </span>
                         </div>
                     </div>
