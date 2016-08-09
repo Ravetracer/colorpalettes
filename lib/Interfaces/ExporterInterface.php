@@ -21,12 +21,12 @@ interface ExporterInterface
      *
      * @return mixed
      */
-    public function getExportContents();
+    public function getExportContents(): mixed;
 
     /**
      * Returns the file extension
      *
      * @return string
      */
-    public function getExportFileExtension();
+    public function getExportFileExtension(): string;
 }

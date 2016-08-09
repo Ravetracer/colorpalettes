@@ -20,7 +20,7 @@ class ResultToArrayService
      * @param Query $dbResult
      * @return array
      */
-    public function getPaletteArray(Query $dbResult)
+    public function getPaletteArray(Query $dbResult): array
     {
         $pals = [];
         foreach ($dbResult as $currentResult) {

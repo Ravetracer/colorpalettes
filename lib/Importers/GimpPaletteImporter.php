@@ -64,7 +64,7 @@ class GimpPaletteImporter implements ImporterInterface
      *
      * @return bool
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return $this->isValid;
     }
@@ -74,7 +74,7 @@ class GimpPaletteImporter implements ImporterInterface
      *
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return strtolower(trim(str_replace(' ', '_', basename($this->fileName, '.gpl'))));
     }
@@ -84,7 +84,7 @@ class GimpPaletteImporter implements ImporterInterface
      *
      * @return string
      */
-    public function getPaletteName()
+    public function getPaletteName(): string
     {
         return $this->paletteName;
     }
@@ -94,7 +94,7 @@ class GimpPaletteImporter implements ImporterInterface
      *
      * @return string
      */
-    public function getComment()
+    public function getComment(): string
     {
         return $this->comment;
     }
@@ -102,7 +102,7 @@ class GimpPaletteImporter implements ImporterInterface
     /**
      * @return int
      */
-    public function getColumns()
+    public function getColumns(): int
     {
         return (int) $this->columns;
     }
@@ -110,14 +110,16 @@ class GimpPaletteImporter implements ImporterInterface
     /**
      * Parse palette file
      *
-     * @return bool|array
+     * @return array
      */
-    public function getParsedColors()
+    public function getParsedColors(): array
     {
-        if (!$this->isValid()) {
-            return false;
-        }
         $colors = [];
+
+        if (!$this->isValid()) {
+            return $colors;
+        }
+
         foreach ($this->paletteFile as $currentEntry) {
             // fetch name
             preg_match("/(Name|name): (.*)/", $currentEntry, $nameMatch);
@@ -160,7 +162,7 @@ class GimpPaletteImporter implements ImporterInterface
      * @param $inputString
      * @return string
      */
-    private function isPaletteString($inputString)
+    private function isPaletteString($inputString): string
     {
         return strstr($inputString, "GIMP Palette");
     }

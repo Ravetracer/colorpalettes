@@ -4,12 +4,12 @@
  * demo console
  */
 
-use Commands\ImportPalsCommand,
-    Commands\CreateDBCommand;
+use Commands\ImportPalsCommand;
+use Commands\CreateDBCommand;
 
 set_time_limit(0);
 
-$app = require_once __DIR__ . '/bootstrap.php';
+$app = require_once __DIR__.'/bootstrap.php';
 
 $console = &$app['console'];
 // add commands with $console->add(<command name>);

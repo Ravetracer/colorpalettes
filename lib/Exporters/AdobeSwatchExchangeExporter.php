@@ -34,7 +34,7 @@ class AdobeSwatchExchangeExporter implements ExporterInterface
      *
      * @return string
      */
-    public function getExportContents()
+    public function getExportContents(): string
     {
         $expColors = [];
         /**
@@ -61,7 +61,7 @@ class AdobeSwatchExchangeExporter implements ExporterInterface
      * Get the export file extension
      * @return string
      */
-    public function getExportFileExtension()
+    public function getExportFileExtension(): string
     {
         return 'ase';
     }
@@ -93,7 +93,7 @@ class AdobeSwatchExchangeExporter implements ExporterInterface
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
      */
-    private function mkASE($palettes)
+    private function mkASE($palettes): string
     {
         $internalEncoding = mb_internal_encoding();
         mb_internal_encoding("UTF-8");

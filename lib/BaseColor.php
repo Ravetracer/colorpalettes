@@ -40,7 +40,7 @@ class BaseColor
     /**
      * @return int
      */
-    public function getRed()
+    public function getRed(): int
     {
         return (int) $this->red;
     }
@@ -49,7 +49,7 @@ class BaseColor
      * @param int $red
      * @return BaseColor
      */
-    public function setRed($red = 0)
+    public function setRed($red = 0): BaseColor
     {
         $this->red = (int) $red;
 
@@ -59,7 +59,7 @@ class BaseColor
     /**
      * @return int
      */
-    public function getGreen()
+    public function getGreen(): int
     {
         return (int) $this->green;
     }
@@ -68,7 +68,7 @@ class BaseColor
      * @param int $green
      * @return BaseColor
      */
-    public function setGreen($green = 0)
+    public function setGreen($green = 0): BaseColor
     {
         $this->green = (int) $green;
 
@@ -78,7 +78,7 @@ class BaseColor
     /**
      * @return int
      */
-    public function getBlue()
+    public function getBlue(): int
     {
         return (int) $this->blue;
     }
@@ -87,7 +87,7 @@ class BaseColor
      * @param int $blue
      * @return BaseColor
      */
-    public function setBlue($blue = 0)
+    public function setBlue($blue = 0): BaseColor
     {
         $this->blue = (int) $blue;
 
@@ -98,7 +98,7 @@ class BaseColor
      * @param string $name
      * @return BaseColor
      */
-    public function setName($name = "")
+    public function setName($name = ""): BaseColor
     {
         $this->colorName = filter_var($name, FILTER_SANITIZE_STRING);
 
@@ -106,9 +106,9 @@ class BaseColor
     }
 
     /**
-     * @return \MischiefCollective\ColorJizz\Formats\MischiefCollective\ColorJizz\Formats\Hex
+     * @return Hex
      */
-    public function getHexValue()
+    public function getHexValue(): Hex
     {
         $rgb = new RGB($this->getRed(), $this->getGreen(), $this->getBlue());
 
@@ -118,7 +118,7 @@ class BaseColor
     /**
      * @return string
      */
-    public function getCssHex()
+    public function getCssHex(): string
     {
         return '#'.sprintf('%02x', $this->getRed()).sprintf('%02x', $this->getGreen()).sprintf('%02x', $this->getBlue());
     }
@@ -126,7 +126,7 @@ class BaseColor
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->colorName;
     }

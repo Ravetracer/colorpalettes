@@ -31,7 +31,7 @@ class BasePalette
      * @param int $id
      * @return BasePalette
      */
-    public function setId($id = 0)
+    public function setId($id = 0): BasePalette
     {
         $this->id = (int) $id;
 
@@ -41,7 +41,7 @@ class BasePalette
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return (int) $this->id;
     }
@@ -51,7 +51,7 @@ class BasePalette
      *
      * @return int
      */
-    public function getColumns()
+    public function getColumns(): int
     {
         return $this->columns;
     }
@@ -60,7 +60,7 @@ class BasePalette
      * @param int $cols
      * @return BasePalette
      */
-    public function setColumns($cols = 1)
+    public function setColumns($cols = 1): BasePalette
     {
         $this->columns = (int) $cols;
 
@@ -72,7 +72,7 @@ class BasePalette
      *
      * @return string
      */
-    public function getComment()
+    public function getComment(): string
     {
         return $this->comment;
     }
@@ -81,7 +81,7 @@ class BasePalette
      * @param string $comment
      * @return BasePalette
      */
-    public function setComment($comment = '')
+    public function setComment($comment = ''): BasePalette
     {
         $this->comment = trim(filter_var($comment, FILTER_SANITIZE_STRING));
 
@@ -94,7 +94,7 @@ class BasePalette
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return strlen($this->name) ? $this->name : str_replace(' ', '_', $this->getFilename());
     }
@@ -103,7 +103,7 @@ class BasePalette
      * @param string $name
      * @return BasePalette
      */
-    public function setName($name = '')
+    public function setName($name = ''): BasePalette
     {
         $this->name = filter_var($name, FILTER_SANITIZE_STRING);
 
@@ -115,7 +115,7 @@ class BasePalette
      *
      * @return array
      */
-    public function getColors()
+    public function getColors(): array
     {
         return $this->colors;
     }
@@ -124,9 +124,9 @@ class BasePalette
      * Set new color array (e.g. from foreign palette format)
      *
      * @param array $colorArray
-     * @return $this
+     * @return BasePalette
      */
-    public function setColors(array $colorArray = [])
+    public function setColors(array $colorArray = []): BasePalette
     {
         $this->colors = $colorArray;
 
@@ -139,7 +139,7 @@ class BasePalette
      * @param ImporterInterface $importer
      * @return bool
      */
-    public function import(ImporterInterface $importer)
+    public function import(ImporterInterface $importer): bool
     {
         if ($importer->isValid()) {
             $this->setColors($importer->getParsedColors())
@@ -160,7 +160,7 @@ class BasePalette
      * @param ExporterInterface $exporter
      * @return Response
      */
-    public function export(ExporterInterface $exporter)
+    public function export(ExporterInterface $exporter): Response
     {
         $contents = $exporter->getExportContents();
         $response = new Response($contents);
@@ -176,7 +176,7 @@ class BasePalette
     /**
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
@@ -185,7 +185,7 @@ class BasePalette
      * @param string $filename
      * @return BasePalette
      */
-    public function setFilename($filename)
+    public function setFilename($filename): BasePalette
     {
         $this->filename = $filename;
 
@@ -197,7 +197,7 @@ class BasePalette
      *
      * @return BasePalette
      */
-    public function calculateColorCount()
+    public function calculateColorCount(): BasePalette
     {
         $colCount = 0;
         $existingCombinations = [];
@@ -225,7 +225,7 @@ class BasePalette
      *
      * @return int
      */
-    public function getColorCount()
+    public function getColorCount(): int
     {
         if ($this->colorCount <= 0) {
             $this->calculateColorCount();

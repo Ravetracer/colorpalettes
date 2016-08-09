@@ -46,7 +46,7 @@ class ACOEncoder
     /**
      * Output aco file to browser
      */
-    public function outputAcoFile()
+    public function outputAcoFile(): void
     {
         $aco = $this->createAcofile();
         header("Content-type: application/octet-stream");
@@ -60,7 +60,7 @@ class ACOEncoder
      * Save aco file on server
      * @return bool
      */
-    public function saveAcofile() //Suggested by Horst Nogajski <info {at} nogajski <dot> de>
+    public function saveAcofile(): bool //Suggested by Horst Nogajski <info {at} nogajski <dot> de>
     {
         $fp = @fopen($this->file, 'wb');  // write binarysave (needed on windows systems, has no effect on Unix)
         if ($fp === false) {
@@ -75,7 +75,7 @@ class ACOEncoder
     /**
      * @return string
      */
-    public function createAcofile()
+    public function createAcofile(): string
     {
         $this->count = count($this->colors);
         $out = $this->n(1);
@@ -113,8 +113,9 @@ class ACOEncoder
      * @param int   $r
      * @param int   $g
      * @param int   $b
+     * @return void
      */
-    public function add($param, $r = 0, $g = 0, $b = 0)
+    public function add($param, $r = 0, $g = 0, $b = 0): void
     {
         if (!is_array($param)) {
             $this->i++;
@@ -134,7 +135,7 @@ class ACOEncoder
      * @param $x
      * @return string
      */
-    private function n($x)
+    private function n($x): string
     {
         return sprintf("%c%c", ($x >> 8) & 0xff, $x & 0xff);
     }

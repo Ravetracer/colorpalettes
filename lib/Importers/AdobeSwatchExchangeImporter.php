@@ -47,7 +47,7 @@ class AdobeSwatchExchangeImporter implements ImporterInterface
      *
      * @return bool
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return $this->isValid;
     }
@@ -57,7 +57,7 @@ class AdobeSwatchExchangeImporter implements ImporterInterface
      *
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return strtolower(trim(str_replace(' ', '_', basename($this->fileName, '.ase'))));
     }
@@ -67,7 +67,7 @@ class AdobeSwatchExchangeImporter implements ImporterInterface
      *
      * @return string
      */
-    public function getPaletteName()
+    public function getPaletteName(): string
     {
         return $this->getFilename();
     }
@@ -77,7 +77,7 @@ class AdobeSwatchExchangeImporter implements ImporterInterface
      *
      * @return string
      */
-    public function getComment()
+    public function getComment(): string
     {
         return '';
     }
@@ -85,7 +85,7 @@ class AdobeSwatchExchangeImporter implements ImporterInterface
     /**
      * @return int
      */
-    public function getColumns()
+    public function getColumns(): int
     {
         return 1;
     }
@@ -95,9 +95,14 @@ class AdobeSwatchExchangeImporter implements ImporterInterface
      *
      * @return array
      */
-    public function getParsedColors()
+    public function getParsedColors(): array
     {
         $colors = [];
+
+        if (!$this->isValid()) {
+            return $colors;
+        }
+
         foreach ($this->swatches as $currentEntry) {
             $col = new BaseColor();
             $col->setRed($currentEntry['r'])

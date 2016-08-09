@@ -5,6 +5,7 @@
  * Date: 01.02.16
  * Time: 17:06
  */
+declare(strict_types = 1);
 
 use Colorpalettes\BasePalette;
 use Colorpalettes\Exporters\AdobeSwatchExchangeExporter;
@@ -21,8 +22,10 @@ $app = require_once __DIR__.DIRECTORY_SEPARATOR.'bootstrap.php';
 
 /**
  * Index page
+ *
+ * @return Response
  */
-$app->get('/', function () use ($app) {
+$app->get('/', function () use ($app) : Response {
     $mapper = $app['spot']->mapper('Entity\Palette');
     $result = $mapper->all()->order(['filename' => 'ASC']);
 
@@ -37,8 +40,10 @@ $app->get('/', function () use ($app) {
 
 /**
  * Export palette to AdobeSwatchExchange
+ *
+ * @return Response
  */
-$app->get('/export/ase/{id}', function ($id) use ($app) {
+$app->get('/export/ase/{id}', function ($id) use ($app) : Response {
     $mapper = $app['spot']->mapper('Entity\Palette');
     $result = $mapper->where(['id' => (int) $id]);
 
@@ -54,8 +59,10 @@ $app->get('/export/ase/{id}', function ($id) use ($app) {
 
 /**
  * Export palette to GIMP palette file format
+ *
+ * @return Response
  */
-$app->get('/export/gpl/{id}', function ($id) use ($app) {
+$app->get('/export/gpl/{id}', function ($id) use ($app) : Response {
     $mapper = $app['spot']->mapper('Entity\Palette');
 
     $result = $mapper->where(['id' => (int) $id]);
@@ -72,8 +79,10 @@ $app->get('/export/gpl/{id}', function ($id) use ($app) {
 
 /**
  * Export palette to Adobe Color file (ACO)
+ *
+ * @return Response
  */
-$app->get('/export/aco/{id}', function ($id) use ($app) {
+$app->get('/export/aco/{id}', function ($id) use ($app) : Response {
     $mapper = $app['spot']->mapper('Entity\Palette');
 
     $result = $mapper->where(['id' => (int) $id]);
@@ -90,8 +99,10 @@ $app->get('/export/aco/{id}', function ($id) use ($app) {
 
 /**
  * Preview route for showing new files in the import folder
+ *
+ * @return Response
  */
-$app->get('/previewImports', function () use ($app) {
+$app->get('/previewImports', function () use ($app) : Response {
     $previewFiles = glob(__DIR__.'/import/*.gpl');
 
     if (count($previewFiles) <= 0) {
@@ -109,8 +120,10 @@ $app->get('/previewImports', function () use ($app) {
 
 /**
  * Preview a single palette file from the preview folder
+ *
+ * @return Response
  */
-$app->get('/import/preview/{palName}', function ($palName) use ($app) {
+$app->get('/import/preview/{palName}', function ($palName) use ($app) : Response {
 
     $fname = __DIR__.'/import/'.filter_var($palName, FILTER_SANITIZE_STRING).'.gpl';
     if (!file_exists($fname)) {
@@ -126,16 +139,28 @@ $app->get('/import/preview/{palName}', function ($palName) use ($app) {
     ]);
 });
 
-/**
- * Palette editor
- */
+/**********************************
+ *
+ *          Palette editor
+ *
+ **********************************/
 
-$app->get('/editor', function () use ($app) {
+/**
+ * Main page
+ *
+ * @return Response
+ */
+$app->get('/editor', function () use ($app) : Response {
     return $app->render('editor/index.html.twig');
 })
 ->bind('editor');
 
-$app->post('/editor/save', function (Request $request) use ($app) {
+/**
+ * Save colors to desired format
+ *
+ * @return JsonResponse
+ */
+$app->post('/editor/save', function (Request $request) use ($app) : JsonResponse {
     $palData = json_decode($request->get('paletteData'), true);
     $cols = (int) $request->get('columns');
     $rows = (int) $request->get('rows');
@@ -163,16 +188,16 @@ $app->post('/editor/save', function (Request $request) use ($app) {
         ->setComment(filter_var($request->get('paletteComment'), FILTER_SANITIZE_STRING));
 
     switch ($fileType) {
-        case 'gpl':
-            $exporter = new GimpPaletteExporter($exportPalette);
-            break;
-
         case 'ase':
             $exporter = new AdobeSwatchExchangeExporter($exportPalette);
             break;
 
         case 'aco':
             $exporter = new AdobeColorfileExporter($exportPalette);
+            break;
+
+        default:
+            $exporter = new GimpPaletteExporter($exportPalette);
             break;
     }
 
@@ -181,8 +206,10 @@ $app->post('/editor/save', function (Request $request) use ($app) {
 
 /**
  * Import .gpl file
+ *
+ * @return JsonResponse
  */
-$app->post('/editor/importGpl', function (Request $request) use ($app) {
+$app->post('/editor/importGpl', function (Request $request) use ($app) : JsonResponse {
     /**
      * decode submitted Base64 string and replacing standard LF (ASCII char dec. 10) with \n and standard TAB (ASCII char dec. 9) with \t for splitting the array
      */
@@ -213,8 +240,10 @@ $app->post('/editor/importGpl', function (Request $request) use ($app) {
 
 /**
  * import ASE file
+ *
+ * @return JsonResponse
  */
-$app->post('/editor/importASE', function (Request $request) use ($app) {
+$app->post('/editor/importASE', function (Request $request) use ($app) : JsonResponse {
     $aseData = base64_decode(str_replace('data:;base64,', '', $request->get('palettefile')));
 
     $fName = 'import/ase_editor_import_'.microtime();
@@ -245,4 +274,7 @@ $app->post('/editor/importASE', function (Request $request) use ($app) {
     return new JsonResponse($response);
 });
 
+/**
+ * Run the app
+ */
 $app->run();

@@ -13,7 +13,7 @@ class ASEDecoder
      * @param string $file
      * @return array
      */
-    public static function decodeFile($file)
+    public static function decodeFile($file): array
     {
         $swatches = array();
         $fp = fopen($file, "rb");
@@ -116,7 +116,11 @@ class ASEDecoder
         return $swatches;
     }
 
-    private static function toFloat($data)
+    /**
+     * @param $data
+     * @return float
+     */
+    private static function toFloat($data): float
     {
         $t = unpack("C*", pack("S*", 256));
         if ($t[1] == 1) {
@@ -124,11 +128,18 @@ class ASEDecoder
         } else {
             $a = unpack("f*", strrev($data));
         }
+
         return (float) $a[1];
     }
 
-
-    private static function cmykToRgb($c, $m, $y, $k)
+    /**
+     * @param $c
+     * @param $m
+     * @param $y
+     * @param $k
+     * @return \stdClass
+     */
+    private static function cmykToRgb($c, $m, $y, $k): \stdClass
     {
         $o = new \stdClass();
         $r = 1 - ($c * (1 - $k)) - $k;
@@ -141,8 +152,13 @@ class ASEDecoder
         return $o;
     }
 
-
-    private static function labToRgb($l, $a, $b)
+    /**
+     * @param $l
+     * @param $a
+     * @param $b
+     * @return \stdClass
+     */
+    private static function labToRgb($l, $a, $b): \stdClass
     {
         $o = new \stdClass();
         $refX = 95.047;
@@ -208,8 +224,11 @@ class ASEDecoder
         return $o;
     }
 
-
-    private static function dec2hex($bin)
+    /**
+     * @param $bin
+     * @return string
+     */
+    private static function dec2hex($bin): string
     {
         $ret = "";
         $string = dechex($bin);

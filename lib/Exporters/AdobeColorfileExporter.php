@@ -38,7 +38,7 @@ class AdobeColorfileExporter implements ExporterInterface
      *
      * @return string
      */
-    public function getExportContents()
+    public function getExportContents(): string
     {
         $acoPal = new ACOEncoder();
         /**
@@ -59,7 +59,7 @@ class AdobeColorfileExporter implements ExporterInterface
     /**
      * @return string
      */
-    public function getExportFileExtension()
+    public function getExportFileExtension(): string
     {
         return 'aco';
     }

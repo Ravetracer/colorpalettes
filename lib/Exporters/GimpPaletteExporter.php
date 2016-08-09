@@ -32,7 +32,7 @@ class GimpPaletteExporter implements ExporterInterface
      *
      * @return string
      */
-    public function getExportContents()
+    public function getExportContents(): string
     {
         $export = "GIMP Palette\n"."Name: ".$this->palette->getName()."\n"."Columns: ".$this->palette->getColumns()."\n"."# ".$this->palette->getComment()."\n";
 
@@ -49,7 +49,7 @@ class GimpPaletteExporter implements ExporterInterface
     /**
      * @return string
      */
-    public function getExportFileExtension()
+    public function getExportFileExtension(): string
     {
         return 'gpl';
     }
