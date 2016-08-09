@@ -19,9 +19,9 @@ interface ExporterInterface
     /**
      * Get export contents for the file
      *
-     * @return mixed
+     * @return string
      */
-    public function getExportContents(): mixed;
+    public function getExportContents(): string;
 
     /**
      * Returns the file extension

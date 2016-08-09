@@ -31,9 +31,9 @@ class BasePalette
      * @param int $id
      * @return BasePalette
      */
-    public function setId($id = 0): BasePalette
+    public function setId(int $id = 0): BasePalette
     {
-        $this->id = (int) $id;
+        $this->id = $id;
 
         return $this;
     }
@@ -43,7 +43,7 @@ class BasePalette
      */
     public function getId(): int
     {
-        return (int) $this->id;
+        return $this->id;
     }
 
     /**
@@ -60,9 +60,9 @@ class BasePalette
      * @param int $cols
      * @return BasePalette
      */
-    public function setColumns($cols = 1): BasePalette
+    public function setColumns(int $cols = 1): BasePalette
     {
-        $this->columns = (int) $cols;
+        $this->columns = $cols;
 
         return $this;
     }
@@ -81,7 +81,7 @@ class BasePalette
      * @param string $comment
      * @return BasePalette
      */
-    public function setComment($comment = ''): BasePalette
+    public function setComment(string $comment = ''): BasePalette
     {
         $this->comment = trim(filter_var($comment, FILTER_SANITIZE_STRING));
 
@@ -103,7 +103,7 @@ class BasePalette
      * @param string $name
      * @return BasePalette
      */
-    public function setName($name = ''): BasePalette
+    public function setName(string $name = ''): BasePalette
     {
         $this->name = filter_var($name, FILTER_SANITIZE_STRING);
 
@@ -185,7 +185,7 @@ class BasePalette
      * @param string $filename
      * @return BasePalette
      */
-    public function setFilename($filename): BasePalette
+    public function setFilename(string $filename): BasePalette
     {
         $this->filename = $filename;
 

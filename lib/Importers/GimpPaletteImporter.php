@@ -45,7 +45,7 @@ class GimpPaletteImporter implements ImporterInterface
      * GimpPalette constructor.
      * @param string $fileName
      */
-    public function __construct($fileName)
+    public function __construct(string $fileName)
     {
         if (file_exists($fileName)) {
             $this->fileName = $fileName;
@@ -162,7 +162,7 @@ class GimpPaletteImporter implements ImporterInterface
      * @param $inputString
      * @return string
      */
-    private function isPaletteString($inputString): string
+    private function isPaletteString(string $inputString): string
     {
         return strstr($inputString, "GIMP Palette");
     }

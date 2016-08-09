@@ -2,14 +2,21 @@
 
 namespace Entity;
 
-use Spot\Entity,
-    Spot\MapperInterface,
-    Spot\EntityInterface;
+use Spot\Entity;
+use Spot\MapperInterface;
+use Spot\EntityInterface;
 
+/**
+ * Class Color
+ * @package Entity
+ */
 class Color extends Entity
 {
     protected static $table = "colors";
 
+    /**
+     * @return array
+     */
     public static function fields()
     {
         return [
@@ -18,7 +25,7 @@ class Color extends Entity
             'red_value'     => ['type' => 'integer', 'default' => 0, 'required' => true],
             'green_value'   => ['type' => 'integer', 'default' => 0, 'required' => true],
             'blue_value'    => ['type' => 'integer', 'default' => 0, 'required' => true],
-            'palette_id'    => ['type' => 'integer',  'required' => true]
+            'palette_id'    => ['type' => 'integer', 'required' => true],
         ];
     }
 
@@ -30,7 +37,7 @@ class Color extends Entity
     public static function relations(MapperInterface $mapper, EntityInterface $entity)
     {
         return [
-            'user'  => $mapper->belongsTo($entity, 'Entity\Palette', 'palette_id')
+            'user' => $mapper->belongsTo($entity, 'Entity\Palette', 'palette_id'),
         ];
     }
 }

@@ -37,7 +37,7 @@ class ACOEncoder
     /**
      * @param string $filename
      */
-    public function __construct($filename = "aco_file.aco")
+    public function __construct(string $filename = "aco_file.aco")
     {
         $this->i = 0;
         $this->file = $filename;
@@ -115,7 +115,7 @@ class ACOEncoder
      * @param int   $b
      * @return void
      */
-    public function add($param, $r = 0, $g = 0, $b = 0): void
+    public function add(mixed $param, int $r = 0, int $g = 0, int $b = 0): void
     {
         if (!is_array($param)) {
             $this->i++;
@@ -132,10 +132,10 @@ class ACOEncoder
     }
 
     /**
-     * @param $x
+     * @param mixed $x
      * @return string
      */
-    private function n($x): string
+    private function n(mixed $x): string
     {
         return sprintf("%c%c", ($x >> 8) & 0xff, $x & 0xff);
     }

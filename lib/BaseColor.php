@@ -49,9 +49,9 @@ class BaseColor
      * @param int $red
      * @return BaseColor
      */
-    public function setRed($red = 0): BaseColor
+    public function setRed(int $red = 0): BaseColor
     {
-        $this->red = (int) $red;
+        $this->red = $red;
 
         return $this;
     }
@@ -68,9 +68,9 @@ class BaseColor
      * @param int $green
      * @return BaseColor
      */
-    public function setGreen($green = 0): BaseColor
+    public function setGreen(int $green = 0): BaseColor
     {
-        $this->green = (int) $green;
+        $this->green = $green;
 
         return $this;
     }
@@ -87,9 +87,9 @@ class BaseColor
      * @param int $blue
      * @return BaseColor
      */
-    public function setBlue($blue = 0): BaseColor
+    public function setBlue(int $blue = 0): BaseColor
     {
-        $this->blue = (int) $blue;
+        $this->blue = $blue;
 
         return $this;
     }
@@ -98,7 +98,7 @@ class BaseColor
      * @param string $name
      * @return BaseColor
      */
-    public function setName($name = ""): BaseColor
+    public function setName(string $name = ""): BaseColor
     {
         $this->colorName = filter_var($name, FILTER_SANITIZE_STRING);
 

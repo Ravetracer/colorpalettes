@@ -13,7 +13,7 @@ class ASEDecoder
      * @param string $file
      * @return array
      */
-    public static function decodeFile($file): array
+    public static function decodeFile(string $file): array
     {
         $swatches = array();
         $fp = fopen($file, "rb");
@@ -120,7 +120,7 @@ class ASEDecoder
      * @param $data
      * @return float
      */
-    private static function toFloat($data): float
+    private static function toFloat(mixed $data): float
     {
         $t = unpack("C*", pack("S*", 256));
         if ($t[1] == 1) {

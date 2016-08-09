@@ -33,7 +33,7 @@ class AdobeSwatchExchangeImporter implements ImporterInterface
      * GimpPalette constructor.
      * @param string $fileName
      */
-    public function __construct($fileName)
+    public function __construct(string $fileName)
     {
         $this->fileName = $fileName;
         if (file_exists($fileName)) {

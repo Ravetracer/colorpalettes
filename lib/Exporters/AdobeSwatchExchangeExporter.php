@@ -30,7 +30,7 @@ class AdobeSwatchExchangeExporter implements ExporterInterface
     }
 
     /**
-     * Generates the palette content for exporting to GIMP palette file
+     * Generates the palette content for exporting to ASE palette file
      *
      * @return string
      */
@@ -93,7 +93,7 @@ class AdobeSwatchExchangeExporter implements ExporterInterface
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
      */
-    private function mkASE($palettes): string
+    private function mkASE(array $palettes): string
     {
         $internalEncoding = mb_internal_encoding();
         mb_internal_encoding("UTF-8");

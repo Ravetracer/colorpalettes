@@ -1,24 +1,31 @@
 <?php
 
-namespace Commands;
+namespace commands;
 
-use Colorpalettes\BaseColor,
-    Knp\Command\Command,
-    Symfony\Component\Console\Input\InputInterface,
-    Symfony\Component\Console\Output\OutputInterface,
-    Colorpalettes\BasePalette,
-    Colorpalettes\Importers\GimpPaletteImporter;
+use Colorpalettes\BaseColor;
+use Knp\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Colorpalettes\BasePalette;
+use Colorpalettes\Importers\GimpPaletteImporter;
 
+/**
+ * Class ImportPalsCommand
+ * @package commands
+ */
 class ImportPalsCommand extends Command
 {
-
-    public function __construct($name = null)
+    /**
+     * ImportPalsCommand constructor.
+     * @param string $name
+     */
+    public function __construct(string $name = null)
     {
         parent::__construct($name);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -27,7 +34,7 @@ class ImportPalsCommand extends Command
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -48,27 +55,26 @@ class ImportPalsCommand extends Command
             }
 
             $newPalette = $mapper_pal->create([
-                'title'     => $palObj->getName(),
-                'comment'   => $palObj->getComment(),
-                'columns'   => $palObj->getColumns(),
-                'filename'  => $palObj->getFilename()
+                'title' => $palObj->getName(),
+                'comment' => $palObj->getComment(),
+                'columns' => $palObj->getColumns(),
+                'filename' => $palObj->getFilename(),
             ]);
 
             /**
-             * @var BaseColor $currentColor
+             * @var BaseColor
              */
             foreach ($palObj->getColors() as $currentColor) {
                 $mapper_col->create([
-                    'title'         => $currentColor->getName(),
-                    'red_value'     => $currentColor->getRed(),
-                    'green_value'   => $currentColor->getGreen(),
-                    'blue_value'    => $currentColor->getBlue(),
-                    'palette_id'    => $newPalette->id,
+                    'title' => $currentColor->getName(),
+                    'red_value' => $currentColor->getRed(),
+                    'green_value' => $currentColor->getGreen(),
+                    'blue_value' => $currentColor->getBlue(),
+                    'palette_id' => $newPalette->id,
                 ]);
             }
 
-            $output->writeln("Processed: " . $currentFile);
+            $output->writeln('Processed: '.$currentFile);
         }
-
     }
 }
