@@ -35,4 +35,19 @@ class DatabaseHelper
 
         return $pals;
     }
+
+    /**
+     * Get the number of current palettes
+     *
+     * @param SilexApp $app
+     * @return int
+     */
+    public static function getPaletteCount($app): int
+    {
+        $mapper = $app['spot']->mapper('Entity\Palette');
+        $num = $mapper->all()->count();
+
+        return $num;
+
+    }
 }
