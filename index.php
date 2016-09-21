@@ -7,16 +7,11 @@
  */
 declare(strict_types = 1);
 
-use Colorpalettes\BasePalette;
-use Colorpalettes\Exporters\AdobeSwatchExchangeExporter;
-use Colorpalettes\Exporters\AdobeColorfileExporter;
-use Colorpalettes\Exporters\GimpPaletteExporter;
-use Symfony\Component\HttpFoundation\Response;
-use Colorpalettes\Importers\GimpPaletteImporter;
-use Colorpalettes\Importers\AdobeSwatchExchangeImporter;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Colorpalettes\BaseColor;
+use Colorpalettes\{BaseColor, BasePalette};
+use Colorpalettes\Importers\{AdobeSwatchExchangeImporter, GimpPaletteImporter};
+use Colorpalettes\Exporters\{AdobeSwatchExchangeExporter, AdobeColorfileExporter, GimpPaletteExporter};
+use Symfony\Component\HttpFoundation\{Response, Request, JsonResponse};
+use Colorpalettes\DatabaseHelper;
 
 $app = require_once __DIR__.DIRECTORY_SEPARATOR.'bootstrap.php';
 
@@ -26,17 +21,30 @@ $app = require_once __DIR__.DIRECTORY_SEPARATOR.'bootstrap.php';
  * @return Response
  */
 $app->get('/', function () use ($app) : Response {
-    $mapper = $app['spot']->mapper('Entity\Palette');
-    $result = $mapper->all()->order(['filename' => 'ASC']);
-
-    $resultConv = $app["result_to_array"];
-    $pals = $resultConv->getPaletteArray($result);
+    $pals = DatabaseHelper::getLimitedEntries($app, 0, 12);
 
     return $app->render('index.html.twig', [
         'palettes'  => $pals,
+        'offset'    => 12,
     ]);
 })
 ->bind('homepage');
+
+$app->get('/load/{offset}', function ($offset) use ($app) : Response {
+    $endReached = false;
+    $pals = DatabaseHelper::getLimitedEntries($app, (int) $offset, 12);
+    if (count($pals) <= 0) {
+        $endReached = true;
+    }
+    $offset += 12;
+
+    return new JsonResponse([
+        'html'          => $endReached ? '' : $app->renderView('palette_list.html.twig', ['palettes'  => $pals]),
+        'offset'        => $offset,
+        'endreached'    => $endReached,
+    ]);
+})
+->bind('loadmore');
 
 /**
  * Export palette to AdobeSwatchExchange

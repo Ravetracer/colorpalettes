@@ -1,0 +1,7 @@
+{% set cnt = 1 %}
+{% for pal in palettes %}
+    {% if cnt == 1 %}<div class="row">{% endif %}
+    {% include 'palette_bar.html.twig' %}
+    {% set cnt = cnt+1 %}
+    {% if cnt > 3 %}</div>{% set cnt = 1 %}{% endif %}
+{% endfor %}
