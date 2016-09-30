@@ -233,4 +233,17 @@ class BasePalette
 
         return (int) $this->colorCount;
     }
+
+    /**
+     * Adds a color to the array collection
+     *
+     * @param BaseColor $color
+     * @return BasePalette
+     */
+    public function addColor(BaseColor $color)
+    {
+        $this->colors[] = $color;
+
+        return $this;
+    }
 }
