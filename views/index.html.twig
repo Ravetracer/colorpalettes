@@ -10,38 +10,40 @@
         </div>
     </div>
 
-    <div id="palette_container" data-currentoffset="{{ offset }}">
+    <div id="palette_container" {#data-currentoffset="{{ offset }}"#}>
         {% include 'palette_list.html.twig' with {'palettes': palettes} %}
     </div>
 {% endblock %}
 
 {% block additionalJS %}
+
     <script type="text/javascript">
         $('.palgrid').matchHeight();
         $('.palinfos').matchHeight();
         $('.palbuttons').matchHeight();
+        {#
+                $(document).ready(function() {
+                    var win = $(window),
+                        endreached = false;
 
-        $(document).ready(function() {
-            var win = $(window),
-                endreached = false;
-
-            // Each time the user scrolls
-            win.scroll(function() {
-                // End of the document reached?
-                if ($(document).height() - win.height() <= win.scrollTop()) {
-                    if (!endreached) {
-                        $.get('{{ app.request.baseUrl ~ '/load/'}}' + $('#palette_container').attr('data-currentoffset'), function (response) {
-                            endreached = response.endreached;
-                            if (endreached == false) {
-                                $('#palette_container').append(response.html).attr('data-currentoffset', response.offset);
-                                $('.palgrid').matchHeight();
-                                $('.palinfos').matchHeight();
-                                $('.palbuttons').matchHeight();
+                    // Each time the user scrolls
+                    win.scroll(function() {
+                        // End of the document reached?
+                        if ($(document).height() - win.height() <= win.scrollTop()) {
+                            if (!endreached) {
+                                $.get('{{ app.request.baseUrl ~ '/load/'}}' + $('#palette_container').attr('data-currentoffset'), function (response) {
+                                    endreached = response.endreached;
+                                    if (endreached == false) {
+                                        $('#palette_container').append(response.html).attr('data-currentoffset', response.offset);
+                                        $('.palgrid').matchHeight();
+                                        $('.palinfos').matchHeight();
+                                        $('.palbuttons').matchHeight();
+                                    }
+                                }, 'json');
                             }
-                        }, 'json');
-                    }
-                }
-            });
-        });
+                        }
+                    });
+                });
+            #}
     </script>
 {% endblock %}

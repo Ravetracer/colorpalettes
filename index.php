@@ -21,12 +21,12 @@ $app = require_once __DIR__.DIRECTORY_SEPARATOR.'bootstrap.php';
  * @return Response
  */
 $app->get('/', function () use ($app) : Response {
-    $pals = DatabaseHelper::getLimitedEntries($app, 0, 12);
     $cnt = DatabaseHelper::getPaletteCount($app);
+    $pals = DatabaseHelper::getLimitedEntries($app, 0, $cnt);
 
     return $app->render('index.html.twig', [
         'palettes'      => $pals,
-        'offset'        => 12,
+        //'offset'        => 12,
         'numpals'       => $cnt,
     ]);
 })
